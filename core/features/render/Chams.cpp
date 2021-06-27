@@ -1,6 +1,8 @@
 #include "Chams.h"
 #include "../../menu/variables.hpp"
 
+
+
 void Override(bool ignoreZ, bool wireframe, bool glass, const color c) {
 	i_material* pMat = nullptr;
 
@@ -28,7 +30,9 @@ void Override(bool ignoreZ, bool wireframe, bool glass, const color c) {
 		break;
 	}
 
-
+	//if (Render::Chams::t.has_time_elapsed(500, true)) {
+	//	Render::Chams::_switch = !Render::Chams::_switch;
+	//}
 
 	pMat->set_material_var_flag(material_var_ignorez, ignoreZ);
 
@@ -81,4 +85,9 @@ void Render::Chams::onChams(void* _this, int edx, void* ctx, void* state, model_
 			}
 		}
 	}
+}
+
+void Render::Chams::onEnable() {
+	//Render::Chams::t.reset();
+
 }

@@ -1,7 +1,7 @@
 #pragma once
 #include "../../dependencies/utilities/csgo.hpp"
 #include "./../menu/components/button_component.h"
-
+#include "./../menu/utils/timer.h"
 
 class feature {
 
@@ -33,6 +33,8 @@ namespace Render {
 		inline color team_color_invisible = {150, 255, 0};
 		inline color enemy_color_invisible = {255, 100, 200};
 		inline color hands_color = {255, 255, 255};
+
+
 		/*
 		inline int TeamRedVisible = 255;
 		inline int TeamGreenVisible = 255;
@@ -49,7 +51,7 @@ namespace Render {
 		inline int armsColor = 200;
 		*/
 		void onChams(void* _this, int edx, void* ctx, void* state, model_render_info_t& info, matrix3x4_t* customBoneToWorld, hooks::draw_model_execute::fn orig, entity_t* ent);
-
+		void onEnable();
 	};
 	namespace Esp {
 		inline int category = Category::RENDER;

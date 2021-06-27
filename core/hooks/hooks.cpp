@@ -107,7 +107,6 @@ void __fastcall hooks::SceneEnd::hook(void* _this, void* edx) {
 
 long __stdcall hooks::EndScene::hook(IDirect3DDevice9* pDevice)
 {
-
 	return EndScene_original(pDevice);
 }
 

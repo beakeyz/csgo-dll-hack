@@ -7,9 +7,10 @@
 
 
 auto do_frame = [&](std::int32_t x, std::int32_t y, std::int32_t w, std::int32_t h, color bg, color header_text, color header_line, const std::string& name) {
-	render::draw_filled_rect(x - 1, y - 1, w + 3, h + 3, color(variables::menu::r, variables::menu::g, variables::menu::b, 255));
+	render::draw_filled_rect(x - 1, y - 1, w + 2, h + 2, color(variables::menu::r, variables::menu::g, variables::menu::b, 255));
 	render::draw_filled_rect(x, y, w, h, bg);
 	render::draw_filled_rect(x, y, w, 70, header_text);
+	render::draw_filled_rect(x - 1, y + 69, w + 2, 2, color::white());
 	render::draw_filled_rect(x, y + 70, w, 2, header_line);
 	render::text(x + 10, y + 8, render::fonts::watermark_font, name, false, color::white());
 };
@@ -40,10 +41,10 @@ void menu::render() {
 	do_frame(variables::menu::x, variables::menu::y, variables::menu::w, variables::menu::h, color(36, 36, 36, 255), color(45, 45, 45, 235), color(36, 36, 36, 255), "BeakonCS - B1.1");
 	const std::int32_t offset = 20;
 	//menu_framework::group_box(variables::menu::x + 5, variables::menu::y + 35, 100, 250, render::fonts::watermark_font, "tabs", false); {
-	menu_framework::tab((variables::menu::x + 100) + offset, variables::menu::y + 9, render::get_text_size(render::fonts::font_bigboi, "Combat").x + 50, 45, render::fonts::font_bigboi, "Combat", menu::current_tab, 0);
-	menu_framework::tab((variables::menu::x + 220) + offset, variables::menu::y + 9, render::get_text_size(render::fonts::font_bigboi, "Visuals").x + 50, 45, render::fonts::font_bigboi, "Visuals", menu::current_tab, 1);
-	menu_framework::tab((variables::menu::x + 330) + offset, variables::menu::y + 9, render::get_text_size(render::fonts::font_bigboi, "Movement").x + 50, 45, render::fonts::font_bigboi, "Movement", menu::current_tab, 2);
-	menu_framework::tab((variables::menu::x + 460) + offset, variables::menu::y + 9, render::get_text_size(render::fonts::font_bigboi, "Misc").x + 50, 45, render::fonts::font_bigboi, "Misc", menu::current_tab, 3);
+	menu_framework::tab((variables::menu::x + 100) + offset, variables::menu::y + 15, render::get_text_size(render::fonts::font_bigboi, "Combat").x + 50, 45, render::fonts::font_bigboi, "Combat", menu::current_tab, 0);
+	menu_framework::tab((variables::menu::x + 220) + offset, variables::menu::y + 15, render::get_text_size(render::fonts::font_bigboi, "Visuals").x + 50, 45, render::fonts::font_bigboi, "Visuals", menu::current_tab, 1);
+	menu_framework::tab((variables::menu::x + 330) + offset, variables::menu::y + 15, render::get_text_size(render::fonts::font_bigboi, "Movement").x + 50, 45, render::fonts::font_bigboi, "Movement", menu::current_tab, 2);
+	menu_framework::tab((variables::menu::x + 460) + offset, variables::menu::y + 15, render::get_text_size(render::fonts::font_bigboi, "Misc").x + 50, 45, render::fonts::font_bigboi, "Misc", menu::current_tab, 3);
 	
 	if (current_tab == 0) {
 		groupBox box(variables::menu::x + 20, variables::menu::y + 80, variables::menu::w / 2 - 20, 220, render::fonts::watermark_font_other, "Combat"); {
@@ -118,7 +119,7 @@ void menu::render() {
 
 		groupBox ChamsBox(variables::menu::x + 20, variables::menu::y + 80, variables::menu::w / 2 - 20, 220, render::fonts::watermark_font_other, "Chams"); {
 			ChamsBox.draw();
-			buttonComponent chams_enabled(15, 10, &ChamsBox, "Enabled", render::fonts::watermark_font_small, Render::Chams::isEnabled);
+			buttonComponent chams_enabled(15, 10, &ChamsBox, "Enabled", render::fonts::watermark_font_small, Render::Chams::isEnabled, &Render::Chams::onEnable);
 			c_slider_component Material(15, 22, &ChamsBox, "Material", render::fonts::watermark_font_small, Render::Chams::material, 1, 7);
 			buttonComponent Enemies(15, 58, &ChamsBox, "Enemies", render::fonts::watermark_font_small, Render::Chams::enemies);
 			buttonComponent Teamates(15, 70, &ChamsBox, "Teammates", render::fonts::watermark_font_small, Render::Chams::teammates);

@@ -4,7 +4,6 @@
 #include <string.h>
 #include <vadefs.h>
 #include <stdio.h>
-#include <xstring>
 #include <Psapi.h>
 #include <thread>
 #include <iostream>

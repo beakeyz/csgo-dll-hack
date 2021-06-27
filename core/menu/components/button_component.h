@@ -18,6 +18,18 @@ public:
 		this->parent = parent;
 	}
 
+	buttonComponent(double x, double y, groupBox* parent, std::string text, unsigned long font, bool& r_value, void(*callback)()) : value(r_value) {
+		this->x = x;
+		this->x2 = x;
+		this->y = y;
+		this->y2 = y;
+		this->font = font;
+		this->text = text;
+		this->value = value;
+		this->parent = parent;
+		this->m_callback = callback;
+	}
+
 	void draw() {
 		this->x = this->x2;
 		this->y = this->y2;
@@ -56,6 +68,9 @@ public:
 	void toggle() {
 		if ((cursor.x > x) && (cursor.x < x + 8) && (cursor.y > y) && (cursor.y < y + 8) && GetAsyncKeyState(VK_LBUTTON) & 1) {
 			this->value = !value;
+			if (m_callback != nullptr) {
+				m_callback();
+			}
 			std::this_thread::sleep_for(std::chrono::milliseconds(1));
 
 		}
@@ -79,6 +94,7 @@ protected:
 	double y;
 	double x2;
 	double y2;
+	void(*m_callback)() = nullptr;
 	std::string text;
 	unsigned long font;
 	bool& value;
@@ -88,6 +104,7 @@ protected:
 public:
 	int index;
 	static const int indexed_height = 12;
+
 };
 
 class c_slider_component {

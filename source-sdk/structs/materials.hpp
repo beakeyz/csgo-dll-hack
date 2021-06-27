@@ -1,5 +1,5 @@
 #pragma once
-#include "imageformats.h"
+#include "./../../dependencies/interfaces/imageformats.h"
 
 enum material_var_flags_t {
 	material_var_debug = (1 << 0),
