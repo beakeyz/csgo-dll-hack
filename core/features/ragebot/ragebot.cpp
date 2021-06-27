@@ -334,7 +334,7 @@ void c_ragebot::choose_angles() {
 	if (csgo::local_player->next_attack() > interfaces::globals->cur_time)
 		return;
 
-	if (combat::ragebot::auto_fire && !(m_cmd->buttons & in_attack)) {
+	if (combat::ragebot::auto_fire /*&& !(m_cmd->buttons & in_attack)*/) {
 		m_cmd->buttons |= in_attack;
 		shots_fired++;
 	}
@@ -353,7 +353,7 @@ void c_ragebot::choose_angles() {
 		//	g_misc.capsule_overlay(selected_target, g_vars.misc.client_hitboxes_duration, best_record.m_matrix);
 
 		//g_backtrack.process_cmd(m_cmd, selected_target, best_record);
-
+		//m_cmd->buttons |= in_attack2;
 	}
 	
 }
