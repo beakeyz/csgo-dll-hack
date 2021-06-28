@@ -1,6 +1,7 @@
 #pragma once
 #include "./../../../dependencies/utilities/csgo.hpp"
 
+//Timer MIGHT prevent injection
 class c_timer {
 
 public:

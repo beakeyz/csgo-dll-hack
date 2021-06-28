@@ -142,5 +142,7 @@ namespace combat {
 		inline bool pelvis = true;
 		inline bool arms = false;
 		inline bool legs = false;
+
+		void onEnable();
 	}
 };

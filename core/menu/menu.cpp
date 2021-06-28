@@ -2,6 +2,7 @@
 #include "../features/features.hpp"
 #include "./components/button_component.h"
 #include "./components/group_box.h"
+#include "../features/ragebot/ragebot.h"
 //todo auto elements positioning
 
 
@@ -85,7 +86,7 @@ void menu::render() {
 
 		groupBox ragebot_box(variables::menu::x + variables::menu::w / 2 + 10, variables::menu::y + 80, variables::menu::w / 2 - 30, 190, render::fonts::watermark_font_other, "ragebot"); {
 			ragebot_box.draw();
-			buttonComponent rb_enabled(15, 10, &ragebot_box, "Enabled", render::fonts::watermark_font_small, combat::ragebot::isEnabled);
+			buttonComponent rb_enabled(15, 10, &ragebot_box, "Enabled", render::fonts::watermark_font_small, combat::ragebot::isEnabled, &combat::ragebot::onEnable);
 			buttonComponent rb_auto_fire(15, 22, &ragebot_box, "Auto fire", render::fonts::watermark_font_small, combat::ragebot::auto_fire);
 			buttonComponent rb_silent(15, 34, &ragebot_box, "Silent", render::fonts::watermark_font_small, combat::ragebot::silent);
 			buttonComponent rb_quickstop(15, 46, &ragebot_box, "Quickstop", render::fonts::watermark_font_small, combat::ragebot::quickstop);

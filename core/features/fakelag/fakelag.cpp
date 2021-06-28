@@ -10,6 +10,8 @@ void c_fakelag::think(c_usercmd* cmd, bool& sendPacket)
 	
 	static int choke = 0;
 	static bool m_sendpacket = false;
+	static bool _was_enabled = false;
+	static c_timer packet_timer;
 	auto local = csgo::local_player;
 	if (!combat::fakelag::isEnabled && combat::antiaim::isEnabled) {
 		choke = 1;
@@ -17,6 +19,11 @@ void c_fakelag::think(c_usercmd* cmd, bool& sendPacket)
 	}
 
 	if (combat::fakelag::isEnabled) {
+		if (!_was_enabled) {
+			packet_timer.reset();
+			//console::log("reset fakelagTimer!");
+			_was_enabled = true;
+		}
 		//switch (g_vars.misc.fakelag.type) {
 		//case 0: { // Maximum
 		//choke = std::min< int >(combat::fakelag::amount, 14);
@@ -28,21 +35,20 @@ void c_fakelag::think(c_usercmd* cmd, bool& sendPacket)
 		//}
 		//}
 
-		choke++;
-		if (choke > combat::fakelag::amount * 5) {
-			
+		
+		if (packet_timer.has_time_elapsed(1500, false)) {
 			sendPacket = true;
-			choke = 0;
 		}
-		else {
+		else if (packet_timer.has_time_elapsed(2000, true)) {
 			sendPacket = false;
 		}
-
 		
 		//sendPacket = m_sendpacket;
 		//m_sendpacket = !m_sendpacket;
 	}
-
+	else {
+		_was_enabled = false;
+	}
 	//if (choke > static_cast<int>(interfaces::clientstate->choked_commands)) {
 		//sendPacket = false;
 	//}

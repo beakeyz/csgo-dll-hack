@@ -68,7 +68,7 @@ public:
 	void toggle() {
 		if ((cursor.x > x) && (cursor.x < x + 8) && (cursor.y > y) && (cursor.y < y + 8) && GetAsyncKeyState(VK_LBUTTON) & 1) {
 			this->value = !value;
-			if (m_callback != nullptr) {
+			if (m_callback != nullptr && this->value == true) {
 				m_callback();
 			}
 			std::this_thread::sleep_for(std::chrono::milliseconds(1));

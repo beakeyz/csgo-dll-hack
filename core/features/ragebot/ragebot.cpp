@@ -41,8 +41,12 @@ void c_ragebot::select_target() {
 
 	try {
 		std::vector< int > hitboxes = {};
-		
+
 		if (combat::ragebot::dynamic_hitbox) {
+			for (int i = 0; i <= 85; i++) {
+				hitboxes.push_back(i);
+			}
+			/*
 			hitboxes.push_back(4);//lower chest
 			hitboxes.push_back(5);//upper chest
 			hitboxes.push_back(3);//thorax
@@ -64,6 +68,7 @@ void c_ragebot::select_target() {
 
 			hitboxes.push_back(8);//head
 			hitboxes.push_back(7);//neck
+			*/
 		}
 		else {
 			if (combat::ragebot::head) {
@@ -93,7 +98,6 @@ void c_ragebot::select_target() {
 				hitboxes.push_back(76);
 			}
 		}
-
 		
 		
 		for (short i = 1; i < interfaces::globals->max_clients; i++) {
@@ -177,7 +181,7 @@ void c_ragebot::select_target() {
 						continue;
 					}
 
-					if (current_damage > e->health()) {
+					if (current_damage >= e->health()) {
 						player_best_damage = current_damage;
 						player_best_point = point;
 						break;
@@ -353,7 +357,10 @@ void c_ragebot::choose_angles() {
 		//	g_misc.capsule_overlay(selected_target, g_vars.misc.client_hitboxes_duration, best_record.m_matrix);
 
 		//g_backtrack.process_cmd(m_cmd, selected_target, best_record);
-		//m_cmd->buttons |= in_attack2;
+		if (shots_fired > 1) {
+			m_cmd->buttons &= ~in_attack;
+			shots_fired = 0;
+		}
 	}
 	
 }
@@ -425,4 +432,8 @@ bool c_ragebot::is_valid(player_t* player) {
 		return false;*/
 
 	return true;
+}
+
+void combat::ragebot::onEnable() {
+	g_ragebot.shots_fired = 0;
 }

@@ -89,10 +89,10 @@ void math::CorrectMovement(vec3_t vOldAngles, c_usercmd* pCmd, float fOldForward
 		pCmd->forwardmove = cos(DEG2RAD(deltaView)) * fOldForward + cos(DEG2RAD(deltaView + 90.f)) * fOldSidemove;
 		pCmd->sidemove = sin(DEG2RAD(deltaView)) * fOldForward + sin(DEG2RAD(deltaView + 90.f)) * fOldSidemove;
 
-		pCmd->buttons &= ~in_moveright;
-		pCmd->buttons &= ~in_moveright;
-		pCmd->buttons &= ~in_forward;
-		pCmd->buttons &= ~in_back;
+		//pCmd->buttons &= ~in_moveright;
+		//pCmd->buttons &= ~in_moveright;
+		//pCmd->buttons &= ~in_forward;
+		//pCmd->buttons &= ~in_back;
 	}
 }
 

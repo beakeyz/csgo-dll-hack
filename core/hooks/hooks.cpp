@@ -6,13 +6,19 @@
 #include "../features/fakelag/fakelag.h"
 #include "../features/ragebot/ragebot.h"
 
+/*
+make sure unused hooks are not used!
+*/
+
+//hooks::doPostScreenEffects::fn do_post_screen_original = nullptr;
+//hooks::EndScene::fn EndScene_original = nullptr;
+
 hooks::create_move::fn create_move_original = nullptr;
 hooks::paint_traverse::fn paint_traverse_original = nullptr;
-hooks::doPostScreenEffects::fn do_post_screen_original = nullptr;
+
 hooks::draw_model_execute::fn draw_model_execute_original = nullptr;
 hooks::frame_stage_notify::fn frame_stage_notify_original = nullptr;
 hooks::SceneEnd::fn SceneEnd_original = nullptr;
-hooks::EndScene::fn EndScene_original = nullptr;
 
 bool hooks::initialize() {
 	const auto create_move_target = reinterpret_cast<void*>(get_virtual(interfaces::clientmode, 24));
@@ -31,8 +37,10 @@ bool hooks::initialize() {
 	else if (MH_CreateHook(paint_traverse_target, &paint_traverse::hook, reinterpret_cast<void**>(&paint_traverse_original)) != MH_OK)
 		throw std::runtime_error("failed to initialize paint_traverse. (outdated index?)");
 
-	else if (MH_CreateHook(do_post_screen_target, &doPostScreenEffects::hook, reinterpret_cast<void**>(&do_post_screen_original)) != MH_OK)
-		throw std::runtime_error("failed to initialize post_screen. (outdated index?)");
+	//else if (MH_CreateHook(do_post_screen_target, &doPostScreenEffects::hook, reinterpret_cast<void**>(&do_post_screen_original)) != MH_OK)
+	//	throw std::runtime_error("failed to initialize post_screen. (outdated index?)");
+	//else if (MH_CreateHook(EndScene_target, &EndScene::hook, reinterpret_cast<void**>(&EndScene_original)) != MH_OK)
+	//	throw std::runtime_error("failed to initialize EndScene. (outdated index?)");
 
 	else if (MH_CreateHook(draw_model_execute_target, &draw_model_execute::hook, reinterpret_cast<void**>(&draw_model_execute_original)) != MH_OK)
 		throw std::runtime_error("failed to initialize draw_model_execute. (outdated index?)");
@@ -43,8 +51,7 @@ bool hooks::initialize() {
 	else if (MH_CreateHook(SceneEnd_target, &SceneEnd::hook, reinterpret_cast<void**>(&SceneEnd_original)) != MH_OK)
 		throw std::runtime_error("failed to initialize SceneEnd. (outdated index?)");
 
-	else if (MH_CreateHook(EndScene_target, &EndScene::hook, reinterpret_cast<void**>(&EndScene_original)) != MH_OK)
-		throw std::runtime_error("failed to initialize EndScene. (outdated index?)");
+	
 
 	if (MH_EnableHook(MH_ALL_HOOKS) != MH_OK)
 		throw std::runtime_error("failed to enable hooks.");
@@ -105,10 +112,12 @@ void __fastcall hooks::SceneEnd::hook(void* _this, void* edx) {
 	Render::Glow::RunGlow();
 }
 
+/*
 long __stdcall hooks::EndScene::hook(IDirect3DDevice9* pDevice)
 {
 	return EndScene_original(pDevice);
 }
+*/
 
 bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd* cmd) {
 	create_move_original(input_sample_frametime, cmd);
@@ -156,9 +165,9 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 
 	math::CorrectMovement(old_viewangles, cmd, old_forwardmove, old_sidemove);
 
-	cmd->forwardmove = std::clamp(cmd->forwardmove, -450.0f, 450.0f);
-	cmd->sidemove = std::clamp(cmd->sidemove, -450.0f, 450.0f);
-	cmd->upmove = std::clamp(cmd->upmove, -320.0f, 320.0f);
+	//cmd->forwardmove = std::clamp(cmd->forwardmove, -450.0f, 450.0f);
+	//cmd->sidemove = std::clamp(cmd->sidemove, -450.0f, 450.0f);
+	//cmd->upmove = std::clamp(cmd->upmove, -320.0f, 320.0f);
 
 	cmd->viewangles.normalize();
 	cmd->viewangles.x = std::clamp(cmd->viewangles.x, -89.0f, 89.0f);
@@ -168,13 +177,14 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 	return false;
 }
 
+/*
 int __fastcall hooks::doPostScreenEffects::hook(void* _this, int edx, int param) {
 
 	//visuals::glow();
 
 	return do_post_screen_original(interfaces::clientmode, edx, param);
 }
-
+*/
 
 void __stdcall hooks::paint_traverse::hook(unsigned int panel, bool force_repaint, bool allow_force) {
 	auto panel_to_draw = fnv::hash(interfaces::panel->get_panel_name(panel));
