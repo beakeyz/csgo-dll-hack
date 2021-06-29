@@ -137,7 +137,6 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 
 	//where all the hacks go
 	movement::bunny_hop::bunny_hop(cmd);
-	movement::auto_strafe::auto_strafe(cmd);
 	//misc::movement::fastStop(cmd);
 	//misc::movement::air_strafe(cmd);
 
@@ -153,9 +152,11 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 
 		g_ragebot.work(cmd);
 		
-		g_fakelag.think(cmd, send_packet);
+		movement::auto_strafe::auto_strafe(cmd);
 
 		combat::antiaim::run(cmd, send_packet);
+
+		g_fakelag.think(cmd, send_packet);
 
 	} prediction::end();
 
@@ -173,7 +174,7 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 	cmd->viewangles.x = std::clamp(cmd->viewangles.x, -89.0f, 89.0f);
 	cmd->viewangles.y = std::clamp(cmd->viewangles.y, -180.0f, 180.0f);
 	cmd->viewangles.z = 0.0f;
-
+	
 	return false;
 }
 
