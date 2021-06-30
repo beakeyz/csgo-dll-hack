@@ -1,6 +1,6 @@
 #pragma once
-#include "../features.hpp"
-#include "../../menu/variables.hpp"
+#include "../../features.hpp"
+#include "../../../menu/variables.hpp"
 
 enum resolve_mode_e {
 	RESOLVE_MODE_NONE,

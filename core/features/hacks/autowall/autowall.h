@@ -1,6 +1,6 @@
 #pragma once
-#include "../features.hpp"
-#include "../../menu/variables.hpp"
+#include "../../features.hpp"
+#include "../../../menu/variables.hpp"
 
 struct autowall_info_t {
 	autowall_info_t(const vec3_t start, const vec3_t end, player_t* to, player_t* from) {

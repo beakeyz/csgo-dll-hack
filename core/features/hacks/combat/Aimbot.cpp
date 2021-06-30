@@ -1,5 +1,5 @@
-#include "../features.hpp"
-#include "../../menu/variables.hpp"
+#include "../../features.hpp"
+#include "../../../menu/variables.hpp"
 
 vec3_t calculateRelativeAngle(const vec3_t& source, const vec3_t& destination, const vec3_t& viewAngles) noexcept
 {

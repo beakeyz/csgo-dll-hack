@@ -1,6 +1,6 @@
 #pragma once
-#include "../features.hpp"
-#include "../../menu/variables.hpp"
+#include "../../features.hpp"
+#include "../../../menu/variables.hpp"
 
 class c_ragebot{
 

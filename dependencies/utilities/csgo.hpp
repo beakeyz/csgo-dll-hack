@@ -39,4 +39,5 @@
 
 namespace csgo {
 	extern player_t* local_player;
+	//extern c_module_manager* module_manager;
 }

@@ -1,6 +1,6 @@
-#include "../features.hpp"
+#include "../../features.hpp"
 #include <stdlib.h>
-#include "../../menu/variables.hpp"
+#include "../../../menu/variables.hpp"
 
 void combat::resolver::resolver() {
 	if (!combat::resolver::enabled)

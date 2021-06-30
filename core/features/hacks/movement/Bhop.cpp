@@ -1,5 +1,5 @@
-#include "../../menu/variables.hpp"
-#include "../features.hpp"
+#include "../../../menu/variables.hpp"
+#include "../../features.hpp"
 
 void movement::bunny_hop::bunny_hop(c_usercmd* cmd) {
 

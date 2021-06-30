@@ -11,4 +11,6 @@ namespace utilities {
 	}
 
 	std::uint8_t* pattern_scan(const char* module_name, const char* signature) noexcept;
+
+	//TODO: add more game-related utils (boundingbox function, among others)
 }

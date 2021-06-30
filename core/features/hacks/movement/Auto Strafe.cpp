@@ -1,5 +1,5 @@
-#include "../../menu/variables.hpp"
-#include "../features.hpp"
+#include "../../../menu/variables.hpp"
+#include "../../features.hpp"
 
 #define CheckIfNonValidNumber(x) (fpclassify(x) == FP_INFINITE || fpclassify(x) == FP_NAN || fpclassify(x) == FP_SUBNORMAL)
 

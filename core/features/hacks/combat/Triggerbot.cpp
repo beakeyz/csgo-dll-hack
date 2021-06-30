@@ -1,5 +1,5 @@
-#include "../features.hpp"
-#include "../../menu/variables.hpp"
+#include "../../features.hpp"
+#include "../../../menu/variables.hpp"
 
 void combat::triggerbot::triggerbot(c_usercmd* cmd)
 {
