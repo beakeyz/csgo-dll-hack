@@ -1,10 +1,10 @@
 #include "../../dependencies/utilities/csgo.hpp"
 #include "../features/features.hpp"
-#include "../features/misc/engine_prediction.hpp"
+#include "../features/hacks/misc/engine_prediction.hpp"
 #include "../menu/menu.hpp"
 #include "../../dependencies/interfaces/Framestage.h"
-#include "../features/fakelag/fakelag.h"
-#include "../features/ragebot/ragebot.h"
+#include "../features/hacks/fakelag/fakelag.h"
+#include "../features/hacks/ragebot/ragebot.h"
 
 /*
 make sure unused hooks are not used!

@@ -89,20 +89,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="core\features\autowall\autowall.cpp" />
-    <ClCompile Include="core\features\combat\Aimbot.cpp" />
-    <ClCompile Include="core\features\combat\Antiaim.cpp" />
-    <ClCompile Include="core\features\combat\Resolver.cpp" />
-    <ClCompile Include="core\features\combat\Triggerbot.cpp" />
-    <ClCompile Include="core\features\fakelag\fakelag.cpp" />
-    <ClCompile Include="core\features\misc\engine_prediction.cpp" />
-    <ClCompile Include="core\features\misc\misc.cpp" />
-    <ClCompile Include="core\features\movement\Auto Strafe.cpp" />
-    <ClCompile Include="core\features\movement\Bhop.cpp" />
-    <ClCompile Include="core\features\ragebot\ragebot.cpp" />
-    <ClCompile Include="core\features\render\Chams.cpp" />
-    <ClCompile Include="core\features\render\Esp.cpp" />
-    <ClCompile Include="core\features\render\Glow.cpp" />
+    <ClCompile Include="core\features\hacks\autowall\autowall.cpp" />
+    <ClCompile Include="core\features\hacks\combat\Aimbot.cpp" />
+    <ClCompile Include="core\features\hacks\combat\Antiaim.cpp" />
+    <ClCompile Include="core\features\hacks\combat\Resolver.cpp" />
+    <ClCompile Include="core\features\hacks\combat\Triggerbot.cpp" />
+    <ClCompile Include="core\features\hacks\fakelag\fakelag.cpp" />
+    <ClCompile Include="core\features\hacks\misc\engine_prediction.cpp" />
+    <ClCompile Include="core\features\hacks\misc\misc.cpp" />
+    <ClCompile Include="core\features\module.cpp" />
+    <ClCompile Include="core\features\hacks\movement\Auto Strafe.cpp" />
+    <ClCompile Include="core\features\hacks\movement\Bhop.cpp" />
+    <ClCompile Include="core\features\hacks\ragebot\ragebot.cpp" />
+    <ClCompile Include="core\features\hacks\render\Chams.cpp" />
+    <ClCompile Include="core\features\hacks\render\Esp.cpp" />
+    <ClCompile Include="core\features\hacks\render\Glow.cpp" />
+    <ClCompile Include="core\features\setting\setting.cpp" />
     <ClCompile Include="core\hooks\hooks.cpp" />
     <ClCompile Include="core\menu\framework.cpp" />
     <ClCompile Include="core\menu\menu.cpp" />
@@ -125,13 +127,15 @@
     <ClCompile Include="source-sdk\math\view_matrix.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="core\features\autowall\autowall.h" />
-    <ClInclude Include="core\features\combat\Resolver.h" />
-    <ClInclude Include="core\features\fakelag\fakelag.h" />
+    <ClInclude Include="core\features\hacks\autowall\autowall.h" />
+    <ClInclude Include="core\features\hacks\combat\Resolver.h" />
+    <ClInclude Include="core\features\hacks\fakelag\fakelag.h" />
     <ClInclude Include="core\features\features.hpp" />
-    <ClInclude Include="core\features\misc\engine_prediction.hpp" />
-    <ClInclude Include="core\features\ragebot\ragebot.h" />
-    <ClInclude Include="core\features\render\Chams.h" />
+    <ClInclude Include="core\features\hacks\misc\engine_prediction.hpp" />
+    <ClInclude Include="core\features\module.h" />
+    <ClInclude Include="core\features\hacks\ragebot\ragebot.h" />
+    <ClInclude Include="core\features\hacks\render\Chams.h" />
+    <ClInclude Include="core\features\setting\setting.h" />
     <ClInclude Include="core\hooks\hooks.hpp" />
     <ClInclude Include="core\menu\components\button_component.h" />
     <ClInclude Include="core\menu\components\group_box.h" />
