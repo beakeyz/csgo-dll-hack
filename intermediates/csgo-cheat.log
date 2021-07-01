@@ -7,16 +7,12 @@
   fakelag.cpp
   engine_prediction.cpp
   misc.cpp
-  module.cpp
   Auto Strafe.cpp
   Bhop.cpp
-  ragebot.cpp
   Chams.cpp
   Esp.cpp
   Glow.cpp
-  hooks.cpp
   framework.cpp
-  menu.cpp
   timer.cpp
   interfaces.cpp
   math.cpp
@@ -25,10 +21,5 @@
   renderer.cpp
   utilities.cpp
   main.cpp
-  buffer.c
-  hde32.c
-  hde64.c
-  hook.c
-  trampoline.c
   LINK : /LTCG specified but no code generation required; remove /LTCG from the link command line to improve linker performance
   csgo-cheat.vcxproj -> C:\Users\Joost\source\repos\BeakonV2\output\debug\BeakonCS.dll

@@ -2,6 +2,8 @@
 #include "../../features.hpp"
 #include "../../../menu/variables.hpp"
 
+class c_module;
+
 class c_ragebot{
 
 	struct rage_t {

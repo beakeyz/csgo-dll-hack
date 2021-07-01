@@ -24,7 +24,7 @@ bool interfaces::initialize() {
 	physics_surface = get_interface<c_physics_surface, interface_type::index>("vphysics.dll", "VPhysicsSurfaceProps001");
 
 	/*custom interfaces*/
-	clientmode = **reinterpret_cast<i_client_mode * **>((*reinterpret_cast<uintptr_t * *>(client))[10] + 5);
+	clientmode = **reinterpret_cast<i_client_mode ***>((*reinterpret_cast<uintptr_t * *>(client))[10] + 5);
 	globals = **reinterpret_cast<c_global_vars_base***>((*reinterpret_cast<uintptr_t**>(client))[11] + 10);
 	clientstate = **reinterpret_cast<i_client_state***>(utilities::pattern_scan("engine.dll", sig_client_state) + 1);
 	directx = **reinterpret_cast<IDirect3DDevice9***>(utilities::pattern_scan("shaderapidx9.dll", sig_directx) + 1);

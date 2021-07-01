@@ -3,6 +3,7 @@
 #include <iostream>
 #include "./setting/setting.h"
 #include "features.hpp"
+#include "./../../core/features/hacks/ragebot/ragebot.h"
 
 
 class c_module {
@@ -35,8 +36,11 @@ protected:
 class c_module_manager : singleton<c_module_manager> {
 
 public:
-	c_module_manager(std::vector<c_module> m_modules) {
-		this->m_modules = m_modules;
+	c_module_manager() {
+		this->m_modules = {
+			g_ragebot
+			
+		};
 	}
 
 	static c_module* get_module_by_name(const char* m_name);
