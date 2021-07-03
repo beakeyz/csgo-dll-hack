@@ -16,8 +16,6 @@ std::vector<c_module> c_module_manager::get_modules() {
 	return c_module_manager::m_modules;
 }
 
-std::vector<c_module> c_module_manager::m_modules = {};
-
 bool c_module::is_enabled() {
 	return this->m_is_enabled;
 }

@@ -102,7 +102,7 @@
     <ClCompile Include="core\features\hacks\movement\Bhop.cpp" />
     <ClCompile Include="core\features\hacks\ragebot\ragebot.cpp" />
     <ClCompile Include="core\features\hacks\render\Chams.cpp" />
-    <ClCompile Include="core\features\hacks\render\Esp.cpp" />
+    <ClCompile Include="core\features\hacks\render\player_esp.cpp" />
     <ClCompile Include="core\features\hacks\render\Glow.cpp" />
     <ClCompile Include="core\features\setting\setting.cpp" />
     <ClCompile Include="core\hooks\hooks.cpp" />
@@ -119,6 +119,7 @@
     <ClCompile Include="dependencies\math\math.cpp" />
     <ClCompile Include="dependencies\utilities\console\console.cpp" />
     <ClCompile Include="dependencies\utilities\csgo.cpp" />
+    <ClCompile Include="dependencies\utilities\ctx.cpp" />
     <ClCompile Include="dependencies\utilities\netvars\netvars.cpp" />
     <ClCompile Include="dependencies\utilities\renderer\renderer.cpp" />
     <ClCompile Include="dependencies\utilities\utilities.cpp" />
@@ -132,6 +133,7 @@
     <ClInclude Include="core\features\hacks\fakelag\fakelag.h" />
     <ClInclude Include="core\features\features.hpp" />
     <ClInclude Include="core\features\hacks\misc\engine_prediction.hpp" />
+    <ClInclude Include="core\features\hacks\render\player_esp.h" />
     <ClInclude Include="core\features\module.h" />
     <ClInclude Include="core\features\hacks\ragebot\ragebot.h" />
     <ClInclude Include="core\features\hacks\render\Chams.h" />
@@ -183,6 +185,7 @@
     <ClInclude Include="dependencies\interfaces\i_trace.hpp" />
     <ClInclude Include="dependencies\math\math.hpp" />
     <ClInclude Include="dependencies\utilities\console\console.hpp" />
+    <ClInclude Include="dependencies\utilities\ctx.hpp" />
     <ClInclude Include="dependencies\utilities\fnv.hpp" />
     <ClInclude Include="dependencies\utilities\netvars\netvars.hpp" />
     <ClInclude Include="dependencies\utilities\renderer\renderer.hpp" />

@@ -3,6 +3,7 @@
 #include "../../source-sdk/math/vector3d.hpp"
 
 class entity_t;
+class c_usercmd;
 
 struct Box
 {
@@ -32,6 +33,8 @@ namespace utilities {
 	//TODO: add more game-related utils (boundingbox function, among others)
 
 	bool get_bbox(entity_t* e, Box& b, bool player_esp);
+	void movement_fix(c_usercmd* cmd);
+	void rotate_movement(c_usercmd* cmd, float yaw);
 	//void trace_line(Vector& start, Vector& end, unsigned int mask, CTraceFilter* filter, CGameTrace* tr);
 
 

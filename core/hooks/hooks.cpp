@@ -5,6 +5,7 @@
 #include "../../dependencies/interfaces/Framestage.h"
 #include "../features/hacks/fakelag/fakelag.h"
 #include "../features/hacks/ragebot/ragebot.h"
+#include "../features/hacks/render/player_esp.h"
 
 /*
 make sure unused hooks are not used!
@@ -134,6 +135,7 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 	auto old_viewangles = cmd->viewangles;
 	auto old_forwardmove = cmd->forwardmove;
 	auto old_sidemove = cmd->sidemove;
+	g_ctx.globals.wish_angle = cmd->viewangles;
 
 	//where all the hacks go
 	movement::bunny_hop::bunny_hop(cmd);
@@ -198,7 +200,7 @@ void __stdcall hooks::paint_traverse::hook(unsigned int panel, bool force_repain
 		render::text(10, 5, render::fonts::watermark_font, "BeakonCS - V2 [beakey]", false, color::white(255));
 		//visuals::twoD_box();
 		//visuals::snap_lines();
-		Render::Esp::onEsp();
+		g_player_esp.on_draw();
 
 		menu::toggle();
 

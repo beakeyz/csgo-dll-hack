@@ -54,115 +54,21 @@ void movement::auto_strafe::auto_strafe(c_usercmd* cmd) {
 	cmd->sidemove = (sin_rot * cmd->forwardmove) + (cos_rot * cmd->sidemove);
 	*/
 
-	static auto old_yaw = 0.0f;
-
-	auto get_velocity_degree = [](float velocity)
-	{
-		auto tmp = RAD2DEG(atan(30.0f / velocity));
-
-		if (CheckIfNonValidNumber(tmp) || tmp > 90.0f)
-			return 90.0f;
-
-		else if (tmp < 0.0f)
-			return 0.0f;
-		else
-			return tmp;
-	};
-
-	if (csgo::local_player->move_type() == movetype_ladder)
-		return;
+	vec3_t engine_angles;
+	interfaces::engine->get_view_angles(engine_angles);
 
 	auto velocity = csgo::local_player->velocity();
-	velocity.z = 0.0f;
 
-	auto forwardmove = cmd->forwardmove;
-	auto sidemove = cmd->sidemove;
+	cmd->forwardmove = min(5850.0f / velocity.length_2d(), side_speed);
+	cmd->sidemove= cmd->command_number % 2 ? side_speed : -side_speed;
 
-	if (velocity.length_2d() < 5.0f && !forwardmove && !sidemove)
-		return;
+	vec3_t tmp = { 0.0f, 0.0f, 0.0f };
 
-	static auto flip = false;
-	flip = !flip;
+	auto yaw_velocity = math::calculate_angle(tmp, velocity).y;
+	auto ideal_rotation = math::clamp(RAD2DEG(atan2(15.0f, velocity.length_2d())), 0.0f, 45.0f);
 
-	auto turn_direction_modifier = flip ? 1.0f : -1.0f;
-	auto viewangles = cmd->viewangles;
+	auto yaw_rotation = fabs(yaw_velocity - engine_angles.y) + (cmd->command_number % 2 ? ideal_rotation : -ideal_rotation);
+	auto ideal_yaw_rotation = yaw_rotation < 5.0f ? yaw_velocity : engine_angles.y;
 
-	if (forwardmove || sidemove)
-	{
-		cmd->forwardmove = 0.0f;
-		cmd->sidemove = 0.0f;
-
-		auto turn_angle = atan2(-sidemove, forwardmove);
-		viewangles.y += turn_angle * M_RADPI;
-	}
-	else if (forwardmove)
-		cmd->forwardmove = 0.0f;
-
-	auto strafe_angle = RAD2DEG(atan(15.0f / velocity.length_2d()));
-
-	if (strafe_angle > 90.0f)
-		strafe_angle = 90.0f;
-	else if (strafe_angle < 0.0f)
-		strafe_angle = 0.0f;
-
-	auto temp = vec3_t(0.0f, viewangles.y - old_yaw, 0.0f);
-	temp.y = math::normalize_angle(temp.y);
-
-	auto yaw_delta = temp.y;
-	old_yaw = viewangles.y;
-
-	auto abs_yaw_delta = fabs(yaw_delta);
-
-	if (abs_yaw_delta <= strafe_angle || abs_yaw_delta >= 30.0f)
-	{
-		vec3_t velocity_angles;
-		math::vector_angles(velocity, velocity_angles);
-
-		temp = vec3_t(0.0f, viewangles.y - velocity_angles.y, 0.0f);
-		temp.y = math::normalize_angle(temp.y);
-
-		auto velocityangle_yawdelta = temp.y;
-		auto velocity_degree = get_velocity_degree(velocity.length_2d());
-
-		if (velocityangle_yawdelta <= velocity_degree || velocity.length_2d() <= 15.0f)
-		{
-			if (-velocity_degree <= velocityangle_yawdelta || velocity.length_2d() <= 15.0f)
-			{
-				viewangles.y += strafe_angle * turn_direction_modifier;
-				cmd->sidemove = side_speed * turn_direction_modifier;
-			}
-			else
-			{
-				viewangles.y = velocity_angles.y - velocity_degree;
-				cmd->sidemove = side_speed;
-			}
-		}
-		else
-		{
-			viewangles.y = velocity_angles.y + velocity_degree;
-			cmd->sidemove = -side_speed;
-		}
-	}
-	else if (yaw_delta > 0.0f)
-		cmd->sidemove = -side_speed;
-	else if (yaw_delta < 0.0f)
-		cmd->sidemove = side_speed;
-
-	auto move = vec3_t(cmd->forwardmove, cmd->sidemove, 0.0f);
-	auto speed = move.length();
-
-	vec3_t angles_move;
-	math::vector_angles(move, angles_move);
-
-	auto normalized_x = fmod(cmd->viewangles.x + 180.0f, 360.0f) - 180.0f;
-	auto normalized_y = fmod(cmd->viewangles.y + 180.0f, 360.0f) - 180.0f;
-
-	auto yaw = DEG2RAD(normalized_y - viewangles.y + angles_move.y);
-
-	if (normalized_x >= 90.0f || normalized_x <= -90.0f || cmd->viewangles.x >= 90.0f && cmd->viewangles.x <= 200.0f || cmd->viewangles.x <= -90.0f && cmd->viewangles.x <= 200.0f) //-V648
-		cmd->forwardmove = -cos(yaw) * speed;
-	else
-		cmd->forwardmove = cos(yaw) * speed;
-
-	cmd->sidemove = sin(yaw) * speed;
+	utilities::rotate_movement(cmd, ideal_yaw_rotation);
 }

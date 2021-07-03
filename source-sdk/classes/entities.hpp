@@ -187,7 +187,10 @@ enum item_definition_indexes {
 class entity_t {
 public:
 
-
+	matrix_t& m_rgflCoordinateFrame()
+	{
+		return *(matrix_t*)((uintptr_t)this + (netvar_manager::get_net_var(fnv::hash("CBaseEntity"), fnv::hash("m_CollisionGroup")) - 0x30));
+	}
 	void* animating() {
 		return reinterpret_cast<void*>(uintptr_t(this) + 0x4);
 	}
@@ -197,11 +200,6 @@ public:
 	collideable_t* collideable() {
 		using original_fn = collideable_t * (__thiscall*)(void*);
 		return (*(original_fn**)this)[3](this);
-	}
-	matrix_t& m_rgflCoordinateFrame()
-	{
-		static auto _m_rgflCoordinateFrame = netvar_manager::get_net_var(fnv::hash("CBaseEntity"), fnv::hash("m_CollisionGroup")) - 0x30;
-		return *(matrix_t*)((uintptr_t)this + _m_rgflCoordinateFrame);
 	}
 	c_client_class* client_class() {
 		using original_fn = c_client_class * (__thiscall*)(void*);
@@ -402,7 +400,6 @@ public:
 		auto active_weapon = read<uintptr_t>(netvar_manager::get_net_var(fnv::hash("DT_CSPlayer"), fnv::hash("m_hActiveWeapon"))) & 0xFFF;
 		return reinterpret_cast<weapon_t*>(interfaces::entity_list->get_client_entity(active_weapon));
 	}
-
 
 	UINT* get_wearables() {
 		return (UINT*)((uintptr_t)this + (netvar_manager::get_net_var(fnv::hash("DT_CSPlayer"), fnv::hash("m_hMyWearables"))));

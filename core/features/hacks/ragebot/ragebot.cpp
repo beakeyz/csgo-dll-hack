@@ -40,78 +40,64 @@ void c_ragebot::select_target() {
 		return;
 
 	try {
-		std::vector< int > hitboxes = {};
-
-		if (combat::ragebot::dynamic_hitbox) {
-			for (int i = 0; i <= 85; i++) {
-				hitboxes.push_back(i);
-			}
-			/*
-			hitboxes.push_back(4);//lower chest
-			hitboxes.push_back(5);//upper chest
-			hitboxes.push_back(3);//thorax
-			hitboxes.push_back(0);//pelvis
-
-			hitboxes.push_back(65);//left upperarm
-			hitboxes.push_back(36);//right upperarm
-			hitboxes.push_back(63);//left lowerarm
-			hitboxes.push_back(35);//right forearm
-
-			hitboxes.push_back(56);//left hand
-			hitboxes.push_back(90);//right hand
-			hitboxes.push_back(88);//left thigh
-			hitboxes.push_back(72);//right thigh
-			hitboxes.push_back(83);//left calf
-			hitboxes.push_back(74);//right calf
-			hitboxes.push_back(84);//left foot
-			hitboxes.push_back(76);//right foot
-
-			hitboxes.push_back(8);//head
-			hitboxes.push_back(7);//neck
-			*/
-		}
-		else {
-			if (combat::ragebot::head) {
-				hitboxes.push_back(8);
-				hitboxes.push_back(7);
-			}
-			if (combat::ragebot::pelvis) {
-				hitboxes.push_back(4);
-				hitboxes.push_back(5);
-				hitboxes.push_back(3);
-				hitboxes.push_back(0);
-			}
-			if (combat::ragebot::arms) {
-				hitboxes.push_back(65);
-				hitboxes.push_back(36);
-				hitboxes.push_back(63);
-				hitboxes.push_back(35);
-				hitboxes.push_back(90);
-				hitboxes.push_back(56);
-			}
-			if (combat::ragebot::legs) {
-				hitboxes.push_back(88);
-				hitboxes.push_back(72);
-				hitboxes.push_back(83);
-				hitboxes.push_back(74);
-				hitboxes.push_back(84);
-				hitboxes.push_back(76);
-			}
-		}
-		
 		
 		for (short i = 1; i < interfaces::globals->max_clients; i++) {
 			
-
 			player_t* e = static_cast<player_t*>(interfaces::entity_list->get_client_entity(i));
 			
 			if (!is_valid(e))
 				continue;
 
+			std::vector< int > hitboxes = {};
+
+			if (combat::ragebot::dynamic_hitbox) {
+
+				auto model = e->model();
+
+				if (!model)
+					return;
+
+				auto studio_model = interfaces::model_info->get_studio_model(model);
+
+				if (!studio_model)
+					return;
+				for (auto i = 0; i < studio_model->bones_count; i++)
+				{
+					hitboxes.push_back(i);
+				}
+			}
+			else {
+				if (combat::ragebot::head) {
+					hitboxes.push_back(8);
+					hitboxes.push_back(7);
+				}
+				if (combat::ragebot::pelvis) {
+					hitboxes.push_back(4);
+					hitboxes.push_back(5);
+					hitboxes.push_back(3);
+					hitboxes.push_back(0);
+				}
+				if (combat::ragebot::arms) {
+					hitboxes.push_back(65);
+					hitboxes.push_back(36);
+					hitboxes.push_back(63);
+					hitboxes.push_back(35);
+					hitboxes.push_back(90);
+					hitboxes.push_back(56);
+				}
+				if (combat::ragebot::legs) {
+					hitboxes.push_back(88);
+					hitboxes.push_back(72);
+					hitboxes.push_back(83);
+					hitboxes.push_back(74);
+					hitboxes.push_back(84);
+					hitboxes.push_back(76);
+				}
+			}
+
 			float player_best_damage = 0.f;
 			vec3_t player_best_point = vec3_t(0.f, 0.f, 0.f);
 			const int best_min_dmg = local->active_weapon()->clip1_count() <= 3 ? e->health() : combat::ragebot::min_dmg; // ensure we get the kill
-
 			
 			for (auto& hitbox : hitboxes) {
 				const vec3_t point = e->getBonePos(hitbox);

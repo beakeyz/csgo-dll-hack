@@ -14,11 +14,14 @@ namespace math {
 	vec3_t vector_multiply(vec3_t&, vec3_t&);
 	vec3_t vector_divide(vec3_t&, vec3_t&);
 	bool screen_transform(const vec3_t& point, vec3_t& screen);
-	bool world_to_screen(const vec3_t& origin, vec2_t& screen);
+	//bool world_to_screen(const vec3_t& origin, vec2_t& screen);
+	bool world_to_screen(const vec3_t& origin, vec3_t& screen);
 	float rad_to_deg(float x);
 	float deg_to_rad(float x);
 	float normalize_angle(float angle);
 	float random_float(float min, float max);
 	vec3_t calc_angle(vec3_t v1, vec3_t v2);
 	void angle_to_vector(const vec3_t& angles, vec3_t& forward);
+	float clamp(float in, float low, float high);
+	
 };

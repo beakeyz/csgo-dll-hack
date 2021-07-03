@@ -60,7 +60,7 @@ namespace Render {
 		inline int G = 255;
 		inline int B = 255;
 
-		void onEsp();
+		//void onEsp();
 
 	}
 	namespace Glow {

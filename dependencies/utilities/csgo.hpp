@@ -24,6 +24,7 @@
 #include "../../dependencies/utilities/renderer/renderer.hpp"
 #include "../../dependencies/utilities/console/console.hpp"
 #include "../utilities/csgo.hpp"
+#include "../utilities/ctx.hpp"
 
 //interfaces
 #define sig_client_state "A1 ? ? ? ? 8B 80 ? ? ? ? C3"

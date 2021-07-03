@@ -1,5 +1,15 @@
 #include "../utilities/csgo.hpp"
 
+float math::clamp(float in, float low, float high)
+{
+	if (in <= low)
+		return low;
+
+	if (in >= high)
+		return high;
+
+	return in;
+}
 
 float math::rad_to_deg(float x) {
 	return (float)(x) * (float)(180.f / M_PI_F);
@@ -230,6 +240,7 @@ bool math::screen_transform(const vec3_t & point, vec3_t & screen) {
 	return (w < 0.001f);
 }
 
+/*
 bool math::world_to_screen(const vec3_t & origin, vec2_t & screen) {
 	static std::uintptr_t view_matrix;
 	if ( !view_matrix )
@@ -251,6 +262,14 @@ bool math::world_to_screen(const vec3_t & origin, vec2_t & screen) {
 	screen.y *= 1.0f - ( matrix.m[ 1 ][ 0 ] * origin.x + matrix.m[ 1 ][ 1 ] * origin.y + matrix.m[ 1 ][ 2 ] * origin.z + matrix.m[ 1 ][ 3 ] ) / w;
 
 	return true;
+}
+*/
+
+bool math::world_to_screen(const vec3_t& origin, vec3_t& screen)
+{
+	//crashes
+	//return !interfaces::debug_overlay->screen_position(origin, screen);
+	return !interfaces::debug_overlay->ScreenPosition(origin, screen);
 }
 
 vec3_t math::calc_angle(vec3_t v1, vec3_t v2) {

@@ -38,16 +38,15 @@ class c_module_manager : singleton<c_module_manager> {
 public:
 	c_module_manager() {
 		this->m_modules = {
-			g_ragebot
-			
+			//g_ragebot
 		};
 	}
 
-	static c_module* get_module_by_name(const char* m_name);
+	c_module* get_module_by_name(const char* m_name);
 
-	static std::vector<c_module> get_modules();
+	std::vector<c_module> get_modules();
 
 public:
 
-	static std::vector<c_module> m_modules;
+	std::vector<c_module> m_modules;
 };
