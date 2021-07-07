@@ -4,6 +4,7 @@
 #include "./components/group_box.h"
 #include "../features/hacks/ragebot/ragebot.h"
 #include "../features/hacks/render/player_esp.h"
+#include "../features/hacks/render/visuals.h"
 //todo auto elements positioning
 
 
@@ -17,6 +18,17 @@ auto do_frame = [&](std::int32_t x, std::int32_t y, std::int32_t w, std::int32_t
 	render::text(x + 10, y + 8, render::fonts::watermark_font, name, false, color::white());
 };
 
+void draw_box(groupBox& box) {
+	box.draw();
+	int i = 10;
+	for (comp* m_c : box.get_comps()) {
+		m_c->draw();
+		i += m_c->get_standard_height();
+	}
+
+	i += 10;
+	box.set_height(i);
+}
 
 
 void menu::render() {
@@ -33,55 +45,54 @@ void menu::render() {
 	menu_framework::tab((variables::menu::x + 460) + offset, variables::menu::y + 15, render::get_text_size(render::fonts::font_bigboi, "Misc").x + 50, 45, render::fonts::font_bigboi, "Misc", menu::current_tab, 3);
 	
 	if (current_tab == 0) {
-		static groupBox box(20, 80, variables::menu::w / 2 - 20, 220, render::fonts::watermark_font_other, "Combat");
+		{
+			static groupBox box(20, 80, variables::menu::w / 2 - 20, 220, render::fonts::watermark_font_other, "Combat");
 			//box.draw();
 			//menu_framework::group_box(variables::menu::x + 5, variables::menu::y + 35, variables::menu::w - 10, variables::menu::h - 40, render::fonts::watermark_font, "Combat", false); {
-		static buttonComponent Aimbot_checkBoxComp(15, 10, &box, "Aimbot", render::fonts::watermark_font_small, combat::aimbot::isEnabled);
+			static buttonComponent Aimbot_checkBoxComp(15, 10, &box, "Aimbot", render::fonts::watermark_font_small, combat::aimbot::isEnabled);
 
-		static buttonComponent Trigger_comp(15, 22, &box, "Triggerbot", render::fonts::watermark_font_small, combat::triggerbot::enabled);
-		static buttonComponent Resolver_comp(15, 34, &box, "Resolver", render::fonts::watermark_font_small, combat::resolver::enabled);
-		static buttonComponent anti_aim_comp(15, 46, &box, "Anti aim", render::fonts::watermark_font_small, combat::antiaim::isEnabled);
-		static buttonComponent desync_comp(15, 58, &box, "Desync", render::fonts::watermark_font_small, combat::antiaim::desync);
-		static buttonComponent backwards_comp(15, 70, &box, "Backwards", render::fonts::watermark_font_small, combat::antiaim::backwards);
-		static buttonComponent jitter_comp(15, 82, &box, "Jitter", render::fonts::watermark_font_small, combat::antiaim::jitter);
+			static buttonComponent Trigger_comp(15, 22, &box, "Triggerbot", render::fonts::watermark_font_small, combat::triggerbot::enabled);
+			static buttonComponent Resolver_comp(15, 34, &box, "Resolver", render::fonts::watermark_font_small, combat::resolver::enabled);
+			static buttonComponent anti_aim_comp(15, 46, &box, "Anti aim", render::fonts::watermark_font_small, combat::antiaim::isEnabled);
+			static buttonComponent desync_comp(15, 58, &box, "Desync", render::fonts::watermark_font_small, combat::antiaim::desync);
+			static buttonComponent backwards_comp(15, 70, &box, "Backwards", render::fonts::watermark_font_small, combat::antiaim::backwards);
+			static buttonComponent jitter_comp(15, 82, &box, "Jitter", render::fonts::watermark_font_small, combat::antiaim::jitter);
 
-		static c_slider_component jitter_amount_comp(15, 94, &box, "Jitter Amount", render::fonts::watermark_font_small, combat::antiaim::jitter_amount, 1, 20);
-		static buttonComponent spin_comp(15, 122, &box, "Spinbot", render::fonts::watermark_font_small, combat::antiaim::spinbot);
-		static c_slider_component spinspeed_comp(15, 132, &box, "Spinspeed", render::fonts::watermark_font_small, combat::antiaim::spinspeed, 1, 20);
-		static c_slider_component yaw_comp(15, 156, &box, "yaw", render::fonts::watermark_font_small, combat::antiaim::yaw, -180, 180);
-		static c_slider_component pitch_comp(15, 180, &box, "pitch", render::fonts::watermark_font_small, combat::antiaim::pitch, -90, 90);
+			static c_slider_component jitter_amount_comp(15, 94, &box, "Jitter Amount", render::fonts::watermark_font_small, combat::antiaim::jitter_amount, 1, 20);
+			static buttonComponent spin_comp(15, 122, &box, "Spinbot", render::fonts::watermark_font_small, combat::antiaim::spinbot);
+			static c_slider_component spinspeed_comp(15, 132, &box, "Spinspeed", render::fonts::watermark_font_small, combat::antiaim::spinspeed, 1, 20);
+			static c_slider_component yaw_comp(15, 156, &box, "yaw", render::fonts::watermark_font_small, combat::antiaim::yaw, -180, 180);
+			static c_slider_component pitch_comp(15, 180, &box, "pitch", render::fonts::watermark_font_small, combat::antiaim::pitch, -90, 90);
 
-		box.draw();
-		for (comp* m_c : box.get_comps()) {
-			m_c->draw();
-		}
-		
-		static groupBox fakelagBox(20, 310, variables::menu::w / 2 - 20, 80, render::fonts::watermark_font_other, "fakelag"); 
-		static buttonComponent fakelag_enabled(15, 10, &fakelagBox, "enabled", render::fonts::watermark_font_small, combat::fakelag::isEnabled);
-		static c_slider_component fakelag_amount(15, 22, &fakelagBox, "Lag amount", render::fonts::watermark_font_small, combat::fakelag::amount, 2, 10);
-		fakelagBox.draw();
-		for (comp* m_c : fakelagBox.get_comps()) {
-			m_c->draw();
+			draw_box(box);
 		}
 
-		static groupBox ragebot_box(variables::menu::w / 2 + 10, 80, variables::menu::w / 2 - 30, 190, render::fonts::watermark_font_other, "ragebot");
+		{
+			static groupBox fakelagBox(20, 310, variables::menu::w / 2 - 20, 80, render::fonts::watermark_font_other, "fakelag");
+			static buttonComponent fakelag_enabled(15, 10, &fakelagBox, "enabled", render::fonts::watermark_font_small, combat::fakelag::isEnabled);
+			static c_slider_component fakelag_amount(15, 22, &fakelagBox, "Lag amount", render::fonts::watermark_font_small, combat::fakelag::amount, 2, 10);
+
+			draw_box(fakelagBox);
+		}
+
+		{
+			static groupBox ragebot_box(variables::menu::w / 2 + 10, 80, variables::menu::w / 2 - 30, 190, render::fonts::watermark_font_other, "ragebot");
 			//ragebot_box.draw();
-		static buttonComponent rb_enabled(15, 10, &ragebot_box, "Enabled", render::fonts::watermark_font_small, combat::ragebot::isEnabled);
-		static buttonComponent rb_auto_fire(15, 22, &ragebot_box, "Auto fire", render::fonts::watermark_font_small, combat::ragebot::auto_fire);
-		static buttonComponent rb_silent(15, 34, &ragebot_box, "Silent", render::fonts::watermark_font_small, combat::ragebot::silent);
-		static buttonComponent rb_quickstop(15, 46, &ragebot_box, "Quickstop", render::fonts::watermark_font_small, combat::ragebot::quickstop);
-		static buttonComponent rb_teammates(15, 58, &ragebot_box, "Teammates", render::fonts::watermark_font_small, combat::ragebot::teammates);
-		static c_slider_component rb_hitchance(15, 70, &ragebot_box, "Hitchance", render::fonts::watermark_font_small, combat::ragebot::hit_chance, 1, 100);
-		static c_slider_component rb_min_dmg(15, 94, &ragebot_box, "Minimum damage", render::fonts::watermark_font_small, combat::ragebot::min_dmg, 1, 100);
-		static buttonComponent rb_dynamic_hitbox(15, 125, &ragebot_box, "Dynamic hitbox targeting", render::fonts::watermark_font_small, combat::ragebot::dynamic_hitbox);
-		static buttonComponent rb_head(15, 137, &ragebot_box, "Head hitbox targeting", render::fonts::watermark_font_small, combat::ragebot::head);
-		static buttonComponent rb_pelvis(15, 149, &ragebot_box, "Pelvis hitbox targeting", render::fonts::watermark_font_small, combat::ragebot::pelvis);
+			static buttonComponent rb_enabled(15, 10, &ragebot_box, "Enabled", render::fonts::watermark_font_small, combat::ragebot::isEnabled);
+			static buttonComponent rb_auto_fire(15, 22, &ragebot_box, "Auto fire", render::fonts::watermark_font_small, combat::ragebot::auto_fire);
+			static buttonComponent rb_silent(15, 34, &ragebot_box, "Silent", render::fonts::watermark_font_small, combat::ragebot::silent);
+			static buttonComponent rb_quickstop(15, 46, &ragebot_box, "Quickstop", render::fonts::watermark_font_small, combat::ragebot::quickstop);
+			static buttonComponent rb_teammates(15, 58, &ragebot_box, "Teammates", render::fonts::watermark_font_small, combat::ragebot::teammates);
+			static c_slider_component rb_hitchance(15, 70, &ragebot_box, "Hitchance", render::fonts::watermark_font_small, combat::ragebot::hit_chance, 1, 100);
+			static c_slider_component rb_min_dmg(15, 94, &ragebot_box, "Minimum damage", render::fonts::watermark_font_small, combat::ragebot::min_dmg, 1, 100);
+			static buttonComponent rb_dynamic_hitbox(15, 125, &ragebot_box, "Dynamic hitbox targeting", render::fonts::watermark_font_small, combat::ragebot::dynamic_hitbox);
+			static buttonComponent rb_head(15, 137, &ragebot_box, "Head hitbox targeting", render::fonts::watermark_font_small, combat::ragebot::head);
+			static buttonComponent rb_pelvis(15, 149, &ragebot_box, "Pelvis hitbox targeting", render::fonts::watermark_font_small, combat::ragebot::pelvis);
 
-		static buttonComponent rb_arms(15, 161, &ragebot_box, "Arms hitbox targeting", render::fonts::watermark_font_small, combat::ragebot::arms);
-		static buttonComponent rb_legs(15, 173, &ragebot_box, "Legs hitbox targeting", render::fonts::watermark_font_small, combat::ragebot::legs);
-		ragebot_box.draw();
-		for (comp* m_c : ragebot_box.get_comps()) {
-			m_c->draw();
+			static buttonComponent rb_arms(15, 161, &ragebot_box, "Arms hitbox targeting", render::fonts::watermark_font_small, combat::ragebot::arms);
+			static buttonComponent rb_legs(15, 173, &ragebot_box, "Legs hitbox targeting", render::fonts::watermark_font_small, combat::ragebot::legs);
+			
+			draw_box(ragebot_box);
 		}
 		
 	}
@@ -93,29 +104,32 @@ void menu::render() {
 			//menu_framework::check_box(variables::menu::x + 120, variables::menu::y + 105, variables::menu::x + 275, render::fonts::watermark_font, "Glow", variables::visuals::glow);
 			//menu_framework::check_box(variables::menu::x + 120, variables::menu::y + 120, variables::menu::x + 275, render::fonts::watermark_font, "ColorWorld", variables::visuals::colorWorld);
 		//}
-
-		static groupBox ChamsBox(20, 80, variables::menu::w / 2 - 20, 220, render::fonts::watermark_font_other, "Chams");
+			static groupBox ChamsBox(20, 80, variables::menu::w / 2 - 20, 220, render::fonts::watermark_font_other, "Chams");
 			//ChamsBox.draw();
-		static buttonComponent chams_enabled(15, 10, &ChamsBox, "Enabled", render::fonts::watermark_font_small, Render::Chams::isEnabled);
-		static c_slider_component Material(15, 22, &ChamsBox, "Material", render::fonts::watermark_font_small, Render::Chams::material, 1, 7);
-		static buttonComponent Enemies(15, 58, &ChamsBox, "Enemies", render::fonts::watermark_font_small, Render::Chams::enemies);
-		static buttonComponent Teamates(15, 70, &ChamsBox, "Teammates", render::fonts::watermark_font_small, Render::Chams::teammates);
-		static buttonComponent Hands(15, 82, &ChamsBox, "Hands", render::fonts::watermark_font_small, Render::Chams::hands);
-		static c_color_picker team_color_invisible(15, 94, &ChamsBox, "Team Color Invisible", render::fonts::watermark_font_small, Render::Chams::team_color_invisible);
-		static c_color_picker team_color_visible(15, 112, &ChamsBox, "Team Color Visible", render::fonts::watermark_font_small, Render::Chams::team_color_visible);
-		
-		ChamsBox.draw();
-		for (comp* m_c : ChamsBox.get_comps()) {
-			m_c->draw();
+			static buttonComponent chams_enabled(15, 10, &ChamsBox, "Enabled", render::fonts::watermark_font_small, Render::Chams::isEnabled);
+			static c_slider_component Material(15, 22, &ChamsBox, "Material", render::fonts::watermark_font_small, Render::Chams::material, 1, 7);
+			static buttonComponent Enemies(15, 58, &ChamsBox, "Enemies", render::fonts::watermark_font_small, Render::Chams::enemies);
+			static buttonComponent Teamates(15, 70, &ChamsBox, "Teammates", render::fonts::watermark_font_small, Render::Chams::teammates);
+			static buttonComponent Hands(15, 82, &ChamsBox, "Hands", render::fonts::watermark_font_small, Render::Chams::hands);
+			static c_color_picker team_color_invisible(15, 94, &ChamsBox, "Team Color Invisible", render::fonts::watermark_font_small, Render::Chams::team_color_invisible);
+			static c_color_picker team_color_visible(15, 112, &ChamsBox, "Team Color Visible", render::fonts::watermark_font_small, Render::Chams::team_color_visible);
+
+			draw_box(ChamsBox);
+
+		{
+			static groupBox esp_box(variables::menu::w / 2 + 10, 80, variables::menu::w / 2 - 30, 190, render::fonts::watermark_font_other, "player esp");
+			static buttonComponent skeleton_esp(15, 10, &esp_box, "Skeleton Esp", render::fonts::watermark_font_small, g_player_esp.is_enabled);
+
+			draw_box(esp_box);
 		}
 
-		static groupBox esp_box(variables::menu::w / 2 + 10, 80, variables::menu::w / 2 - 30, 190, render::fonts::watermark_font_other, "player esp");
-		static buttonComponent skeleton_esp(15, 10, &esp_box, "Skeleton Esp", render::fonts::watermark_font_small, g_player_esp.is_enabled);
-		esp_box.draw();
-		for (comp* m_c : esp_box.get_comps()) {
-			m_c->draw();
-		}
+		{
+			static groupBox visual_box(20, 80 + ChamsBox.getHeight() + 10, variables::menu::w / 2 - 20, 20, render::fonts::watermark_font_other, "visuals");
 
+			static buttonComponent remove_visual_recoil(15, 10, &visual_box, "remove visual recoil", render::fonts::watermark_font_small, c_visuals::get().visual_recoil);
+
+			draw_box(visual_box);
+		}
 		/*
 		menu_framework::group_box(variables::menu::x + 5, variables::menu::y + 35, variables::menu::w - 10, variables::menu::h - 40, render::fonts::watermark_font, "Visuals", false); {
 			//menu_framework::check_box(variables::menu::x + 7, variables::menu::y + 35, variables::menu::x + 275, render::fonts::watermark_font_other, "Chams", Render::Chams::isEnabled);

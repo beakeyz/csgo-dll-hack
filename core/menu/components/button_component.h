@@ -8,6 +8,7 @@ class comp {
 
 public:
 	virtual void draw() {}
+	virtual double get_standard_height() { return 12; }
 };
 
 class buttonComponent : public comp {
@@ -120,6 +121,10 @@ public:
 		return this->y;
 	}
 
+	double get_standard_height() {
+		return this->indexed_height;
+	}
+
 protected:
 	double x;
 	double y;
@@ -222,6 +227,10 @@ public:
 		return this->y;
 	}
 
+	double get_standard_height() {
+		return this->indexed_height;
+	}
+
 protected:
 	double x;
 	double y;
@@ -240,7 +249,7 @@ protected:
 
 public:
 	int index;
-	const int indexed_height = 28;
+	const int indexed_height = 25;
 };
 
 class c_color_picker : public comp {
@@ -285,6 +294,11 @@ public:
 		}
 	}
 
+	double get_standard_height() {
+		return this->indexed_height;
+	}
+
+
 protected:
 	double x;
 	double y;
@@ -298,6 +312,7 @@ protected:
 
 public:
 	bool isExtended = false;
+	const int indexed_height = 21;
 };
 
 

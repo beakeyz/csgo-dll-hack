@@ -42,7 +42,7 @@ public:
 
 		//groupbox label
 		render::text(x + 6, y - 8, font, string, false, color::white());
-
+	
 	}
 
 	std::int32_t getX() {
@@ -59,6 +59,10 @@ public:
 
 	std::int32_t getHeight() {
 		return this->h;
+	}
+
+	void set_height(std::int32_t height) {
+		this->h = height;
 	}
 
 	std::set<comp*> get_comps() {

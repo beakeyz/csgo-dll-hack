@@ -6,6 +6,7 @@
 #include "../features/hacks/fakelag/fakelag.h"
 #include "../features/hacks/ragebot/ragebot.h"
 #include "../features/hacks/render/player_esp.h"
+#include "../features/hacks/render/visuals.h"
 
 /*
 make sure unused hooks are not used!
@@ -20,6 +21,12 @@ hooks::paint_traverse::fn paint_traverse_original = nullptr;
 hooks::draw_model_execute::fn draw_model_execute_original = nullptr;
 hooks::frame_stage_notify::fn frame_stage_notify_original = nullptr;
 hooks::SceneEnd::fn SceneEnd_original = nullptr;
+
+vec3_t flb_aim_punch;
+vec3_t flb_view_punch;
+
+vec3_t* aim_punch;
+vec3_t* view_punch;
 
 bool hooks::initialize() {
 	const auto create_move_target = reinterpret_cast<void*>(get_virtual(interfaces::clientmode, 24));
@@ -74,6 +81,27 @@ void hooks::release() {
 
 void __fastcall hooks::frame_stage_notify::hook(void* _this, int edx, FrameStage stage) {
 
+	aim_punch = nullptr;
+	view_punch = nullptr;
+
+	flb_aim_punch = { 0.0f, 0.0f, 0.0f };
+	flb_view_punch = { 0.0f, 0.0f, 0.0f };
+
+	if (stage == FrameStage::RENDER_START)
+	{
+		if (c_visuals::get().visual_recoil && interfaces::engine->is_in_game())
+		{
+			aim_punch = &csgo::local_player->aim_punch_angle();
+			view_punch = &csgo::local_player->punch_angle();
+
+			flb_aim_punch = *aim_punch;
+			flb_view_punch = *view_punch;
+
+			(*aim_punch) = {0.0f, 0.0f, 0.0f };
+			(*view_punch) = { 0.0f, 0.0f, 0.0f };
+		}
+	}
+
 	if (stage == FrameStage::NET_UPDATE_POSTDATAUPDATE_START)
 	{
 
@@ -82,6 +110,12 @@ void __fastcall hooks::frame_stage_notify::hook(void* _this, int edx, FrameStage
 	}
 
 	frame_stage_notify_original(interfaces::client, edx, stage);
+
+	if (csgo::local_player && c_visuals::get().visual_recoil && csgo::local_player->is_alive() && aim_punch && view_punch)
+	{
+		*aim_punch = flb_aim_punch;
+		*view_punch = flb_view_punch;
+	}
 }
 
 void __fastcall hooks::draw_model_execute::hook(void* _this, int edx, void* ctx, void* state, model_render_info_t& info, matrix3x4_t* customBoneToWorld) {

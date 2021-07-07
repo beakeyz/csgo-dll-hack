@@ -21,6 +21,7 @@ void c_fakelag::think(c_usercmd* cmd, bool& sendPacket)
 	if (combat::fakelag::isEnabled) {
 		if (!_was_enabled) {
 			packet_timer.reset();
+			
 			//console::log("reset fakelagTimer!");
 			_was_enabled = true;
 		}
@@ -34,12 +35,11 @@ void c_fakelag::think(c_usercmd* cmd, bool& sendPacket)
 		//	break;
 		//}
 		//}
-
 		
-		if (packet_timer.has_time_elapsed(1500, false)) {
-			sendPacket = true;
-		}
-		else if (packet_timer.has_time_elapsed(2000, true)) {
+		sendPacket = true;
+
+		if (packet_timer.has_time_elapsed(1500, true)) {
+			console::log("yoink");
 			sendPacket = false;
 		}
 		

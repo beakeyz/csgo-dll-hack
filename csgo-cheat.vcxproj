@@ -97,6 +97,7 @@
     <ClCompile Include="core\features\hacks\fakelag\fakelag.cpp" />
     <ClCompile Include="core\features\hacks\misc\engine_prediction.cpp" />
     <ClCompile Include="core\features\hacks\misc\misc.cpp" />
+    <ClCompile Include="core\features\hacks\render\visuals.cpp" />
     <ClCompile Include="core\features\module.cpp" />
     <ClCompile Include="core\features\hacks\movement\Auto Strafe.cpp" />
     <ClCompile Include="core\features\hacks\movement\Bhop.cpp" />
@@ -134,6 +135,7 @@
     <ClInclude Include="core\features\features.hpp" />
     <ClInclude Include="core\features\hacks\misc\engine_prediction.hpp" />
     <ClInclude Include="core\features\hacks\render\player_esp.h" />
+    <ClInclude Include="core\features\hacks\render\visuals.h" />
     <ClInclude Include="core\features\module.h" />
     <ClInclude Include="core\features\hacks\ragebot\ragebot.h" />
     <ClInclude Include="core\features\hacks\render\Chams.h" />
