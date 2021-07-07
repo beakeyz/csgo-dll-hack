@@ -9,6 +9,19 @@ class c_player_esp {
 
 public:
 
+	bool is_enabled = false;
+	color teammate_color = {
+		0,
+		255,
+		0,
+		255
+	};
+	color enemy_color = {
+		255,
+		0,
+		0,
+		255
+	};
 	void on_draw();
 };
 

@@ -23,5 +23,5 @@ namespace math {
 	vec3_t calc_angle(vec3_t v1, vec3_t v2);
 	void angle_to_vector(const vec3_t& angles, vec3_t& forward);
 	float clamp(float in, float low, float high);
-	
+	void vector_transform(const vec3_t& in1, const matrix_t& in2, vec3_t& out);
 };

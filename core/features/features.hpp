@@ -3,15 +3,6 @@
 #include "./../menu/components/button_component.h"
 #include "./../menu/utils/timer.h"
 
-class feature {
-
-public:
-	bool isEnabled = false;
-	std::vector<buttonComponent> bool_settings = {};
-	std::vector<c_slider_component> int_settings = {};
-	std::vector<c_mode_component> mode_settings = {};
-};
-
 namespace Category
 {
 	constexpr auto COMBAT = -4;
@@ -30,7 +21,7 @@ namespace Render {
 		inline bool isEnabled = false;
 		inline color team_color_visible = {0, 255, 0};
 		inline color enemy_color_visible = {255, 0, 0};
-		inline color team_color_invisible = {150, 255, 0};
+		inline color team_color_invisible = {0, 255, 255};
 		inline color enemy_color_invisible = {255, 100, 200};
 		inline color hands_color = {255, 255, 255};
 

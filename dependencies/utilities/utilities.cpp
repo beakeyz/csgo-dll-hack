@@ -78,8 +78,11 @@ bool utilities::get_bbox(entity_t* e, Box& b, bool player_esp)
 
 	vec3_t pointsTransformed[8];
 
-	for (auto i = 0; i < 8; i++)
-		math::transform_vector(points[i], m_rgflCoordinateFrame, pointsTransformed[i]);
+	for (auto i = 0; i < 8; i++) {
+		math::vector_transform(points[i], m_rgflCoordinateFrame, pointsTransformed[i]);
+		
+	}
+
 
 	vec3_t pos = e->origin();
 	vec3_t flb;

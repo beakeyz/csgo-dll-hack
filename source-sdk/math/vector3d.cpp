@@ -60,6 +60,11 @@ vec3_t vec3_t::normalized(void) {
 	return res;
 }
 
+float vec3_t::Dot(const vec3_t& vOther) const
+{
+	return (x * vOther.x + y * vOther.y + z * vOther.z);
+}
+
 float vec3_t::length(void) {
 	float root = 0.0f, sqsr = this->length_sqr();
 

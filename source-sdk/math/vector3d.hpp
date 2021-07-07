@@ -124,6 +124,7 @@ public:
 	vec3_t clamped();
 	vec3_t normalized();
 	vec3_t calculateRelativeAngle(const vec3_t& source, const vec3_t& destination, const vec3_t& viewAngles) noexcept;
+	float Dot(const vec3_t &vOther) const;
 	float distance_to(const vec3_t& other);
 	void normalize();
 	float length();

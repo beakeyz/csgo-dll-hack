@@ -143,6 +143,11 @@ void math::transform_vector(vec3_t & a, matrix_t & b, vec3_t & out) {
 	out.z = a.dot(b.mat_val[2]) + b.mat_val[2][3];
 }
 
+void math::vector_transform(const vec3_t& in1, const matrix_t& in2, vec3_t& out)
+{
+	out = vec3_t((in1.Dot(vec3_t(in2[0][0], in2[0][1], in2[0][2]))) + in2[0][3], (in1.Dot(vec3_t(in2[1][0], in2[1][1], in2[1][2]))) + in2[1][3], in1.Dot(vec3_t(in2[2][0], in2[2][1], in2[2][2])) + in2[2][3]);
+}
+
 void math::vector_angles(const vec3_t & forward, vec3_t & angles) {
 	if (forward.y == 0.0f && forward.x == 0.0f) {
 		angles.x = (forward.z > 0.0f) ? 270.0f : 90.0f;
