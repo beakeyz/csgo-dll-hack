@@ -186,6 +186,35 @@ enum item_definition_indexes {
 
 class entity_t {
 public:
+	void set_m_bUseCustomBloomScale(byte value)
+	{
+		*reinterpret_cast<byte*>(uintptr_t(this) + (int)netvar_manager::get_net_var(fnv::hash("CEnvTonemapController"), fnv::hash("m_bUseCustomBloomScale"))) = value;
+	}
+
+	void set_m_flCustomBloomScale(float value)
+	{
+		*reinterpret_cast<float*>(uintptr_t(this) + (int)netvar_manager::get_net_var(fnv::hash("CEnvTonemapController"), fnv::hash("m_flCustomBloomScale"))) = value;
+	}
+
+	void set_m_bUseCustomAutoExposureMin(byte value)
+	{
+		*reinterpret_cast<byte*>(uintptr_t(this) + (int)netvar_manager::get_net_var(fnv::hash("CEnvTonemapController"), fnv::hash("m_bUseCustomAutoExposureMin"))) = value;
+	}
+
+	void set_m_flCustomAutoExposureMin(float value)
+	{
+		*reinterpret_cast<float*>(uintptr_t(this) + (int)netvar_manager::get_net_var(fnv::hash("CEnvTonemapController"), fnv::hash("m_flCustomAutoExposureMin"))) = value;
+	}
+
+	void set_m_bUseCustomAutoExposureMax(byte value)
+	{
+		*reinterpret_cast<byte*>(uintptr_t(this) + (int)netvar_manager::get_net_var(fnv::hash("CEnvTonemapController"), fnv::hash("m_bUseCustomAutoExposureMax"))) = value;
+	}
+
+	void set_m_flCustomAutoExposureMax(float value)
+	{
+		*reinterpret_cast<float*>(uintptr_t(this) + (int)netvar_manager::get_net_var(fnv::hash("CEnvTonemapController"), fnv::hash("m_flCustomAutoExposureMax"))) = value;
+	}
 
 	matrix_t& m_rgflCoordinateFrame()
 	{

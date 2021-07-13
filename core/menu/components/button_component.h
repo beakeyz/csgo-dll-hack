@@ -3,6 +3,8 @@
 #include "../menu.hpp"
 #include "../../features/features.hpp"
 #include "group_box.h"
+#include "./../../features/setting/setting.h"
+
 
 class comp {
 

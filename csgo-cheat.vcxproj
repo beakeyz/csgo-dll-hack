@@ -140,6 +140,9 @@
     <ClInclude Include="core\features\hacks\ragebot\ragebot.h" />
     <ClInclude Include="core\features\hacks\render\Chams.h" />
     <ClInclude Include="core\features\setting\setting.h" />
+    <ClInclude Include="core\features\setting\settings\bool_setting.h" />
+    <ClInclude Include="core\features\setting\settings\mode_setting.h" />
+    <ClInclude Include="core\features\setting\settings\num_setting.h" />
     <ClInclude Include="core\hooks\hooks.hpp" />
     <ClInclude Include="core\menu\components\button_component.h" />
     <ClInclude Include="core\menu\components\group_box.h" />

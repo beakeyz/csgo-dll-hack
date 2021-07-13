@@ -408,7 +408,7 @@ bool c_ragebot::is_valid(player_t* player) {
 	if (!player || player->dormant() || !player->is_player() || player == csgo::local_player)
 		return false;
 
-	if (!player->is_alive() || player->health() == 0)
+	if (!player->is_alive() || player->health() == 0 || player->has_gun_game_immunity())
 		return false;
 
 	if (player->team() == csgo::local_player->team() && !combat::ragebot::teammates)

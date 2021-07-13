@@ -89,6 +89,8 @@ void __fastcall hooks::frame_stage_notify::hook(void* _this, int edx, FrameStage
 
 	if (stage == FrameStage::RENDER_START)
 	{
+		c_visuals::get().remove_smoke();
+
 		if (c_visuals::get().visual_recoil && interfaces::engine->is_in_game())
 		{
 			aim_punch = &csgo::local_player->aim_punch_angle();
@@ -97,14 +99,18 @@ void __fastcall hooks::frame_stage_notify::hook(void* _this, int edx, FrameStage
 			flb_aim_punch = *aim_punch;
 			flb_view_punch = *view_punch;
 
-			(*aim_punch) = {0.0f, 0.0f, 0.0f };
+			(*aim_punch) = { 0.0f, 0.0f, 0.0f };
 			(*view_punch) = { 0.0f, 0.0f, 0.0f };
 		}
 	}
 
+	if (stage == FrameStage::RENDER_END)
+	{
+		c_visuals::get().full_bright();
+	}
+
 	if (stage == FrameStage::NET_UPDATE_POSTDATAUPDATE_START)
 	{
-
 		combat::resolver::resolver();
 		//visuals::color_world();
 	}

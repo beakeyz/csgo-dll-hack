@@ -77,6 +77,7 @@ void menu::render() {
 
 		{
 			static groupBox ragebot_box(variables::menu::w / 2 + 10, 80, variables::menu::w / 2 - 30, 190, render::fonts::watermark_font_other, "ragebot");
+		
 			//ragebot_box.draw();
 			static buttonComponent rb_enabled(15, 10, &ragebot_box, "Enabled", render::fonts::watermark_font_small, combat::ragebot::isEnabled);
 			static buttonComponent rb_auto_fire(15, 22, &ragebot_box, "Auto fire", render::fonts::watermark_font_small, combat::ragebot::auto_fire);
@@ -127,6 +128,10 @@ void menu::render() {
 			static groupBox visual_box(20, 80 + ChamsBox.getHeight() + 10, variables::menu::w / 2 - 20, 20, render::fonts::watermark_font_other, "visuals");
 
 			static buttonComponent remove_visual_recoil(15, 10, &visual_box, "remove visual recoil", render::fonts::watermark_font_small, c_visuals::get().visual_recoil);
+			static buttonComponent full_bright(15, 22, &visual_box, "fullbright", render::fonts::watermark_font_small, c_visuals::get().m_full_bright);
+
+			static buttonComponent edit_smoke(15, 34, &visual_box, "edit smoke", render::fonts::watermark_font_small, c_visuals::get().m_edit_smoke);
+			static buttonComponent smoke_wire(15, 46, &visual_box, "smoke wireframe", render::fonts::watermark_font_small, c_visuals::get().smoke_wireframe);
 
 			draw_box(visual_box);
 		}

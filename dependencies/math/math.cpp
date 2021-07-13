@@ -32,6 +32,24 @@ float math::normalize_angle(float angle) {
 	return angle;
 }
 
+float math::angle_difference(float destAngle, float srcAngle)
+{
+	float delta;
+
+	delta = fmodf(destAngle - srcAngle, 360.0f);
+	if (destAngle > srcAngle)
+	{
+		if (delta >= 180)
+			delta -= 360;
+	}
+	else
+	{
+		if (delta <= -180)
+			delta += 360;
+	}
+	return delta;
+}
+
 //aimtux
 void math::correct_movement(vec3_t old_angles, c_usercmd* cmd, float old_forwardmove, float old_sidemove) {
 	float delta_view;
@@ -146,6 +164,27 @@ void math::transform_vector(vec3_t & a, matrix_t & b, vec3_t & out) {
 void math::vector_transform(const vec3_t& in1, const matrix_t& in2, vec3_t& out)
 {
 	out = vec3_t((in1.Dot(vec3_t(in2[0][0], in2[0][1], in2[0][2]))) + in2[0][3], (in1.Dot(vec3_t(in2[1][0], in2[1][1], in2[1][2]))) + in2[1][3], in1.Dot(vec3_t(in2[2][0], in2[2][1], in2[2][2])) + in2[2][3]);
+}
+
+float math::normalize_yaw(float f) {
+	while (f < -180.0f)
+		f += 360.0f;
+
+	while (f > 180.0f)
+		f -= 360.0f;
+
+	return f;
+}
+
+float math::normalize_pitch(float pitch)
+{
+	while (pitch > 89.0f)
+		pitch -= 180.0f;
+
+	while (pitch < -89.0f)
+		pitch += 180.0f;
+
+	return pitch;
 }
 
 void math::vector_angles(const vec3_t & forward, vec3_t & angles) {

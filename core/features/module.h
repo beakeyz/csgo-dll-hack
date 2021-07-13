@@ -3,32 +3,28 @@
 #include <iostream>
 #include "./setting/setting.h"
 #include "features.hpp"
-#include "./../../core/features/hacks/ragebot/ragebot.h"
-
 
 class c_module {
 
 public:
-	c_module(const char* m_name, int m_key, std::vector<c_setting> m_settings) {
+	c_module(const char* m_name, std::vector<c_setting> m_settings) {
 		this->m_name = m_name;
-		this->m_key_bind = m_key;
+		//this->m_key_bind = m_key;
 		this->m_settings = m_settings;
 	}
+
+	c_module() {}
 
 	bool is_enabled();
 	void set_enabled(bool m_enabled);
 
 	const char* get_name();
 
-	int get_key();
-	void set_key(int m_key);
-
 	std::vector<c_setting> get_settings();
 
 protected:
 	bool m_is_enabled = false;
 	const char* m_name;
-	int m_key_bind;
 	std::vector<c_setting> m_settings;
 
 };
@@ -44,9 +40,9 @@ public:
 
 	c_module* get_module_by_name(const char* m_name);
 
-	std::vector<c_module> get_modules();
+	std::set<c_module*> get_modules();
 
 public:
 
-	std::vector<c_module> m_modules;
+	std::set<c_module*> m_modules;
 };
