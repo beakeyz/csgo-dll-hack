@@ -16,4 +16,8 @@ public:
 		static T inst{};
 		return inst;
 	}
+	static T* get_ptr() {
+		static T inst{};
+		return &inst;
+	}
 };

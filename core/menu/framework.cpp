@@ -5,6 +5,7 @@
 POINT cursor;
 POINT cursor_corrected;
 
+
 void menu_framework::group_box(std::int32_t x, std::int32_t y, std::int32_t w, std::int32_t h, unsigned long font, const std::string string, bool show_label) {
 	//groupbox background
 	render::draw_filled_rect(x, y, w, h, color(25, 25, 25, 255));
@@ -25,11 +26,11 @@ void menu_framework::tab(std::int32_t x, std::int32_t y, std::int32_t w, std::in
 
 	//tab background
 	//render::draw_filled_rect(x, y + h, w, 1, tab == count ? color(variables::menu::r, variables::menu::g, variables::menu::b, 255) : color(25, 25, 25, 255));
-	if (menu::current_tab == count) {
-		render::draw_filled_rect(x - 1, y - 1, w + 2, h + 10, color(255, 255, 255, 255));
+	//if (menu::current_tab == count) {
+	//	render::draw_filled_rect(x - 1, y - 1, w + 2, h + 10, color(255, 255, 255, 255));
 
-	}
-	render::draw_filled_rect(x, y, w, (menu::current_tab == count ? h + 10 : h), color(45, 45, 45, 255));
+	//}
+	//render::draw_filled_rect(x, y, w, (menu::current_tab == count ? h + 10 : h), color(45, 45, 45, 255));
 	
 	//render::draw_rect(x, y, w, h, color(75, 75, 75, 245));
 

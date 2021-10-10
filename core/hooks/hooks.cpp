@@ -27,6 +27,8 @@ vec3_t flb_view_punch;
 
 vec3_t* aim_punch;
 vec3_t* view_punch;
+bool menu_is_initialized;
+
 
 bool hooks::initialize() {
 	const auto create_move_target = reinterpret_cast<void*>(get_virtual(interfaces::clientmode, 24));
@@ -66,6 +68,8 @@ bool hooks::initialize() {
 
 	console::log("[setup] hooks initialized!\n");
 	
+	menu_is_initialized = false;
+
 	return true;
 
 }
@@ -77,6 +81,10 @@ void hooks::release() {
 	MH_Uninitialize();
 
 	MH_DisableHook(MH_ALL_HOOKS);
+
+	
+
+	menu_is_initialized = false;
 }
 
 void __fastcall hooks::frame_stage_notify::hook(void* _this, int edx, FrameStage stage) {
@@ -235,6 +243,14 @@ void __stdcall hooks::paint_traverse::hook(unsigned int panel, bool force_repain
 	switch (panel_to_draw) {
 	case fnv::hash("MatSystemTopPanel"):
 
+		
+		if (menu_is_initialized) {
+			
+			menu_is_initialized = true;
+		}
+		
+		//all the component go out of scope here, so they might get reverted to nullptrs
+
 		render::draw_filled_rect(6, 6, render::get_text_size(render::fonts::watermark_font, "BeakonCS - V2 [beakey]").x + 6, 16, color::black(205));
 
 		render::text(10, 5, render::fonts::watermark_font, "BeakonCS - V2 [beakey]", false, color::white(255));
@@ -242,15 +258,17 @@ void __stdcall hooks::paint_traverse::hook(unsigned int panel, bool force_repain
 		//visuals::snap_lines();
 		g_player_esp.on_draw();
 
-		menu::toggle();
+		//menu::toggle();
+		c_menu::get_ptr()->toggle();
 
-		menu::render();
+		c_menu::get_ptr()->render();
+		//menu::render();
 
 		break;
 
 	case fnv::hash("FocusOverlayPanel"):
-		interfaces::panel->set_keyboard_input_enabled(panel, variables::menu::opened);
-		interfaces::panel->set_mouse_input_enabled(panel, variables::menu::opened);
+		interfaces::panel->set_keyboard_input_enabled(panel, c_menu::get_ptr()->is_open);
+		interfaces::panel->set_mouse_input_enabled(panel, c_menu::get_ptr()->is_open);
 		break;
 	}
 

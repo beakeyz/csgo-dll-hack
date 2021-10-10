@@ -1,6 +1,5 @@
 #pragma once
 #include "../../dependencies/utilities/csgo.hpp"
-#include "./../menu/components/button_component.h"
 #include "./../menu/utils/timer.h"
 
 namespace Category

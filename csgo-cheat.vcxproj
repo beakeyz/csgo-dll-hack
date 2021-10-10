@@ -107,9 +107,13 @@
     <ClCompile Include="core\features\hacks\render\Glow.cpp" />
     <ClCompile Include="core\features\setting\setting.cpp" />
     <ClCompile Include="core\hooks\hooks.cpp" />
+    <ClCompile Include="core\menu\components\button_component.cpp" />
+    <ClCompile Include="core\menu\components\category_btn.cpp" />
+    <ClCompile Include="core\menu\components\groupBox.cpp" />
     <ClCompile Include="core\menu\framework.cpp" />
     <ClCompile Include="core\menu\menu.cpp" />
     <ClCompile Include="core\menu\utils\animation.cpp" />
+    <ClCompile Include="core\menu\utils\gui_utils.cpp" />
     <ClCompile Include="core\menu\utils\timer.cpp" />
     <ClCompile Include="dependencies\minhook\buffer.c" />
     <ClCompile Include="dependencies\minhook\hde\hde32.c" />
@@ -133,6 +137,7 @@
     <ClInclude Include="core\features\hacks\combat\Resolver.h" />
     <ClInclude Include="core\features\hacks\fakelag\fakelag.h" />
     <ClInclude Include="core\features\features.hpp" />
+    <ClInclude Include="core\features\hacks\features.h" />
     <ClInclude Include="core\features\hacks\misc\engine_prediction.hpp" />
     <ClInclude Include="core\features\hacks\render\player_esp.h" />
     <ClInclude Include="core\features\hacks\render\visuals.h" />
@@ -145,10 +150,13 @@
     <ClInclude Include="core\features\setting\settings\num_setting.h" />
     <ClInclude Include="core\hooks\hooks.hpp" />
     <ClInclude Include="core\menu\components\button_component.h" />
+    <ClInclude Include="core\menu\components\category_btn.h" />
+    <ClInclude Include="core\menu\components\comperators\comp_comperator.h" />
     <ClInclude Include="core\menu\components\group_box.h" />
     <ClInclude Include="core\menu\framework.hpp" />
     <ClInclude Include="core\menu\menu.hpp" />
     <ClInclude Include="core\menu\utils\animation.h" />
+    <ClInclude Include="core\menu\utils\gui_utils.h" />
     <ClInclude Include="core\menu\utils\timer.h" />
     <ClInclude Include="core\menu\variables.hpp" />
     <ClInclude Include="dependencies\interfaces\c_physics_surface.h" />

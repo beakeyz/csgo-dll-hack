@@ -1,49 +1,31 @@
 #pragma once
-#include "../menu.hpp"
 #include "../../features/features.hpp"
 #include "button_component.h"
 
 class comp;
+class buttonComponent;
+class c_slider_component;
+class c_color_picker;
+
+enum e_boxtype {
+	RAGEBOT,
+	CHAMS,
+	VISUALS,
+	FAKELAG,
+	COMBAT,
+	PLAYER_ESP
+};
 
 class groupBox {
 
 public:
-	groupBox(std::int32_t x, std::int32_t y, std::int32_t w, std::int32_t h, unsigned long font, std::string string) {
-		this->x = x;
-		this->x2 = x;
-
-		this->y = y;
-		this->y2 = y;
-
-		this->w = w;
-		this->h = h;
-		this->font = font;
-		this->string = string;
-
-		this->m_comps = {};
-
-	}
+	groupBox(std::int32_t x, std::int32_t y, std::int32_t w, std::int32_t h, unsigned long font, std::string string, e_boxtype type);
 
 	~groupBox() {
 		this->m_comps.clear();
 	}
 
-	void draw() {
-
-		this->x = variables::menu::x + this->x2;
-		this->y = variables::menu::y + this->y2;
-
-		render::draw_filled_rect(x, y, w, h, color(25, 25, 25, 255));
-
-		//groupbox outline
-		render::draw_rect(x, y, w, h, color(45, 45, 45, 255));
-
-		render::draw_rect(x - 1, y - 1, w + 2, h + 2, color::black(150));
-
-		//groupbox label
-		render::text(x + 6, y - 8, font, string, false, color::white());
-	
-	}
+	void draw();
 
 	std::int32_t getX() {
 		return this->x;
@@ -65,9 +47,7 @@ public:
 		this->h = height;
 	}
 
-	std::set<comp*> get_comps() {
-		return this->m_comps;
-	}
+	std::unordered_map<int, comp*> get_comps();
 
 protected:
 	std::int32_t x;
@@ -80,5 +60,6 @@ protected:
 	std::string string;
 
 public:
-	std::set<comp*> m_comps = {};
+	e_boxtype m_boxtype;
+	std::unordered_map<int, comp*> m_comps = {};
 };

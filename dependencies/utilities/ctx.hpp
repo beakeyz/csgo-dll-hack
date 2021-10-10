@@ -2,10 +2,15 @@
 #include "utilities.hpp"
 #include "../utilities/csgo.hpp"
 #include <psapi.h>
+#include "./../../core/menu/components/button_component.h"
+#include "./../../core/menu/components/group_box.h"
+#include "./../../core/menu/components/category_btn.h"
 
 class player_t;
 class weapon_t;
 class CUserCmd;
+
+
 
 class ctx_t
 {
@@ -15,6 +20,8 @@ public:
 	{
 		vec3_t wish_angle = { 0,0,0 };
 		bool should_remove_smoke = false;
+
+
 	} globals;
 
 };

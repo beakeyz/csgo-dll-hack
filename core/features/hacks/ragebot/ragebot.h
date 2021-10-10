@@ -4,10 +4,8 @@
 #include "../../module.h"
 #include "../../setting/settings/bool_setting.h"
 
-class c_module;
-class c_bool_setting;
 
-class c_ragebot : public c_module{
+class c_ragebot{
 
 	struct rage_t {
 		rage_t(player_t* player, int i, int damage, vec3_t point, float dist) {
@@ -38,16 +36,6 @@ class c_ragebot : public c_module{
 	bool hitchance(vec3_t& angle, player_t* ent);
 
 public:
-	c_ragebot() {
-		this->m_name = "ragebot";
-
-		c_bool_setting set("Enabled", combat::ragebot::isEnabled);
-
-		this->m_settings = {
-			set
-		};
-	}
-
 
 	bool lol;
 	vec3_t unpredicted_vel;
