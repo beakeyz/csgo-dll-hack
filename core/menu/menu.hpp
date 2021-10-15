@@ -15,6 +15,11 @@ public:
 	void mouseClicked(int mouseX, int mouseY, int btn);
 	void mouseReleased();
 
+	void renderTextInMenu(std::int32_t x, std::int32_t y, unsigned long font, std::string text, bool centered, color color);
+	void renderRectInMenu(std::int32_t x, std::int32_t y, std::int32_t width, std::int32_t height, color color);
+	void renderFilledRectInMenu(std::int32_t x, std::int32_t y, std::int32_t width, std::int32_t height, color color);
+	void renderCircleInMenu(std::int32_t x, std::int32_t y, std::int32_t radius, std::int32_t segments, color color);
+
 	int current_tab{ 0 };
 	bool is_open = false;
 	int x = 840, y = 140;
@@ -26,10 +31,10 @@ public:
 	int x2;
 	int y2;
 
-	c_category_btn combat_btn = { current_tab, 0, "Combat" };
-	c_category_btn visuals_btn = { current_tab, 1, "Visuals" };
-	c_category_btn movement_btn = { current_tab, 2, "Movement" };
-	c_category_btn misc_btn = { current_tab, 3, "Misc" };
+	c_category_btn combat_btn = { current_tab, 0, "Combat", 120, 35, 15, 35 };
+	c_category_btn visuals_btn = { current_tab, 1, "Visuals", 240, 35, 15, 35 };
+	c_category_btn movement_btn = { current_tab, 2, "Movement", 360, 35, 15, 35 };
+	c_category_btn misc_btn = { current_tab, 3, "Misc", 480, 35, 15, 35 };
 	std::set<c_category_btn*> categories = { &combat_btn, &visuals_btn, &movement_btn, &misc_btn };
 };
 

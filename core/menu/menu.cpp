@@ -179,7 +179,9 @@ void c_menu::render() {
 	else if (!GetAsyncKeyState(VK_LBUTTON) && is_mouse) {
 		this->mouseReleased();
 		is_mouse = false;
-		render::text(x + 10, y + 16, render::fonts::watermark_font, "dfadfa", false, color::white());
+
+		//DEBUG
+		//render::text(x + 10, y + 16, render::fonts::watermark_font, "dfadfa", false, color::white());
 	}
 
 	if (dragging) {
@@ -203,7 +205,6 @@ void c_menu::toggle() {
 	{
 		this->is_open = !this->is_open;
 	}
-
 }
 
 void c_menu::mouseClicked(int mouseX, int mouseY, int btn) {
@@ -212,12 +213,37 @@ void c_menu::mouseClicked(int mouseX, int mouseY, int btn) {
 
 		clicking = true;
 
-		if (cursor.x > x && cursor.x < x + w && cursor.y > y && cursor.y < y + 70) {
+		if (mouseX > x && mouseX < x + w && mouseY > y && mouseY < y + 70) {
 			dragging = true;
-			x2 = cursor.x - x;
-			y2 = cursor.y - y;
+			x2 = mouseX - x;
+			y2 = mouseY - y;
+		}
+
+		for (c_category_btn* c_btn : this->categories) {
+
+			if (mouseX > this->x + c_btn->x && mouseX < this->x + c_btn->x + c_btn->w && mouseY > this->y + c_btn->y && mouseY < this->y + c_btn->y + c_btn->h) {
+				c_btn->mouseClicked(mouseX, mouseY, btn);
+				break;
+			}
 		}
 	}
+}
+
+void c_menu::renderTextInMenu(std::int32_t x, std::int32_t y, unsigned long font, std::string text, bool centered, color color)
+{
+	render::text(this->x + x, this->y + y, font, text, centered, color);
+}
+void c_menu::renderRectInMenu(std::int32_t x, std::int32_t y, std::int32_t width, std::int32_t height, color color)
+{
+	render::draw_rect(this->x + x, this->y + y, width, height, color);
+}
+void c_menu::renderFilledRectInMenu(std::int32_t x, std::int32_t y, std::int32_t width, std::int32_t height, color color)
+{
+	render::draw_filled_rect(this->x + x, this->y + y, width, height, color);
+}
+void c_menu::renderCircleInMenu(std::int32_t x, std::int32_t y, std::int32_t radius, std::int32_t segments, color color)
+{
+	render::draw_circle(this->x + x, this->y + y, radius, segments, color);
 }
 
 void c_menu::mouseReleased() {

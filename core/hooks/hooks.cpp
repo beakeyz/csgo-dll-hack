@@ -27,8 +27,6 @@ vec3_t flb_view_punch;
 
 vec3_t* aim_punch;
 vec3_t* view_punch;
-bool menu_is_initialized;
-
 
 bool hooks::initialize() {
 	const auto create_move_target = reinterpret_cast<void*>(get_virtual(interfaces::clientmode, 24));
@@ -68,7 +66,6 @@ bool hooks::initialize() {
 
 	console::log("[setup] hooks initialized!\n");
 	
-	menu_is_initialized = false;
 
 	return true;
 
@@ -82,9 +79,6 @@ void hooks::release() {
 
 	MH_DisableHook(MH_ALL_HOOKS);
 
-	
-
-	menu_is_initialized = false;
 }
 
 void __fastcall hooks::frame_stage_notify::hook(void* _this, int edx, FrameStage stage) {
@@ -239,21 +233,20 @@ int __fastcall hooks::doPostScreenEffects::hook(void* _this, int edx, int param)
 
 void __stdcall hooks::paint_traverse::hook(unsigned int panel, bool force_repaint, bool allow_force) {
 	auto panel_to_draw = fnv::hash(interfaces::panel->get_panel_name(panel));
+	static const std::string watermark = "BeakonCS - V2";
 
 	switch (panel_to_draw) {
 	case fnv::hash("MatSystemTopPanel"):
-
-		
-		if (menu_is_initialized) {
-			
-			menu_is_initialized = true;
-		}
 		
 		//all the component go out of scope here, so they might get reverted to nullptrs
 
-		render::draw_filled_rect(6, 6, render::get_text_size(render::fonts::watermark_font, "BeakonCS - V2 [beakey]").x + 6, 16, color::black(205));
+		render::draw_filled_rect(5, 15, render::get_text_size(render::fonts::font_bigboi, watermark).x + 10, 25, color::black(245));
+		
+		render::draw_line(5, 40, render::get_text_size(render::fonts::font_bigboi, watermark).x + 14, 40, color::white(255));
+		render::draw_line(5, 41, render::get_text_size(render::fonts::font_bigboi, watermark).x + 14, 41, color::white(255));
 
-		render::text(10, 5, render::fonts::watermark_font, "BeakonCS - V2 [beakey]", false, color::white(255));
+
+		render::text(10, 15, render::fonts::font_bigboi, watermark, false, color::white(255));
 		//visuals::twoD_box();
 		//visuals::snap_lines();
 		g_player_esp.on_draw();

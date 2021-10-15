@@ -183,14 +183,14 @@ bool c_autowall::trace_to_exit(vec3_t& end, trace_t* enter_trace, vec3_t start, 
 	return false;
 }
 
-bool c_autowall::handle_bullet_penetration(weapon_info_t* weapon_data, c_autowall::fire_bullet_data& data)
+bool c_autowall::handle_bullet_penetration(weapon_info_t* weapon_data, fire_bullet_data& data)
 {
 	surface_data_t* enter_surface_data = interfaces::physics_surface->get_surface_data(data.enter_trace.surface.surfaceProps);
 	int enter_material = enter_surface_data->game.material;
 	float enter_surf_penetration_mod = enter_surface_data->game.penetrationmodifier;
 
 	data.trace_length += data.enter_trace.flFraction * data.trace_length_remaining;
-	data.current_damage *= powf(weapon_data->weapon_range_mod, data.trace_length * 0.002f);
+	data.current_damage *= powf(weapon_data->flRangeModifier, data.trace_length * 0.002f);
 
 	if (data.trace_length > 3000.f || enter_surf_penetration_mod < 0.1f)
 		data.penetrate_count = 0;
@@ -228,7 +228,7 @@ bool c_autowall::handle_bullet_penetration(weapon_info_t* weapon_data, c_autowal
 	}
 
 	float v34 = fmaxf(0.f, 1.0f / combined_penetration_modifier);
-	float v35 = (data.current_damage * final_damage_modifier) + v34 * 3.0f * fmaxf(0.0f, (3.0f / weapon_data->weapon_penetration) * 1.25f);
+	float v35 = (data.current_damage * final_damage_modifier) + v34 * 3.0f * fmaxf(0.0f, (3.0f / weapon_data->flPenetration) * 1.25f);
 	float thickness = std::sqrt((trace_exit.end - data.enter_trace.end).length_sqr());
 
 	thickness *= thickness;
@@ -268,11 +268,12 @@ bool c_autowall::simulate_fire_bullet(player_t* ignore, weapon_t* weapon, fire_b
 
 	data.penetrate_count = 4;
 	data.trace_length = 0.0f;
-	data.current_damage = float(weapon_data->weapon_damage);
+	data.current_damage = float(weapon_data->iDamage);
+
 
 	while (data.penetrate_count > 0 && data.current_damage >= 1.0f)
 	{
-		data.trace_length_remaining = weapon_data->weapon_range - data.trace_length;
+		data.trace_length_remaining = weapon_data->flRange - data.trace_length;
 		vec3_t end = data.src + data.direction * data.trace_length_remaining;
 
 		//trace_line(data.src, end, MASK_SHOT, ignore, &data.enter_trace); //was commented
@@ -300,9 +301,9 @@ bool c_autowall::simulate_fire_bullet(player_t* ignore, weapon_t* weapon, fire_b
 				break;
 
 			data.trace_length += data.enter_trace.flFraction * data.trace_length_remaining;
-			data.current_damage *= powf(weapon_data->weapon_range_mod, data.trace_length * 0.002f);
+			data.current_damage *= powf(weapon_data->flRangeModifier, data.trace_length * 0.002f);
 
-			scale_damage(data.enter_trace.hitGroup, player, weapon_data->weapon_armor_ratio, data.current_damage);
+			scale_damage(data.enter_trace.hitGroup, player, weapon_data->flArmorRatio, data.current_damage);
 
 			return true;
 		}
@@ -337,9 +338,9 @@ float c_autowall::get_damage(player_t* player, const vec3_t& point)
 	data.direction = data.direction.normalized();
 
 	if (simulate_fire_bullet(player, weapon, data)) {
-		std::ostringstream stream;
-		stream << data.current_damage << "\n";
-		interfaces::console->console_printf(stream.str().c_str());
+		//std::ostringstream stream;
+		//stream << data.current_damage << "\n";
+		//console::log(stream.str().c_str());
 		damage = data.current_damage;
 	}
 

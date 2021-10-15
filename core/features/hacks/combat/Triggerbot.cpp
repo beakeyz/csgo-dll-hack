@@ -40,7 +40,7 @@ void combat::triggerbot::triggerbot(c_usercmd* cmd)
         return;
 
     auto startPos = csgo::local_player->get_eye_pos();
-    auto endPos = startPos + vec3_t::fromAngle(cmd->viewangles + csgo::local_player->aim_punch_angle()) * weaponData->weapon_range;
+    auto endPos = startPos + vec3_t::fromAngle(cmd->viewangles + csgo::local_player->aim_punch_angle()) * weaponData->flRange;
 
     //if (!cfg.ignoreSmoke && memory->lineGoesThroughSmoke(startPos, endPos, 1))
     //    return;

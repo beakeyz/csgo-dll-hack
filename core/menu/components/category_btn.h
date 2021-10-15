@@ -9,10 +9,15 @@ class c_category_btn{
 
 public:
 
-	c_category_btn(int& tab, const int locale_tab, std::string category_name) : m_tab(tab) {
+	c_category_btn(int& tab, const int locale_tab, std::string category_name, double x, double y, double w, double h) : m_tab(tab) {
 		this->m_tab = m_tab;
 		this->m_locale_tab = locale_tab;
 		this->m_name = category_name;
+		
+		this->x = x;
+		this->y = y;
+		this->w = w;
+		this->h = h;
 
 		this->m_boxes = {};
 	}
@@ -31,7 +36,10 @@ public:
 	int& m_tab;
 	int m_locale_tab;
 	std::string m_name;
-
+	double x;
+	double y;
+	double w;
+	double h;
 
 public:
 	std::set<groupBox*> m_boxes = {};

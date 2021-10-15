@@ -52,6 +52,7 @@ public:
 	virtual float		get_timeout_seconds() const = 0;
 };
 
+//u3 changed from ... to x20C
 class i_client_state {
 public:
 	char		u0[ 156 ];
@@ -63,7 +64,7 @@ public:
 	float		next_cmd_time;
 	uint32_t	server_count;
 	uint32_t	current_sequence;
-	char		u3[ 84 ];
+	char		u3[ 0x20C ];
 	uint32_t	delta_tick;
 	bool		paused;
 	char		u4[ 3 ];

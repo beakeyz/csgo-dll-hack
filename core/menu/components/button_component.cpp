@@ -3,7 +3,6 @@
 class comp;
 class groupBox;
 
-
 //BUTTONCOMPONENT section
 buttonComponent::buttonComponent(groupBox* parent, std::string text, unsigned long font, bool& r_value, int index) : value(r_value) {
 	this->font = font;

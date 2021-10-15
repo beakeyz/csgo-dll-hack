@@ -49,7 +49,7 @@ void c_ragebot::select_target() {
 				continue;
 
 			std::vector< int > hitboxes = {};
-
+			/*
 			if (combat::ragebot::dynamic_hitbox) {
 
 				auto model = e->model();
@@ -67,6 +67,7 @@ void c_ragebot::select_target() {
 				}
 			}
 			else {
+				*/
 				if (combat::ragebot::head) {
 					hitboxes.push_back(8);
 					hitboxes.push_back(7);
@@ -93,7 +94,7 @@ void c_ragebot::select_target() {
 					hitboxes.push_back(84);
 					hitboxes.push_back(76);
 				}
-			}
+			//}
 
 			float player_best_damage = 0.f;
 			vec3_t player_best_point = vec3_t(0.f, 0.f, 0.f);
@@ -104,7 +105,7 @@ void c_ragebot::select_target() {
 				const vec3_t local_eye_pos = csgo::local_player->get_eye_pos();
 				weapon_t* cur_weapon = local->active_weapon();
 				weapon_info_t* cur_weapon_info = cur_weapon->get_weapon_data();
-				float current_damage = cur_weapon_info->weapon_damage;
+				float current_damage = cur_weapon_info->iDamage;
 
 				switch (hitbox)
 				{
@@ -162,6 +163,11 @@ void c_ragebot::select_target() {
 				//else
 				if (cur_hitgroup != -1) {
 					current_damage = g_autowall.get_damage(point);
+					//std::stringstream stream;
+
+					//stream << current_damage;
+
+					//console::log(stream.str().c_str());
 
 					if (current_damage <= 0) {
 						continue;
@@ -250,7 +256,7 @@ bool c_ragebot::hitchance(vec3_t& angle, player_t* ent) {
 
 		trace_t trace;
 		ray_t ray;
-		ray.initialize(eye_position, eye_position + bullet_end * weapon->get_weapon_data()->weapon_range);
+		ray.initialize(eye_position, eye_position + bullet_end * weapon->get_weapon_data()->flRange);
 
 		interfaces::trace_ray->clip_ray_to_entity(ray, MASK_SHOT, ent, &trace);
 
@@ -301,6 +307,7 @@ void c_ragebot::choose_angles() {
 		return;
 	}
 
+	
 	m_last_target = selected_target;
 
 	//if ((!local->is_scoped() && (weapon->get_weapon_data()-> == WEAPONTYPE_SNIPER_RIFLE)) && selected_target)
@@ -362,7 +369,7 @@ void c_ragebot::quickstop(weapon_t* local_weapon) {
 		return;
 
 	// note: scoped weapons use the alternate speed member.
-	const float max_speed = local_weapon->flags() ? weapon_info->weapon_max_speed_alt : weapon_info->weapon_max_speed;
+	const float max_speed = local_weapon->flags() ? weapon_info->flMaxSpeed[0] : weapon_info->flMaxSpeed[1];
 
 	if (unpredicted_vel.length_2d() > max_speed * .34f) {
 		const vec3_t velocity = unpredicted_vel;
@@ -416,7 +423,7 @@ bool c_ragebot::is_valid(player_t* player) {
 
 	/*if( player->survival_team() != -1 )
 		return false;*/
-
+	
 	return true;
 }
 

@@ -23,7 +23,7 @@ void combat::aimbot::aim_bot(c_usercmd* cmd) {
 		float max = 180;
 		vec3_t current = { 0, 0, 0 };
 		const auto localPlayerEyePosition = csgo::local_player->get_eye_pos();
-		vec3_t* aimPunch = csgo::local_player->active_weapon()->get_weapon_data()->weapon_full_auto ? &csgo::local_player->aim_punch_angle() : new vec3_t{ 0, 0, 0 };
+		vec3_t* aimPunch = csgo::local_player->active_weapon()->get_weapon_data()->bFullAuto ? &csgo::local_player->aim_punch_angle() : new vec3_t{ 0, 0, 0 };
 
 		for (short i = 1; i < 64; i++) {
 			entity_t* e = static_cast<entity_t*>(interfaces::entity_list->get_client_entity(i));
