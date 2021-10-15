@@ -12,17 +12,7 @@ namespace Category
 
 namespace Render {
 	namespace Chams {
-		inline bool enemies = true;
-		inline bool teammates = false;
-		inline bool hands = true;
-		inline int material = 1;
-		inline int category = Category::RENDER;
-		inline bool isEnabled = false;
-		inline color team_color_visible = {0, 255, 0};
-		inline color enemy_color_visible = {255, 0, 0};
-		inline color team_color_invisible = {0, 255, 255};
-		inline color enemy_color_invisible = {255, 100, 200};
-		inline color hands_color = {255, 255, 255};
+		
 
 
 		/*
@@ -40,8 +30,8 @@ namespace Render {
 		inline int EnemyBlueInVisible = 255;
 		inline int armsColor = 200;
 		*/
-		void onChams(void* _this, int edx, void* ctx, void* state, model_render_info_t& info, matrix3x4_t* customBoneToWorld, hooks::draw_model_execute::fn orig, entity_t* ent);
-		void onEnable();
+		//void onChams(void* _this, int edx, void* ctx, void* state, model_render_info_t& info, matrix3x4_t* customBoneToWorld, hooks::draw_model_execute::fn orig, entity_t* ent);
+		//void onEnable();
 	};
 	namespace Esp {
 		inline int category = Category::RENDER;

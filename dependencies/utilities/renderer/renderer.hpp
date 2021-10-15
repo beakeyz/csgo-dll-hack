@@ -29,6 +29,7 @@ namespace render {
 	void draw_outline(std::int32_t x, std::int32_t y, std::int32_t width, std::int32_t height, color color);
 	void draw_textured_polygon(std::int32_t vertices_count, vertex_t* vertices, color color);
 	void draw_circle(std::int32_t x, std::int32_t y, std::int32_t radius, std::int32_t segments, color color);
+	void draw_rounded_rect(std::int32_t x, std::int32_t y, std::int32_t width, std::int32_t height, std::int32_t r, color color, bool left_under, bool left_up, bool right_under, bool right_up);
 	vec2_t get_text_size(unsigned long font, std::string text);
 
 	namespace fonts {

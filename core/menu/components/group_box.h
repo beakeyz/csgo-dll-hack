@@ -16,10 +16,15 @@ enum e_boxtype {
 	PLAYER_ESP
 };
 
+enum class e_position {
+	LEFT,
+	RIGHT
+};
+
 class groupBox {
 
 public:
-	groupBox(std::int32_t x, std::int32_t y, std::int32_t w, std::int32_t h, unsigned long font, std::string string, e_boxtype type);
+	groupBox(e_position pos, std::int32_t y, std::int32_t h, unsigned long font, std::string string, e_boxtype type, int index);
 
 	~groupBox() {
 		this->m_comps.clear();
@@ -47,9 +52,11 @@ public:
 		this->h = height;
 	}
 
+	void set_posititon(e_position new_pos);
+
 	std::unordered_map<int, comp*> get_comps();
 
-protected:
+public:
 	std::int32_t x;
 	std::int32_t x2;
 	std::int32_t y;
@@ -58,6 +65,8 @@ protected:
 	std::int32_t h;
 	unsigned long font;
 	std::string string;
+	e_position m_pos;
+	int index;
 
 public:
 	e_boxtype m_boxtype;

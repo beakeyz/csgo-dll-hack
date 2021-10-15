@@ -42,5 +42,5 @@ public:
 	double h;
 
 public:
-	std::set<groupBox*> m_boxes = {};
+	std::unordered_map<int, groupBox*> m_boxes = {};
 };

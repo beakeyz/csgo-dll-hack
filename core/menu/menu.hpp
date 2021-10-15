@@ -19,6 +19,7 @@ public:
 	void renderRectInMenu(std::int32_t x, std::int32_t y, std::int32_t width, std::int32_t height, color color);
 	void renderFilledRectInMenu(std::int32_t x, std::int32_t y, std::int32_t width, std::int32_t height, color color);
 	void renderCircleInMenu(std::int32_t x, std::int32_t y, std::int32_t radius, std::int32_t segments, color color);
+	void renderRoundedRectInMenu(std::int32_t x, std::int32_t y, std::int32_t width, std::int32_t height, std::int32_t r, color color, bool left_under, bool left_up, bool right_under, bool right_up);
 
 	int current_tab{ 0 };
 	bool is_open = false;
@@ -31,10 +32,10 @@ public:
 	int x2;
 	int y2;
 
-	c_category_btn combat_btn = { current_tab, 0, "Combat", 120, 35, 15, 35 };
-	c_category_btn visuals_btn = { current_tab, 1, "Visuals", 240, 35, 15, 35 };
-	c_category_btn movement_btn = { current_tab, 2, "Movement", 360, 35, 15, 35 };
-	c_category_btn misc_btn = { current_tab, 3, "Misc", 480, 35, 15, 35 };
+	c_category_btn combat_btn = { current_tab, 0, "Combat", 25, 35, 100, 35 };
+	c_category_btn visuals_btn = { current_tab, 1, "Visuals", 175, 35, 100, 35 };
+	c_category_btn movement_btn = { current_tab, 2, "Movement", 325, 35, 100, 35 };
+	c_category_btn misc_btn = { current_tab, 3, "Misc", 475, 35, 100, 35 };
 	std::set<c_category_btn*> categories = { &combat_btn, &visuals_btn, &movement_btn, &misc_btn };
 };
 

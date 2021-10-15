@@ -3,10 +3,7 @@
 #include "../features/hacks/misc/engine_prediction.hpp"
 #include "../menu/menu.hpp"
 #include "../../dependencies/interfaces/Framestage.h"
-#include "../features/hacks/fakelag/fakelag.h"
-#include "../features/hacks/ragebot/ragebot.h"
-#include "../features/hacks/render/player_esp.h"
-#include "../features/hacks/render/visuals.h"
+#include "../features/hacks/features.h"
 
 /*
 make sure unused hooks are not used!
@@ -135,15 +132,15 @@ void __fastcall hooks::draw_model_execute::hook(void* _this, int edx, void* ctx,
 	if (interfaces::engine->is_in_game() && interfaces::engine->is_connected()) {
 
 		if (ctx && customBoneToWorld) {
-			if (Render::Chams::isEnabled) {
-				Render::Chams::onChams(_this, edx, ctx, state, info, customBoneToWorld, draw_model_execute_original, static_cast<entity_t*>(interfaces::entity_list->get_client_entity(info.entity_index)));
+			if (c_chams::get_ptr()->isEnabled) {
+				c_chams::get_ptr()->onChams(_this, edx, ctx, state, info, customBoneToWorld, draw_model_execute_original, static_cast<entity_t*>(interfaces::entity_list->get_client_entity(info.entity_index)));
 
 				draw_model_execute_original(_this, edx, ctx, state, info, customBoneToWorld);
 				interfaces::model_render->override_material(nullptr);
 			}
 		}
 	}
-	if (!Render::Chams::isEnabled) {
+	if (!c_chams::get_ptr()->isEnabled) {
 		draw_model_execute_original(_this, edx, ctx, state, info, customBoneToWorld);
 	}
 }

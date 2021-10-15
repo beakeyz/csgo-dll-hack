@@ -13,7 +13,6 @@ buttonComponent::buttonComponent(groupBox* parent, std::string text, unsigned lo
 
 	this->parent->m_comps[this->index] = this;
 
-	
 }
 
 void buttonComponent::draw(int index) {

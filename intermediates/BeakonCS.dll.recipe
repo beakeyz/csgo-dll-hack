@@ -5,7 +5,11 @@
       <FullPath>C:\Users\Joost\source\repos\BeakonV2\output\debug\BeakonCS.dll</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
-  <ContentFiles />
+  <ContentFiles>
+    <ContentFile>
+      <FullPath>C:\Users\Joost\source\repos\BeakonV2\dependencies\interfaces\i_player_movement.hpp</FullPath>
+    </ContentFile>
+  </ContentFiles>
   <SatelliteDlls />
   <NonRecipeFileRefs />
 </Project>

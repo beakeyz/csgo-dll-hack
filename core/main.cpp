@@ -36,7 +36,7 @@ unsigned long WINAPI initialize(void* instance) {
 		FreeLibraryAndExitThread(static_cast<HMODULE>(instance), 0);
 	}
 
-	groupBox box(20, 80, variables::menu::w / 2 - 20, 220, render::fonts::watermark_font_other, "Combat", e_boxtype::COMBAT);
+	groupBox box(e_position::LEFT, 80, 0, render::fonts::watermark_font_other, "Combat", e_boxtype::COMBAT, 0);
 
 	buttonComponent Aimbot_checkboxComp(&box, "Aimbot", render::fonts::watermark_font_small, combat::aimbot::isEnabled, 0);
 	buttonComponent Trigger_comp(&box, "Triggerbot", render::fonts::watermark_font_small, combat::triggerbot::enabled, 1);
@@ -52,13 +52,13 @@ unsigned long WINAPI initialize(void* instance) {
 	c_slider_component pitch_comp(&box, "pitch", render::fonts::watermark_font_small, combat::antiaim::pitch, -90, 90, 11);
 
 
-	groupBox fakelagbox (20, 310, variables::menu::w / 2 - 20, 80, render::fonts::watermark_font_other, "Fakelag", e_boxtype::FAKELAG);
+	groupBox fakelagbox (e_position::LEFT, 80, 0, render::fonts::watermark_font_other, "Fakelag", e_boxtype::FAKELAG, 1);
 
 	buttonComponent fakelag_enabled(&fakelagbox, "enabled", render::fonts::watermark_font_small, combat::fakelag::isEnabled, 0);
 	c_slider_component fakelag_amount(&fakelagbox, "Lag amount", render::fonts::watermark_font_small, combat::fakelag::amount, 2, 10, 1);
 
 	 
-	groupBox ragebot_box (variables::menu::w / 2 + 10, 80, variables::menu::w / 2 - 30, 190, render::fonts::watermark_font_other, "Ragebot", e_boxtype::RAGEBOT);
+	groupBox ragebot_box (e_position::LEFT, 80, 0, render::fonts::watermark_font_other, "Ragebot", e_boxtype::RAGEBOT, 2);
 
 	buttonComponent rb_enabled(&ragebot_box, "Enabled", render::fonts::watermark_font_small, combat::ragebot::isEnabled, 0);
 	buttonComponent rb_auto_fire(&ragebot_box, "Auto fire", render::fonts::watermark_font_small, combat::ragebot::auto_fire, 1);
@@ -74,37 +74,34 @@ unsigned long WINAPI initialize(void* instance) {
 	buttonComponent rb_legs(&ragebot_box, "Legs hitbox targeting", render::fonts::watermark_font_small, combat::ragebot::legs, 11);
 
 
-	groupBox Chamsbox (20, 80, variables::menu::w / 2 - 20, 220, render::fonts::watermark_font_other, "Chams", e_boxtype::CHAMS);
+	groupBox Chamsbox (e_position::LEFT, 80, 0, render::fonts::watermark_font_other, "Chams", e_boxtype::CHAMS, 0);
 
-	buttonComponent chams_enabled(&Chamsbox, "Enabled", render::fonts::watermark_font_small, Render::Chams::isEnabled, 0);
-	c_slider_component Material(&Chamsbox, "Material", render::fonts::watermark_font_small, Render::Chams::material, 1, 7, 1);
-	buttonComponent Enemies(&Chamsbox, "Enemies", render::fonts::watermark_font_small, Render::Chams::enemies, 2);
-	buttonComponent Teamates(&Chamsbox, "Teammates", render::fonts::watermark_font_small, Render::Chams::teammates, 3);
-	buttonComponent Hands(&Chamsbox, "Hands", render::fonts::watermark_font_small, Render::Chams::hands, 4);
-	c_color_picker team_color_invisible(&Chamsbox, "Team Color Invisible", render::fonts::watermark_font_small, Render::Chams::team_color_invisible, 5);
-	c_color_picker team_color_visible(&Chamsbox, "Team Color Visible", render::fonts::watermark_font_small, Render::Chams::team_color_visible, 6);
+	buttonComponent chams_enabled(&Chamsbox, "Enabled", render::fonts::watermark_font_small, c_chams::get_ptr()->isEnabled, 0);
+	c_slider_component Material(&Chamsbox, "Material", render::fonts::watermark_font_small, c_chams::get_ptr()->material, 1, 7, 1);
+	buttonComponent Enemies(&Chamsbox, "Enemies", render::fonts::watermark_font_small, c_chams::get_ptr()->enemies, 2);
+	buttonComponent Teamates(&Chamsbox, "Teammates", render::fonts::watermark_font_small, c_chams::get_ptr()->teammates, 3);
+	buttonComponent Hands(&Chamsbox, "Hands", render::fonts::watermark_font_small, c_chams::get_ptr()->hands, 4);
+	c_color_picker team_color_invisible(&Chamsbox, "Team Color Invisible", render::fonts::watermark_font_small, c_chams::get_ptr()->team_color_invisible, 5);
+	c_color_picker team_color_visible(&Chamsbox, "Team Color Visible", render::fonts::watermark_font_small, c_chams::get_ptr()->team_color_visible, 6);
 
-
-	groupBox esp_box (variables::menu::w / 2 + 10, 80, variables::menu::w / 2 - 30, 190, render::fonts::watermark_font_other, "Player esp", e_boxtype::PLAYER_ESP);
-
-	buttonComponent skeleton_esp(&esp_box, "Skeleton Esp", render::fonts::watermark_font_small, g_player_esp.is_enabled, 0);
-
-
-	groupBox visual_box (20, 80 + Chamsbox.getHeight() + 10, variables::menu::w / 2 - 20, 20, render::fonts::watermark_font_other, "Visuals", e_boxtype::VISUALS);
+	groupBox visual_box (e_position::LEFT, 80, 0, render::fonts::watermark_font_other, "Visuals", e_boxtype::VISUALS, 1);
 
 	buttonComponent remove_visual_recoil(&visual_box, "remove visual recoil", render::fonts::watermark_font_small, c_visuals::get().visual_recoil, 0);
 	buttonComponent full_bright(&visual_box, "fullbright", render::fonts::watermark_font_small, c_visuals::get().m_full_bright, 1);
 	buttonComponent edit_smoke(&visual_box, "edit smoke", render::fonts::watermark_font_small, c_visuals::get().m_edit_smoke, 2);
 	buttonComponent smoke_wire(&visual_box, "smoke wireframe", render::fonts::watermark_font_small, c_visuals::get().smoke_wireframe, 3);
 
+	groupBox esp_box(e_position::LEFT, 80, 0, render::fonts::watermark_font_other, "Player esp", e_boxtype::PLAYER_ESP, 2);
 
-	c_menu::get_ptr()->combat_btn.m_boxes.insert(&box);
-	c_menu::get_ptr()->combat_btn.m_boxes.insert(&fakelagbox);
-	c_menu::get_ptr()->combat_btn.m_boxes.insert(&ragebot_box);
+	buttonComponent skeleton_esp(&esp_box, "Skeleton Esp", render::fonts::watermark_font_small, g_player_esp.is_enabled, 0);
 
-	c_menu::get_ptr()->visuals_btn.m_boxes.insert(&Chamsbox);
-	c_menu::get_ptr()->visuals_btn.m_boxes.insert(&esp_box);
-	c_menu::get_ptr()->visuals_btn.m_boxes.insert(&visual_box);
+	c_menu::get_ptr()->combat_btn.m_boxes[box.index] = &box;
+	c_menu::get_ptr()->combat_btn.m_boxes[fakelagbox.index] = &fakelagbox;
+	c_menu::get_ptr()->combat_btn.m_boxes[ragebot_box.index] = &ragebot_box;
+
+	c_menu::get_ptr()->visuals_btn.m_boxes[Chamsbox.index] = &Chamsbox;
+	c_menu::get_ptr()->visuals_btn.m_boxes[visual_box.index] = &visual_box;
+	c_menu::get_ptr()->visuals_btn.m_boxes[esp_box.index] = &esp_box;
 
 	while (true) {
 
