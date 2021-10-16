@@ -99,6 +99,7 @@ unsigned long WINAPI initialize(void* instance) {
 	c_menu::get_ptr()->combat_btn.m_boxes[fakelagbox.index] = &fakelagbox;
 	c_menu::get_ptr()->combat_btn.m_boxes[ragebot_box.index] = &ragebot_box;
 
+
 	c_menu::get_ptr()->visuals_btn.m_boxes[Chamsbox.index] = &Chamsbox;
 	c_menu::get_ptr()->visuals_btn.m_boxes[visual_box.index] = &visual_box;
 	c_menu::get_ptr()->visuals_btn.m_boxes[esp_box.index] = &esp_box;

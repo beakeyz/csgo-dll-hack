@@ -6,7 +6,8 @@
 #include "../features/hacks/features.h"
 
 /*
-make sure unused hooks are not used!
+make sure unused hookfunctions are commented out!
+otherwise game go boom
 */
 
 //hooks::doPostScreenEffects::fn do_post_screen_original = nullptr;
