@@ -23,8 +23,8 @@ public:
 
 	int current_tab{ 0 };
 	bool is_open = false;
-	int x = 840, y = 140;
-	int w = 600, h = 500;
+	int x = 140, y = 140;
+	int w = 640, h = 480;
 	POINT cursor;
 	bool is_mouse;
 	bool clicking;

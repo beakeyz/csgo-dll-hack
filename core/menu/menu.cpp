@@ -37,7 +37,7 @@ void c_menu::render() {
 	//std::string prev_name = "";
 
 	//render::draw_filled_rect(x - 1, y - 1, w + 2, h + 2, color(variables::menu::r, variables::menu::g, variables::menu::b, 255));
-	render::draw_rounded_rect(x, y, w, h, 15, color(36, 36, 36, 255), true, false, true, false);
+	render::draw_rounded_rect(x, y, w, h, 25, color(36, 36, 36, 255), true, false, true, false);
 	render::draw_filled_rect(x - 1, y - 1, w + 2, 72, color::white());
 	render::draw_filled_rect(x, y, w, 70, color(31, 31, 31, 255));
 	

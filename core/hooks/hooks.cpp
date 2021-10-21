@@ -241,7 +241,7 @@ void __stdcall hooks::paint_traverse::hook(unsigned int panel, bool force_repain
 		render::draw_line(5, 41, render::get_text_size(render::fonts::font_bigboi, watermark).x + 14, 41, color::white(255));
 
 
-		render::text(10, 15, render::fonts::font_bigboi, watermark, false, color::white(255));
+		render::text(10, 16, render::fonts::font_bigboi, watermark, false, color::white(255));
 		//visuals::twoD_box();
 		//visuals::snap_lines();
 		c_skeleton_esp::get_ptr()->on_draw();

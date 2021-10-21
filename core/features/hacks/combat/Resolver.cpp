@@ -1,6 +1,7 @@
 #include "Resolver.h"
 #include "../autowall/autowall.h"
 
+
 void resolver::initialize(player_t* e, adjust_data* record, const float& goal_feet_yaw, const float& pitch)
 {
 	player = e;

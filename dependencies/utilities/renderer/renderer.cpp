@@ -84,17 +84,41 @@ void render::draw_textured_polygon(std::int32_t vertices_count, vertex_t* vertic
 }
 
 void render::draw_circle(std::int32_t x, std::int32_t y, std::int32_t radius, std::int32_t segments, color color) {
-	double prev_x2 = sin(((0 * M_PI) / 180)) * radius;
-	double prev_y2 = cos(((0 * M_PI) / 180)) * radius;
+	
+	color.a = static_cast<int>(color.a * 1);
 
-	for (float a = 0; a <= 360; a ++) {
-		double x2 = sin(((a * M_PI) / 180)) * radius;
-		double y2 = cos(((a * M_PI) / 180)) * radius;
-		interfaces::surface->set_drawing_color(color.r, color.g, color.b, color.a);
-		interfaces::surface->draw_line(x, y, x+x2, y+y2);
-		prev_x2 = x2;
-		prev_y2 = y2;
+	static bool once = true;
+
+	static std::vector<float> temppointsx;
+	static std::vector<float> temppointsy;
+
+	if (once)
+	{
+		float step = (float)M_PI * 2.0f / segments;
+		for (float a = 0; a < (M_PI * 2.0f); a += step)
+		{
+			temppointsx.push_back(cosf(a));
+			temppointsy.push_back(sinf(a));
+		}
+		once = false;
 	}
+
+	std::vector<int> pointsx;
+	std::vector<int> pointsy;
+	std::vector<vertex_t> vertices;
+
+	for (int i = 0; i < temppointsx.size(); i++)
+	{
+		float eeks = radius * temppointsx[i] + x;
+		float why = radius * temppointsy[i] + y;
+		pointsx.push_back(eeks);
+		pointsy.push_back(why);
+
+		vertices.emplace_back(vertex_t(vec2_t(eeks, why)));
+	}
+
+	interfaces::surface->set_drawing_color(color.r, color.g, color.b, color.a);
+	interfaces::surface->draw_textured_polygon(segments, vertices.data());
 }
 
 void render::draw_rounded_rect(std::int32_t x, std::int32_t y, std::int32_t w, std::int32_t h, std::int32_t r, color c, bool left_under, bool left_up, bool right_under, bool right_up)

@@ -11,8 +11,6 @@ unsigned long WINAPI release() {
 #ifdef _DEBUG
 	console::release();
 #endif
-
-
 	return TRUE;
 }
 

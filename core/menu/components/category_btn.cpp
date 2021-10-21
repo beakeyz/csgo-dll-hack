@@ -12,8 +12,12 @@ void c_category_btn::draw(std::string previous_name)
 	{
 		c_menu::get_ptr()->renderFilledRectInMenu(this->x - 2, this->y - 2, this->w + 4, this->h + 2, color::white(25));
 		c_menu::get_ptr()->renderFilledRectInMenu(this->x - 1, this->y - 1, this->w + 2, this->h + 1, color::white(255));
-		c_menu::get_ptr()->renderFilledRectInMenu(this->x, this->y, this->w, this->h + 1, color(36, 36, 36, 255));
 		
+		c_menu::get_ptr()->renderFilledRectInMenu(this->x, this->y, this->w, this->h + 1, color(36, 36, 36, 255));
+		//render::draw_rounded_rect(c_menu::get_ptr()->x + this->x - 1, c_menu::get_ptr()->y + this->y - 1, this->w + 2, this->h + 2, 6, color::white(255), false, true, false, true);
+		//render::draw_rounded_rect(c_menu::get_ptr()->x + this->x, c_menu::get_ptr()->y + this->y, this->w, this->h + 1, 5, color(36, 36, 36, 255), false, true, false, true);
+
+
 		//c_menu::get_ptr()->renderRoundedRectInMenu(this->x - 2, this->y - 2, this->w + 4, this->h, 10, color::white(255), false, true, false, true);
 		//c_menu::get_ptr()->renderRoundedRectInMenu(this->x, this->y, this->w, this->h - 1, 10, color(36, 36, 36, 255), false, true, false, true);
 

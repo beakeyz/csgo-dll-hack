@@ -132,7 +132,7 @@ protected:
 	bool is_mouse;
 
 public:
-	const int indexed_height = 25;
+	const int indexed_height = 30;
 };
 
 class c_color_picker : public comp {
