@@ -46,12 +46,22 @@ typedef int ImageFormat;
 class IMaterialVar;
 typedef int VertexFormat_t;
 typedef int MaterialPropertyTypes_t;
-class i_material_var;
 struct model_t;
 class i_material;
 class c_studio_hdr;
 class c_key_values;
-class i_material_var;
+class i_material_var; /* {
+public:
+
+	void setValue(float value) {
+		using fn = void(__thiscall*)(i_material_var*, float);
+		return (*(fn**)this)[4](this, value);
+	}
+	void setVectorValue(float x, float y, float z) {
+		using fn = void(__thiscall*)(i_material_var*, float, float, float);
+		return (*(fn**)this)[11](this, x, y, z);
+	}
+};*/
 struct studiohwdata_t;
 struct color_mesh_info_t;
 struct draw_model_info_t;

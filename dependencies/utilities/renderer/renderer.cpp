@@ -11,10 +11,10 @@ void render::initialize() {
 	render::fonts::watermark_font_other = interfaces::surface->font_create();
 	render::fonts::font_bigboi = interfaces::surface->font_create();
 
-	interfaces::surface->set_font_glyph(render::fonts::watermark_font, "Tahoma", 16, 500, 0, 0, font_flags::fontflag_dropshadow);
-	interfaces::surface->set_font_glyph(render::fonts::watermark_font_small, "Tahoma", 12, 500, 0, 0, font_flags::fontflag_dropshadow);
-	interfaces::surface->set_font_glyph(render::fonts::watermark_font_other, "Tahoma", 12, 250, 0, 0, font_flags::fontflag_outline);
-	interfaces::surface->set_font_glyph(render::fonts::font_bigboi, "Tahoma", 20, 500, 0, 0, font_flags::fontflag_antialias);
+	interfaces::surface->set_font_glyph(render::fonts::watermark_font, "Andale Mono", 16, 500, 0, 0, font_flags::fontflag_dropshadow);
+	interfaces::surface->set_font_glyph(render::fonts::watermark_font_small, "Andale Mono", 12, 500, 0, 0, font_flags::fontflag_dropshadow);
+	interfaces::surface->set_font_glyph(render::fonts::watermark_font_other, "Andale Mono", 12, 250, 0, 0, font_flags::fontflag_outline);
+	interfaces::surface->set_font_glyph(render::fonts::font_bigboi, "Andale Mono", 20, 500, 0, 0, font_flags::fontflag_antialias);
 
 
 	console::log("[setup] render initialized!\n");

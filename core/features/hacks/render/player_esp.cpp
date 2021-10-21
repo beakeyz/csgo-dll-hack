@@ -2,11 +2,51 @@
 #include "../../../menu/variables.hpp"
 #include "player_esp.h"
 
-c_player_esp g_player_esp;
+color c_skeleton_esp::get_color(std::unordered_map<int, std::string> p_color_map, std::string c) {
 
-void c_player_esp::on_draw()
+	int index = 0;
+	for (auto& elm : p_color_map) {
+		if (elm.second == c) {
+			index = elm.first;
+		}
+	}
+
+	if (index == 0) {
+		return color(255, 0, 0, 255); //red
+	}
+	else if (index == 1) {
+		return color(255, 100, 0, 255); //orange
+	}
+	else if (index == 2) {
+		return color(255, 255, 0, 255); //yellow
+	}
+	else if (index == 3) {
+		return color(0, 255, 0, 255); //green
+	}
+	else if (index == 4) {
+		return color(0, 100, 155, 255); //cyan
+	}
+	else if (index == 5) {
+		return color(0, 0, 255, 255); //blue
+	}
+	else if (index == 6) {
+		return color(255, 0, 255, 255); //purple
+	}
+	else if (index == 7) {
+		return color(255, 0, 100, 255); //pink
+	}
+	else if (index == 8) {
+		return color(255, 255, 255, 255); //white
+	}
+	else if (index == 9) {
+		return color(0, 0, 0, 255); //black
+	}
+	return color(0, 0, 0, 255);
+}
+
+void c_skeleton_esp::on_draw()
 {
-	if (!g_player_esp.is_enabled)
+	if (!this->is_enabled)
 		return;
 
 	if (interfaces::engine->is_in_game())
@@ -20,17 +60,17 @@ void c_player_esp::on_draw()
 			if (!entity || entity->dormant() || entity == csgo::local_player || entity->health() == 0)
 				continue;
 
-			Box b;
-
 			if (entity != nullptr) {
 
 				matrix_t bone_matrices[128];
 				if (entity->setup_bones(bone_matrices, 128, 256, 0.0f)) {
 					if (entity->team() == csgo::local_player->team()) {
-						g_player_esp.draw_skeleton((player_t*)entity, g_player_esp.teammate_color, bone_matrices);
+						
+						this->draw_skeleton((player_t*)entity, this->get_color(this->color_map, this->team_color), bone_matrices);
 					}
 					else {
-						g_player_esp.draw_skeleton((player_t*)entity, g_player_esp.enemy_color, bone_matrices);
+
+						this->draw_skeleton((player_t*)entity, this->get_color(this->color_map, this->enemy_color), bone_matrices);
 					}
 				}
 
@@ -45,36 +85,8 @@ void c_player_esp::on_draw()
 	}
 }
 
-void c_player_esp::draw_2d_box(entity_t* e, const Box& b) {
 
-	color outline_color
-	{
-		0,
-		0,
-		0,
-		255
-	};
-
-	color inside_color
-	{
-		255,
-		255,
-		255,
-		255
-	};
-
-
-	render::draw_rect(b.x - 1, b.y - 1, b.w + 2, b.h + 2, outline_color);
-	render::draw_rect(b.x, b.y, b.w, b.h, inside_color);
-	render::draw_rect(b.x + 1, b.y + 1, b.w - 2, b.h - 2, outline_color);
-}
-
-void c_player_esp::draw_name(entity_t* e, const Box& b) {
-
-}
-
-
-void c_player_esp::draw_skeleton(player_t* e, color color, matrix_t matrix[MAXSTUDIOBONES])
+void c_skeleton_esp::draw_skeleton(player_t* e, color color, matrix_t matrix[MAXSTUDIOBONES])
 {
 	auto model = e->model();
 

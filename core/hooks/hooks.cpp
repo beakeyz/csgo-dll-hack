@@ -168,10 +168,6 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 
 	csgo::local_player = static_cast<player_t*>(interfaces::entity_list->get_client_entity(interfaces::engine->get_local_player()));
 
-	uintptr_t* frame_pointer;
-	__asm mov frame_pointer, ebp;
-	bool& send_packet = *reinterpret_cast<bool*>(*frame_pointer - 0x1C);
-
 	auto old_viewangles = cmd->viewangles;
 	auto old_forwardmove = cmd->forwardmove;
 	auto old_sidemove = cmd->sidemove;
@@ -196,13 +192,11 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 		
 		movement::auto_strafe::auto_strafe(cmd);
 
-		combat::antiaim::run(cmd, send_packet);
+		combat::antiaim::run(cmd, g_ctx.globals.send_packet);
 
-		g_fakelag.think(cmd, send_packet);
+		c_fakelag::get_ptr()->think(cmd, g_ctx.globals.send_packet);
 
 	} prediction::end();
-
-
 
 	//math::correct_movement(old_viewangles, cmd, old_forwardmove, old_sidemove);
 
@@ -217,6 +211,10 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 	cmd->viewangles.y = std::clamp(cmd->viewangles.y, -180.0f, 180.0f);
 	cmd->viewangles.z = 0.0f;
 	
+	uintptr_t* frame_pointer;
+	__asm mov frame_pointer, ebp;
+	*reinterpret_cast<bool*>(*frame_pointer - 0x1C) = g_ctx.globals.send_packet;
+
 	return false;
 }
 
@@ -247,7 +245,7 @@ void __stdcall hooks::paint_traverse::hook(unsigned int panel, bool force_repain
 		render::text(10, 15, render::fonts::font_bigboi, watermark, false, color::white(255));
 		//visuals::twoD_box();
 		//visuals::snap_lines();
-		g_player_esp.on_draw();
+		c_skeleton_esp::get_ptr()->on_draw();
 
 		//menu::toggle();
 		c_menu::get_ptr()->toggle();

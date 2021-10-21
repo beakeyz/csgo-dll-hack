@@ -20,7 +20,7 @@ public:
 	{
 		vec3_t wish_angle = { 0,0,0 };
 		bool should_remove_smoke = false;
-
+		bool send_packet = true;
 
 	} globals;
 

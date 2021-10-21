@@ -159,3 +159,46 @@ public:
 	bool isExtended = false;
 	const int indexed_height = 21;
 };
+
+class c_mode_picker : public comp {
+
+public:
+	c_mode_picker(groupBox* parent, std::string text, unsigned long font, std::unordered_map<int, std::string> settings, std::string default_setting, std::string& setting, int index);
+
+	void draw(int index);
+	void cycle_left();
+	void cycle_right();
+	std::string get_mode(int mode_index);
+	void mouse_clicked(long mouse_x, long mouse_y, int mouse_button);
+
+	void mouse_released();
+
+	double get_standard_height() {
+		return this->indexed_height;
+	}
+
+
+public:
+	double x;
+	double y;
+
+	unsigned long font;
+	groupBox* parent;
+	
+	std::string m_default_setting;
+	std::unordered_map<int, std::string> m_settings;
+	std::string& current_setting;
+	int m_current_index;
+
+	POINT cursor;
+	bool is_mouse;
+	const double indexed_height = 18;
+
+private:
+
+	int longest_str = 0;
+	int cycle_btn_width;
+	int picker_end_pos;
+	int picker_start_pos;
+	int bar_height;
+};

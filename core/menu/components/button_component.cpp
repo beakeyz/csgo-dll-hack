@@ -190,3 +190,113 @@ void c_color_picker::draw(int index) {
 		std::this_thread::sleep_for(std::chrono::milliseconds(5));
 	}
 }
+
+//MODE PICKER section
+
+c_mode_picker::c_mode_picker(groupBox* parent, std::string text, unsigned long font, std::unordered_map<int, std::string> settings, std::string default_setting, std::string& setting, int index) : current_setting(setting) {
+	this->font = font;
+	this->text = text;
+	this->parent = parent;
+	this->index = index;
+	this->m_settings = settings;
+
+	for (auto& elm : this->m_settings) {
+		if (elm.second == default_setting) {
+			this->m_current_index = elm.first;
+		}
+	}
+	this->current_setting = default_setting;
+
+	this->parent->m_comps[this->index] = this;
+
+	for (auto& elm : this->m_settings) {
+		if (longest_str < render::get_text_size(this->font, elm.second).x) {
+			longest_str = render::get_text_size(this->font, elm.second).x;
+		}
+	}
+	cycle_btn_width = 12;
+	picker_end_pos = this->parent->getWidth() - 30;
+	picker_start_pos = picker_end_pos - cycle_btn_width * 2 - longest_str - 8;
+	bar_height = 12;
+}
+
+void c_mode_picker::draw(int index) {
+	this->x = 15;
+	this->y = index + this->parent->getY() + 6;
+	this->x += this->parent->getX();
+	//this->y += this->parent->getY();
+
+	GetCursorPos(&cursor);
+
+	if (GetAsyncKeyState(VK_LBUTTON) && !is_mouse) {
+		if ((cursor.x > this->x + picker_start_pos) && (cursor.x < this->x + picker_start_pos + cycle_btn_width) && (cursor.y > y) && (cursor.y < y + bar_height)) {
+			this->mouse_clicked(cursor.x, cursor.y, VK_LBUTTON);
+		}
+		if ((cursor.x > this->x + picker_end_pos - cycle_btn_width) && (cursor.x < this->x + picker_end_pos) && (cursor.y > y) && (cursor.y < y + bar_height)) {
+			this->mouse_clicked(cursor.x, cursor.y, VK_LBUTTON);
+		}
+		is_mouse = true;
+	}
+	else if (!GetAsyncKeyState(VK_LBUTTON)) {
+		this->mouse_released();
+		is_mouse = false;
+	}
+
+	render::text(x, y - 2, font, this->text + ":", false, color::white());
+	render::draw_filled_rect(this->x + picker_start_pos - 1, this->y - 1, picker_end_pos - picker_start_pos + 2, bar_height + 2, color(18, 18, 18, 255));
+	render::draw_filled_rect(this->x + picker_start_pos, this->y, picker_end_pos - picker_start_pos, bar_height, color(34, 34, 34, 235));
+
+	render::draw_filled_rect(this->x + picker_start_pos, this->y, cycle_btn_width, bar_height, color(40, 40, 40, 255));
+	render::draw_filled_rect(this->x + picker_end_pos - cycle_btn_width, this->y, cycle_btn_width, bar_height, color(40, 40, 40, 255));
+
+	render::text(this->x + (picker_start_pos + cycle_btn_width / 2) - render::get_text_size(font, "-").x / 2, this->y - 1, font, "-", false, color::white(255));
+	render::text(this->x + (picker_end_pos - cycle_btn_width / 2) - render::get_text_size(font, "+").x / 2, this->y - 1, font, "+", false, color::white(255));
+
+	render::text(this->x + (picker_end_pos - (picker_end_pos - picker_start_pos) / 2) - render::get_text_size(font, current_setting).x / 2, y - 1, font, this->current_setting, false, color::white());
+}
+
+void c_mode_picker::mouse_clicked(long mouse_x, long mouse_y, int mouse_button) {
+
+	if (mouse_button == VK_LBUTTON) {
+		
+		if ((mouse_x > this->x + picker_start_pos) && (mouse_x < this->x + picker_start_pos + cycle_btn_width) && (mouse_y > y) && (mouse_y < y + bar_height)) {
+			this->cycle_left();
+		}
+
+		if ((mouse_x > this->x + picker_end_pos - cycle_btn_width) && (mouse_x < this->x + picker_end_pos) && (mouse_y > y) && (mouse_y < y + bar_height)) {
+			this->cycle_right();
+		}
+	}
+}
+
+void c_mode_picker::mouse_released() {
+	//nothing lmao
+}
+
+void c_mode_picker::cycle_left() {
+
+	if (this->m_current_index - 1 < 0) {
+		this->m_current_index = this->m_settings.size() - 1;
+	}
+	else {
+		this->m_current_index--;
+	}
+	this->current_setting = this->m_settings.at(this->m_current_index);
+}
+
+void c_mode_picker::cycle_right() {
+	if (this->m_current_index + 1 > this->m_settings.size() - 1) {
+		this->m_current_index = 0;
+	}
+	else {
+		this->m_current_index++;
+	}
+	this->current_setting = this->m_settings.at(this->m_current_index);
+}
+
+std::string c_mode_picker::get_mode(int mode_index) {
+	if (this->m_settings.at(mode_index) != "") {
+		return this->m_settings.at(mode_index);
+	}
+	return this->m_default_setting;
+}

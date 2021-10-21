@@ -205,6 +205,10 @@ DECLARE_POINTER_HANDLE( mat_lock_t );
 
 class i_material_system {
 public:
+	i_material* create_material(const char* materialName, c_key_values* keyValues) {
+		using fn = i_material * (__thiscall*)(i_material_system*, char const*, c_key_values*);
+		return (*(fn**)this)[83](this, materialName, keyValues);
+	}
 	i_material *find_material( char const *material_name, const char *group_name, bool complain = true, const char *complain_prefix = 0 ) {
 		using fn = i_material * ( __thiscall * )( i_material_system *, char const *, const char *, bool, const char * );
 		return ( *( fn ** ) this )[ 84 ]( this, material_name, group_name, complain, complain_prefix );

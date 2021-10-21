@@ -105,10 +105,6 @@ namespace combat {
 		inline bool isEnabled = false;
 		void aim_bot(c_usercmd* cmd);
 	};
-	namespace fakelag {
-		inline bool isEnabled = false;
-		inline int amount = 6;
-	}
 	namespace ragebot {
 		inline bool isEnabled = false;
 		inline bool auto_fire = true;

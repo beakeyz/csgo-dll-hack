@@ -54,10 +54,12 @@ unsigned long WINAPI initialize(void* instance) {
 
 	groupBox fakelagbox (e_position::LEFT, 80, 0, render::fonts::watermark_font_other, "Fakelag", e_boxtype::FAKELAG, 1);
 
-	buttonComponent fakelag_enabled(&fakelagbox, "enabled", render::fonts::watermark_font_small, combat::fakelag::isEnabled, 0);
-	c_slider_component fakelag_amount(&fakelagbox, "Lag amount", render::fonts::watermark_font_small, combat::fakelag::amount, 2, 10, 1);
+	buttonComponent fakelag_enabled(&fakelagbox, "enabled", render::fonts::watermark_font_small, c_fakelag::get_ptr()->isEnabled, 0);
+	c_slider_component fakelag_amount(&fakelagbox, "Lag amount", render::fonts::watermark_font_small, c_fakelag::get_ptr()->amount, 2, 10, 1);
 
+	c_mode_picker fakelag_mode(&fakelagbox, "Mode", render::fonts::watermark_font_small, c_fakelag::get_ptr()->fakelag_mode_list, "Default", c_fakelag::get_ptr()->mode, 2);
 	 
+
 	groupBox ragebot_box (e_position::LEFT, 80, 0, render::fonts::watermark_font_other, "Ragebot", e_boxtype::RAGEBOT, 2);
 
 	buttonComponent rb_enabled(&ragebot_box, "Enabled", render::fonts::watermark_font_small, combat::ragebot::isEnabled, 0);
@@ -77,12 +79,23 @@ unsigned long WINAPI initialize(void* instance) {
 	groupBox Chamsbox (e_position::LEFT, 80, 0, render::fonts::watermark_font_other, "Chams", e_boxtype::CHAMS, 0);
 
 	buttonComponent chams_enabled(&Chamsbox, "Enabled", render::fonts::watermark_font_small, c_chams::get_ptr()->isEnabled, 0);
-	c_slider_component Material(&Chamsbox, "Material", render::fonts::watermark_font_small, c_chams::get_ptr()->material, 1, 7, 1);
-	buttonComponent Enemies(&Chamsbox, "Enemies", render::fonts::watermark_font_small, c_chams::get_ptr()->enemies, 2);
-	buttonComponent Teamates(&Chamsbox, "Teammates", render::fonts::watermark_font_small, c_chams::get_ptr()->teammates, 3);
-	buttonComponent Hands(&Chamsbox, "Hands", render::fonts::watermark_font_small, c_chams::get_ptr()->hands, 4);
-	c_color_picker team_color_invisible(&Chamsbox, "Team Color Invisible", render::fonts::watermark_font_small, c_chams::get_ptr()->team_color_invisible, 5);
-	c_color_picker team_color_visible(&Chamsbox, "Team Color Visible", render::fonts::watermark_font_small, c_chams::get_ptr()->team_color_visible, 6);
+	c_mode_picker Material_enemy(&Chamsbox, "Enemy material", render::fonts::watermark_font_small, c_chams::get_ptr()->material_map, "Normal", c_chams::get_ptr()->enemy_material, 1);
+	c_mode_picker Material_team(&Chamsbox, "Team material", render::fonts::watermark_font_small, c_chams::get_ptr()->material_map, "Normal", c_chams::get_ptr()->team_material, 2);
+	c_mode_picker Material_arms(&Chamsbox, "Arm material", render::fonts::watermark_font_small, c_chams::get_ptr()->material_map, "Normal", c_chams::get_ptr()->arms_material, 3);
+	c_mode_picker Material_weapon(&Chamsbox, "Weapon material", render::fonts::watermark_font_small, c_chams::get_ptr()->material_map, "Normal", c_chams::get_ptr()->weapons_material, 4);
+	buttonComponent Enemies(&Chamsbox, "Enemies", render::fonts::watermark_font_small, c_chams::get_ptr()->enemies, 5);
+	buttonComponent Teamates(&Chamsbox, "Teammates", render::fonts::watermark_font_small, c_chams::get_ptr()->teammates, 6);
+	buttonComponent Hands(&Chamsbox, "Arms", render::fonts::watermark_font_small, c_chams::get_ptr()->hands, 7);
+	buttonComponent Weapons(&Chamsbox, "Weapons", render::fonts::watermark_font_small, c_chams::get_ptr()->weapons, 8);
+	c_mode_picker color_enemy(&Chamsbox, "Enemy unoccluded color", render::fonts::watermark_font_small, c_chams::get_ptr()->color_map, "Red", c_chams::get_ptr()->enemy_color, 9);
+	c_mode_picker color_team(&Chamsbox, "Team unoccluded color", render::fonts::watermark_font_small, c_chams::get_ptr()->color_map, "Green", c_chams::get_ptr()->team_color, 10);
+	c_mode_picker color_weapon(&Chamsbox, "Weapon unoccluded color", render::fonts::watermark_font_small, c_chams::get_ptr()->color_map, "Purple", c_chams::get_ptr()->weapons_color, 11);
+	c_mode_picker color_arms(&Chamsbox, "Arm color", render::fonts::watermark_font_small, c_chams::get_ptr()->color_map, "Pink", c_chams::get_ptr()->arms_color, 12);
+
+	c_mode_picker color_occluded_enemy(&Chamsbox, "Enemy occluded color", render::fonts::watermark_font_small, c_chams::get_ptr()->color_map, "Yellow", c_chams::get_ptr()->enemy_color_occluded, 13);
+	c_mode_picker color_occluded_team(&Chamsbox, "Team occluded color", render::fonts::watermark_font_small, c_chams::get_ptr()->color_map, "Cyan", c_chams::get_ptr()->team_color_occluded, 14);
+	c_mode_picker color_occluded_weapon(&Chamsbox, "Weapon occluded color", render::fonts::watermark_font_small, c_chams::get_ptr()->color_map, "Pink", c_chams::get_ptr()->weapons_color_occluded, 15);
+	
 
 	groupBox visual_box (e_position::LEFT, 80, 0, render::fonts::watermark_font_other, "Visuals", e_boxtype::VISUALS, 1);
 
@@ -93,16 +106,19 @@ unsigned long WINAPI initialize(void* instance) {
 
 	groupBox esp_box(e_position::LEFT, 80, 0, render::fonts::watermark_font_other, "Player esp", e_boxtype::PLAYER_ESP, 2);
 
-	buttonComponent skeleton_esp(&esp_box, "Skeleton Esp", render::fonts::watermark_font_small, g_player_esp.is_enabled, 0);
+	buttonComponent skeleton_esp(&esp_box, "Skeleton Esp", render::fonts::watermark_font_small, c_skeleton_esp::get_ptr()->is_enabled, 0);
+	c_mode_picker seketon_esp_color_team(&esp_box, "Team color", render::fonts::watermark_font_small, c_skeleton_esp::get_ptr()->color_map, "Green", c_skeleton_esp::get_ptr()->team_color, 2);
+	c_mode_picker seketon_esp_color_enemy(&esp_box, "Enemy color", render::fonts::watermark_font_small, c_skeleton_esp::get_ptr()->color_map, "Red", c_skeleton_esp::get_ptr()->enemy_color, 3);
+
 
 	c_menu::get_ptr()->combat_btn.m_boxes[box.index] = &box;
 	c_menu::get_ptr()->combat_btn.m_boxes[fakelagbox.index] = &fakelagbox;
 	c_menu::get_ptr()->combat_btn.m_boxes[ragebot_box.index] = &ragebot_box;
 
-
 	c_menu::get_ptr()->visuals_btn.m_boxes[Chamsbox.index] = &Chamsbox;
 	c_menu::get_ptr()->visuals_btn.m_boxes[visual_box.index] = &visual_box;
 	c_menu::get_ptr()->visuals_btn.m_boxes[esp_box.index] = &esp_box;
+
 
 	while (true) {
 
