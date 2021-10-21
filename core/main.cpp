@@ -78,23 +78,27 @@ unsigned long WINAPI initialize(void* instance) {
 
 	groupBox Chamsbox (e_position::LEFT, 80, 0, render::fonts::watermark_font_other, "Chams", e_boxtype::CHAMS, 0);
 
-	buttonComponent chams_enabled(&Chamsbox, "Enabled", render::fonts::watermark_font_small, c_chams::get_ptr()->isEnabled, 0);
-	c_mode_picker Material_enemy(&Chamsbox, "Enemy material", render::fonts::watermark_font_small, c_chams::get_ptr()->material_map, "Normal", c_chams::get_ptr()->enemy_material, 1);
-	c_mode_picker Material_team(&Chamsbox, "Team material", render::fonts::watermark_font_small, c_chams::get_ptr()->material_map, "Normal", c_chams::get_ptr()->team_material, 2);
-	c_mode_picker Material_arms(&Chamsbox, "Arm material", render::fonts::watermark_font_small, c_chams::get_ptr()->material_map, "Normal", c_chams::get_ptr()->arms_material, 3);
-	c_mode_picker Material_weapon(&Chamsbox, "Weapon material", render::fonts::watermark_font_small, c_chams::get_ptr()->material_map, "Normal", c_chams::get_ptr()->weapons_material, 4);
-	buttonComponent Enemies(&Chamsbox, "Enemies", render::fonts::watermark_font_small, c_chams::get_ptr()->enemies, 5);
-	buttonComponent Teamates(&Chamsbox, "Teammates", render::fonts::watermark_font_small, c_chams::get_ptr()->teammates, 6);
-	buttonComponent Hands(&Chamsbox, "Arms", render::fonts::watermark_font_small, c_chams::get_ptr()->hands, 7);
-	buttonComponent Weapons(&Chamsbox, "Weapons", render::fonts::watermark_font_small, c_chams::get_ptr()->weapons, 8);
-	c_mode_picker color_enemy(&Chamsbox, "Enemy unoccluded color", render::fonts::watermark_font_small, c_chams::get_ptr()->color_map, "Red", c_chams::get_ptr()->enemy_color, 9);
-	c_mode_picker color_team(&Chamsbox, "Team unoccluded color", render::fonts::watermark_font_small, c_chams::get_ptr()->color_map, "Green", c_chams::get_ptr()->team_color, 10);
-	c_mode_picker color_weapon(&Chamsbox, "Weapon unoccluded color", render::fonts::watermark_font_small, c_chams::get_ptr()->color_map, "Purple", c_chams::get_ptr()->weapons_color, 11);
-	c_mode_picker color_arms(&Chamsbox, "Arm color", render::fonts::watermark_font_small, c_chams::get_ptr()->color_map, "Pink", c_chams::get_ptr()->arms_color, 12);
+	buttonComponent Enemies(&Chamsbox, "Enemies", render::fonts::watermark_font_small, c_chams::get_ptr()->enemies, 0);
+	buttonComponent Teamates(&Chamsbox, "Teammates", render::fonts::watermark_font_small, c_chams::get_ptr()->teammates, 1);
+	buttonComponent Hands(&Chamsbox, "Arms", render::fonts::watermark_font_small, c_chams::get_ptr()->hands, 2);
+	buttonComponent Weapons(&Chamsbox, "Weapons", render::fonts::watermark_font_small, c_chams::get_ptr()->weapons, 3);
 
-	c_mode_picker color_occluded_enemy(&Chamsbox, "Enemy occluded color", render::fonts::watermark_font_small, c_chams::get_ptr()->color_map, "Yellow", c_chams::get_ptr()->enemy_color_occluded, 13);
-	c_mode_picker color_occluded_team(&Chamsbox, "Team occluded color", render::fonts::watermark_font_small, c_chams::get_ptr()->color_map, "Cyan", c_chams::get_ptr()->team_color_occluded, 14);
-	c_mode_picker color_occluded_weapon(&Chamsbox, "Weapon occluded color", render::fonts::watermark_font_small, c_chams::get_ptr()->color_map, "Pink", c_chams::get_ptr()->weapons_color_occluded, 15);
+	c_mode_picker Material_enemy(&Chamsbox, "Enemy material", render::fonts::watermark_font_small, c_chams::get_ptr()->material_map, "Normal", c_chams::get_ptr()->enemy_material, 4);
+	c_mode_picker Material_team(&Chamsbox, "Team material", render::fonts::watermark_font_small, c_chams::get_ptr()->material_map, "Normal", c_chams::get_ptr()->team_material, 5);
+	c_mode_picker Material_arms(&Chamsbox, "Arm material", render::fonts::watermark_font_small, c_chams::get_ptr()->material_map, "Normal", c_chams::get_ptr()->arms_material, 6);
+	c_mode_picker Material_weapon(&Chamsbox, "Weapon material", render::fonts::watermark_font_small, c_chams::get_ptr()->material_map, "Normal", c_chams::get_ptr()->weapons_material, 7);
+	
+	c_mode_picker color_enemy(&Chamsbox, "Enemy unoccluded color", render::fonts::watermark_font_small, c_chams::get_ptr()->color_map, "Red", c_chams::get_ptr()->enemy_color, 8);
+	c_mode_picker color_occluded_enemy(&Chamsbox, "Enemy occluded color", render::fonts::watermark_font_small, c_chams::get_ptr()->color_map, "Yellow", c_chams::get_ptr()->enemy_color_occluded, 9);
+
+	c_mode_picker color_team(&Chamsbox, "Team unoccluded color", render::fonts::watermark_font_small, c_chams::get_ptr()->color_map, "Green", c_chams::get_ptr()->team_color, 10);
+	c_mode_picker color_occluded_team(&Chamsbox, "Team occluded color", render::fonts::watermark_font_small, c_chams::get_ptr()->color_map, "Cyan", c_chams::get_ptr()->team_color_occluded, 11);
+
+	c_mode_picker color_weapon(&Chamsbox, "Weapon unoccluded color", render::fonts::watermark_font_small, c_chams::get_ptr()->color_map, "Purple", c_chams::get_ptr()->weapons_color, 12);
+	c_mode_picker color_occluded_weapon(&Chamsbox, "Weapon occluded color", render::fonts::watermark_font_small, c_chams::get_ptr()->color_map, "Pink", c_chams::get_ptr()->weapons_color_occluded, 13);
+
+	c_mode_picker color_arms(&Chamsbox, "Arm color", render::fonts::watermark_font_small, c_chams::get_ptr()->color_map, "Pink", c_chams::get_ptr()->arms_color, 14);
+
 	
 
 	groupBox visual_box (e_position::LEFT, 80, 0, render::fonts::watermark_font_other, "Visuals", e_boxtype::VISUALS, 1);
@@ -106,7 +110,8 @@ unsigned long WINAPI initialize(void* instance) {
 
 	groupBox esp_box(e_position::LEFT, 80, 0, render::fonts::watermark_font_other, "Player esp", e_boxtype::PLAYER_ESP, 2);
 
-	buttonComponent skeleton_esp(&esp_box, "Skeleton Esp", render::fonts::watermark_font_small, c_skeleton_esp::get_ptr()->is_enabled, 0);
+	buttonComponent skeleton_esp(&esp_box, "Teammates", render::fonts::watermark_font_small, c_skeleton_esp::get_ptr()->teammates, 0);
+	buttonComponent skeleton_esp_enemies(&esp_box, "Enemies", render::fonts::watermark_font_small, c_skeleton_esp::get_ptr()->enemies, 1);
 	c_mode_picker seketon_esp_color_team(&esp_box, "Team color", render::fonts::watermark_font_small, c_skeleton_esp::get_ptr()->color_map, "Green", c_skeleton_esp::get_ptr()->team_color, 2);
 	c_mode_picker seketon_esp_color_enemy(&esp_box, "Enemy color", render::fonts::watermark_font_small, c_skeleton_esp::get_ptr()->color_map, "Red", c_skeleton_esp::get_ptr()->enemy_color, 3);
 
