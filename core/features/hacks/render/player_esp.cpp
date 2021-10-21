@@ -46,7 +46,7 @@ color c_skeleton_esp::get_color(std::unordered_map<int, std::string> p_color_map
 
 void c_skeleton_esp::on_draw()
 {
-	if (!this->is_enabled)
+	if (!this->teammates && !this->enemies)
 		return;
 
 	if (interfaces::engine->is_in_game())
@@ -64,11 +64,11 @@ void c_skeleton_esp::on_draw()
 
 				matrix_t bone_matrices[128];
 				if (entity->setup_bones(bone_matrices, 128, 256, 0.0f)) {
-					if (entity->team() == csgo::local_player->team()) {
+					if (entity->team() == csgo::local_player->team() && this->teammates) {
 						
 						this->draw_skeleton((player_t*)entity, this->get_color(this->color_map, this->team_color), bone_matrices);
 					}
-					else {
+					else if(this->enemies){
 
 						this->draw_skeleton((player_t*)entity, this->get_color(this->color_map, this->enemy_color), bone_matrices);
 					}

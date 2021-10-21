@@ -125,15 +125,12 @@ void __fastcall hooks::frame_stage_notify::hook(void* _this, int edx, FrameStage
 }
 
 void __fastcall hooks::draw_model_execute::hook(void* _this, int edx, void* ctx, void* state, model_render_info_t& info, matrix3x4_t* customBoneToWorld) {
-
-
-	//draw_model_execute_original(_this, edx, ctx, state, info, customBoneToWorld);
-	//interfaces::model_render->override_material(nullptr);
-
 	if (interfaces::engine->is_in_game() && interfaces::engine->is_connected()) {
 
 		if (ctx && customBoneToWorld) {
-			if (c_chams::get_ptr()->isEnabled) {
+			//TODO: this might be broken, check and capitalize
+			//original: if (c_chams::get_ptr()->isEnabled)
+			if (c_chams::get_ptr()->teammates || c_chams::get_ptr()->enemies || c_chams::get_ptr()->weapons || c_chams::get_ptr()->hands) {
 				c_chams::get_ptr()->onChams(_this, edx, ctx, state, info, customBoneToWorld, draw_model_execute_original, static_cast<entity_t*>(interfaces::entity_list->get_client_entity(info.entity_index)));
 
 				draw_model_execute_original(_this, edx, ctx, state, info, customBoneToWorld);
@@ -141,7 +138,9 @@ void __fastcall hooks::draw_model_execute::hook(void* _this, int edx, void* ctx,
 			}
 		}
 	}
-	if (!c_chams::get_ptr()->isEnabled) {
+	//TODO: this might be broken, check and capitalize
+	//original: if (!c_chams::get_ptr()->isEnabled)
+	if (!c_chams::get_ptr()->teammates && !c_chams::get_ptr()->enemies && !c_chams::get_ptr()->weapons && !c_chams::get_ptr()->hands) {
 		draw_model_execute_original(_this, edx, ctx, state, info, customBoneToWorld);
 	}
 }

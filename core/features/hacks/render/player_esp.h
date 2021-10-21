@@ -10,7 +10,8 @@ public:
 
 public:
 
-	bool is_enabled = false;
+	bool teammates = false;
+	bool enemies = false;
 	
 	std::unordered_map<int, std::string> color_map = { {0, "Red"}, {1, "Orange"}, {2, "Yellow"}, {3, "Green"}, {4, "Cyan"}, {5, "Blue"}, {6, "Purple"}, {7, "Pink"},  {8, "White"}, {9, "Black"}};
 

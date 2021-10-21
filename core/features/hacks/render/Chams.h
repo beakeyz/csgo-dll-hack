@@ -24,7 +24,6 @@ public:
 	bool weapons = false;
 	int material = 1;
 	int category = Category::RENDER;
-	bool isEnabled = false;
 	std::unordered_map<int, std::string> color_map = { {0, "Red"}, {1, "Orange"}, {2, "Yellow"}, {3, "Green"}, {4, "Cyan"}, {5, "Blue"}, {6, "Purple"}, {7, "Pink"},  {8, "White"}, {9, "Black"} };
 	std::unordered_map<int, std::string> material_map = { {0, "Normal"}, {1, "Flat"}, {2, "Platinum"}, {3, "Glass"}, {4, "Crystal"}, {5, "Chrome"}, {6, "Silver"}, {7, "Gold"},  {8, "Plastic"}, {9, "Metallic"}, {10, "Pearlescent"}, {11, "Glow"}};
 
