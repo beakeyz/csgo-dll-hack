@@ -95,6 +95,7 @@
     <ClCompile Include="core\features\hacks\combat\Resolver.cpp" />
     <ClCompile Include="core\features\hacks\combat\Triggerbot.cpp" />
     <ClCompile Include="core\features\hacks\fakelag\fakelag.cpp" />
+    <ClCompile Include="core\features\hacks\legit\legitbot.cpp" />
     <ClCompile Include="core\features\hacks\misc\engine_prediction.cpp" />
     <ClCompile Include="core\features\hacks\misc\misc.cpp" />
     <ClCompile Include="core\features\hacks\render\visuals.cpp" />
@@ -138,6 +139,7 @@
     <ClInclude Include="core\features\hacks\fakelag\fakelag.h" />
     <ClInclude Include="core\features\features.hpp" />
     <ClInclude Include="core\features\hacks\features.h" />
+    <ClInclude Include="core\features\hacks\legit\legitbot.h" />
     <ClInclude Include="core\features\hacks\misc\engine_prediction.hpp" />
     <ClInclude Include="core\features\hacks\render\player_esp.h" />
     <ClInclude Include="core\features\hacks\render\visuals.h" />

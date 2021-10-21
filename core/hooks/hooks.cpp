@@ -112,7 +112,6 @@ void __fastcall hooks::frame_stage_notify::hook(void* _this, int edx, FrameStage
 	if (stage == FrameStage::NET_UPDATE_POSTDATAUPDATE_START)
 	{
 		combat::resolver::resolver();
-		//visuals::color_world();
 	}
 
 	frame_stage_notify_original(interfaces::client, edx, stage);
@@ -152,17 +151,16 @@ void __fastcall hooks::SceneEnd::hook(void* _this, void* edx) {
 	Render::Glow::RunGlow();
 }
 
-/*
-long __stdcall hooks::EndScene::hook(IDirect3DDevice9* pDevice)
-{
-	return EndScene_original(pDevice);
-}
-*/
-
 bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd* cmd) {
+	
 	create_move_original(input_sample_frametime, cmd);
 
 	if (!cmd || !cmd->command_number)
+		return false;
+
+	g_ctx.globals.weapon = csgo::local_player->active_weapon();
+
+	if (!g_ctx.globals.weapon)
 		return false;
 
 	csgo::local_player = static_cast<player_t*>(interfaces::entity_list->get_client_entity(interfaces::engine->get_local_player()));
@@ -172,14 +170,9 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 	auto old_sidemove = cmd->sidemove;
 	g_ctx.globals.wish_angle = cmd->viewangles;
 
-	//where all the hacks go
+
 	movement::bunny_hop::bunny_hop(cmd);
-	//misc::movement::fastStop(cmd);
-	//misc::movement::air_strafe(cmd);
 
-	//misc::no_flash(cmd);
-
-	//variables::bot->aim_bot(cmd);
 	combat::aimbot::aim_bot(cmd);
 	combat::triggerbot::triggerbot(cmd);
 
@@ -197,13 +190,8 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 
 	} prediction::end();
 
-	//math::correct_movement(old_viewangles, cmd, old_forwardmove, old_sidemove);
 
 	math::CorrectMovement(old_viewangles, cmd, old_forwardmove, old_sidemove);
-
-	//cmd->forwardmove = std::clamp(cmd->forwardmove, -450.0f, 450.0f);
-	//cmd->sidemove = std::clamp(cmd->sidemove, -450.0f, 450.0f);
-	//cmd->upmove = std::clamp(cmd->upmove, -320.0f, 320.0f);
 
 	cmd->viewangles.normalize();
 	cmd->viewangles.x = std::clamp(cmd->viewangles.x, -89.0f, 89.0f);
@@ -217,15 +205,6 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 	return false;
 }
 
-/*
-int __fastcall hooks::doPostScreenEffects::hook(void* _this, int edx, int param) {
-
-	//visuals::glow();
-
-	return do_post_screen_original(interfaces::clientmode, edx, param);
-}
-*/
-
 void __stdcall hooks::paint_traverse::hook(unsigned int panel, bool force_repaint, bool allow_force) {
 	auto panel_to_draw = fnv::hash(interfaces::panel->get_panel_name(panel));
 	static const std::string watermark = "BeakonCS - V2";
@@ -233,8 +212,6 @@ void __stdcall hooks::paint_traverse::hook(unsigned int panel, bool force_repain
 	switch (panel_to_draw) {
 	case fnv::hash("MatSystemTopPanel"):
 		
-		//all the component go out of scope here, so they might get reverted to nullptrs
-
 		render::draw_filled_rect(5, 15, render::get_text_size(render::fonts::font_bigboi, watermark).x + 10, 25, color::black(245));
 		
 		render::draw_line(5, 40, render::get_text_size(render::fonts::font_bigboi, watermark).x + 14, 40, color::white(255));
@@ -242,15 +219,12 @@ void __stdcall hooks::paint_traverse::hook(unsigned int panel, bool force_repain
 
 
 		render::text(10, 16, render::fonts::font_bigboi, watermark, false, color::white(255));
-		//visuals::twoD_box();
-		//visuals::snap_lines();
+		
 		c_skeleton_esp::get_ptr()->on_draw();
 
-		//menu::toggle();
 		c_menu::get_ptr()->toggle();
 
 		c_menu::get_ptr()->render();
-		//menu::render();
 
 		break;
 
