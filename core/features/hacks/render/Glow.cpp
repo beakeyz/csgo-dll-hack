@@ -1,25 +1,24 @@
 #include "../../../menu/variables.hpp"
 #include "../../features.hpp"
+#include "./glow.h"
+#include "./../features.h"
 
-void Render::Glow::EndGlow() {
+void c_glow::endGlow() {
 
 	for (auto i = 0; i < interfaces::glow_manager->size; i++) {
 		auto& glowObject = interfaces::glow_manager->objects[i];
-		auto entity = reinterpret_cast<entity_t*>(glowObject.entity);
+		auto entity = reinterpret_cast<entity_t*>(glowObject.m_pEntity);
 
 		if (glowObject.unused())
 			continue;
 
-		if (!entity || entity->dormant())
-			continue;
-
-		glowObject.alpha = 0.0f;
+		glowObject.m_flAlpha = 0.0f;
 	}
 }
 
-void Render::Glow::RunGlow() {
+void c_glow::runGlow() {
 
-	if (!Render::Glow::isEnabled)
+	if (!this->teammates && !this->enemies)
 		return;
 
 	if (!interfaces::engine->is_in_game())
@@ -27,7 +26,7 @@ void Render::Glow::RunGlow() {
 
 	for (auto i = 0; i < interfaces::glow_manager->size; i++) {
 		auto& glowObject = interfaces::glow_manager->objects[i];
-		auto entity = reinterpret_cast<entity_t*>(glowObject.entity);
+		auto entity = reinterpret_cast<entity_t*>(glowObject.m_pEntity);
 
 		if (glowObject.unused())
 			continue;
@@ -36,53 +35,27 @@ void Render::Glow::RunGlow() {
 			continue;
 
 		//auto color = Color{};
+		color c;
 
-		if (entity->client_class()->class_id == ccsplayer)
+		if (entity->client_class()->class_id == class_ids::ccsplayer)
 		{
 			if (entity->health() <= 0)
 				continue;
 
-
-
-			//if (Vars.glow_visible_only && !entity->IsVisible())
-			//	continue;
-			/*
-			Color team_color = entity->IsVisible()
-				? Color(Vars.color_glow_team_visible[0],
-					Vars.color_glow_team_visible[1],
-					Vars.color_glow_team_visible[2],
-					Vars.color_glow_team_visible[3])
-				:
-				Color(Vars.color_glow_team_hidden[0],
-					Vars.color_glow_team_hidden[1],
-					Vars.color_glow_team_hidden[2],
-					Vars.color_glow_team_hidden[3]);
-
-
-			Color enemy_color = entity->IsVisible()
-				? Color(Vars.color_glow_enemy_visible[0],
-					Vars.color_glow_enemy_visible[1],
-					Vars.color_glow_enemy_visible[2],
-					Vars.color_glow_enemy_visible[3])
-				:
-				Color(Vars.color_glow_enemy_hidden[0],
-					Vars.color_glow_enemy_hidden[1],
-					Vars.color_glow_enemy_hidden[2],
-					Vars.color_glow_enemy_hidden[3]);
-
-			color = entity->IsTeammate() ? team_color : enemy_color;
-			*/
+			if (entity->team() == csgo::local_player->team() && this->teammates)
+				c = c_skeleton_esp::get_ptr()->get_color(this->color_map, this->team_color);
+			else if (entity->team() != csgo::local_player->team() && this->enemies)
+				c = c_skeleton_esp::get_ptr()->get_color(this->color_map, this->enemy_color);
+			else
+				continue;
 		}
 		else {
 			continue;
 		}
 
-		glowObject.color = vec3_t{ 255, 0, 0 };//color.r() / 255.0f;
-		//glowObject.m_flGreen = color.g() / 255.0f;
-		//glowObject.m_flBlue = color.b() / 255.0f;
-		glowObject.alpha = 255.0f;
-		glowObject.render_when_occluded = true;
-		glowObject.render_when_unoccluded = false;
+		glowObject.m_vecClr = vec3_t{ c.r * 1.0F, c.g * 1.0F, c.b * 1.0F };
+		glowObject.m_flAlpha = c.a * 1.0F;
+		glowObject.m_bRenderWhenUnoccluded = false;
+		glowObject.m_bRenderWhenOccluded = true;
 	}
-
 }

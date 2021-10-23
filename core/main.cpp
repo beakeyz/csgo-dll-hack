@@ -113,6 +113,13 @@ unsigned long WINAPI initialize(void* instance) {
 	c_mode_picker seketon_esp_color_team(&esp_box, "Team color", render::fonts::watermark_font_small, c_skeleton_esp::get_ptr()->color_map, "Green", c_skeleton_esp::get_ptr()->team_color, 2);
 	c_mode_picker seketon_esp_color_enemy(&esp_box, "Enemy color", render::fonts::watermark_font_small, c_skeleton_esp::get_ptr()->color_map, "Red", c_skeleton_esp::get_ptr()->enemy_color, 3);
 
+	groupBox glow_box(e_position::LEFT, 80, 0, render::fonts::watermark_font_other, "Glow", e_boxtype::VISUALS, 3);
+
+	buttonComponent glow_esp(&glow_box, "Teammates", render::fonts::watermark_font_small, c_glow::get_ptr()->teammates, 0);
+	buttonComponent glow_esp_enemies(&glow_box, "Enemies", render::fonts::watermark_font_small, c_glow::get_ptr()->enemies, 1);
+	c_mode_picker glow_esp_color_team(&glow_box, "Team color", render::fonts::watermark_font_small, c_glow::get_ptr()->color_map, "Green", c_glow::get_ptr()->team_color, 2);
+	c_mode_picker glow_esp_color_enemy(&glow_box, "Enemy color", render::fonts::watermark_font_small, c_glow::get_ptr()->color_map, "Red", c_glow::get_ptr()->enemy_color, 3);
+
 
 	c_menu::get_ptr()->combat_btn.m_boxes[box.index] = &box;
 	c_menu::get_ptr()->combat_btn.m_boxes[fakelagbox.index] = &fakelagbox;
@@ -121,6 +128,7 @@ unsigned long WINAPI initialize(void* instance) {
 	c_menu::get_ptr()->visuals_btn.m_boxes[Chamsbox.index] = &Chamsbox;
 	c_menu::get_ptr()->visuals_btn.m_boxes[visual_box.index] = &visual_box;
 	c_menu::get_ptr()->visuals_btn.m_boxes[esp_box.index] = &esp_box;
+	c_menu::get_ptr()->visuals_btn.m_boxes[glow_box.index] = &glow_box;
 
 
 	while (true) {

@@ -68,7 +68,7 @@ void c_skeleton_esp::on_draw()
 						
 						this->draw_skeleton((player_t*)entity, this->get_color(this->color_map, this->team_color), bone_matrices);
 					}
-					else if(this->enemies){
+					else if(entity->team() != csgo::local_player->team() && this->enemies){
 
 						this->draw_skeleton((player_t*)entity, this->get_color(this->color_map, this->enemy_color), bone_matrices);
 					}

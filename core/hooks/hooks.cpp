@@ -10,7 +10,7 @@ make sure unused hookfunctions are commented out!
 otherwise game go boom
 */
 
-//hooks::doPostScreenEffects::fn do_post_screen_original = nullptr;
+hooks::doPostScreenEffects::fn do_post_screen_original = nullptr;
 //hooks::EndScene::fn EndScene_original = nullptr;
 
 hooks::create_move::fn create_move_original = nullptr;
@@ -18,7 +18,7 @@ hooks::paint_traverse::fn paint_traverse_original = nullptr;
 
 hooks::draw_model_execute::fn draw_model_execute_original = nullptr;
 hooks::frame_stage_notify::fn frame_stage_notify_original = nullptr;
-hooks::SceneEnd::fn SceneEnd_original = nullptr;
+//hooks::SceneEnd::fn SceneEnd_original = nullptr;
 
 vec3_t flb_aim_punch;
 vec3_t flb_view_punch;
@@ -43,8 +43,8 @@ bool hooks::initialize() {
 	else if (MH_CreateHook(paint_traverse_target, &paint_traverse::hook, reinterpret_cast<void**>(&paint_traverse_original)) != MH_OK)
 		throw std::runtime_error("failed to initialize paint_traverse. (outdated index?)");
 
-	//else if (MH_CreateHook(do_post_screen_target, &doPostScreenEffects::hook, reinterpret_cast<void**>(&do_post_screen_original)) != MH_OK)
-	//	throw std::runtime_error("failed to initialize post_screen. (outdated index?)");
+	else if (MH_CreateHook(do_post_screen_target, &doPostScreenEffects::hook, reinterpret_cast<void**>(&do_post_screen_original)) != MH_OK)
+		throw std::runtime_error("failed to initialize post_screen. (outdated index?)");
 	//else if (MH_CreateHook(EndScene_target, &EndScene::hook, reinterpret_cast<void**>(&EndScene_original)) != MH_OK)
 	//	throw std::runtime_error("failed to initialize EndScene. (outdated index?)");
 
@@ -54,8 +54,8 @@ bool hooks::initialize() {
 	else if (MH_CreateHook(frame_stage_notify_target, &frame_stage_notify::hook, reinterpret_cast<void**>(&frame_stage_notify_original)) != MH_OK)
 		throw std::runtime_error("failed to initialize frame_stage_notify. (outdated index?)");
 
-	else if (MH_CreateHook(SceneEnd_target, &SceneEnd::hook, reinterpret_cast<void**>(&SceneEnd_original)) != MH_OK)
-		throw std::runtime_error("failed to initialize SceneEnd. (outdated index?)");
+	//else if (MH_CreateHook(SceneEnd_target, &SceneEnd::hook, reinterpret_cast<void**>(&SceneEnd_original)) != MH_OK)
+	//	throw std::runtime_error("failed to initialize SceneEnd. (outdated index?)");
 
 	
 
@@ -71,7 +71,7 @@ bool hooks::initialize() {
 
 void hooks::release() {
 
-	Render::Glow::EndGlow();
+	c_glow::get_ptr()->endGlow();
 
 	MH_Uninitialize();
 
@@ -144,23 +144,11 @@ void __fastcall hooks::draw_model_execute::hook(void* _this, int edx, void* ctx,
 	}
 }
 
-void __fastcall hooks::SceneEnd::hook(void* _this, void* edx) {
-	SceneEnd_original(_this, edx);
-
-
-	Render::Glow::RunGlow();
-}
-
 bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd* cmd) {
 	
 	create_move_original(input_sample_frametime, cmd);
 
 	if (!cmd || !cmd->command_number)
-		return false;
-
-	g_ctx.globals.weapon = csgo::local_player->active_weapon();
-
-	if (!g_ctx.globals.weapon)
 		return false;
 
 	csgo::local_player = static_cast<player_t*>(interfaces::entity_list->get_client_entity(interfaces::engine->get_local_player()));
@@ -203,6 +191,15 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 	*reinterpret_cast<bool*>(*frame_pointer - 0x1C) = g_ctx.globals.send_packet;
 
 	return false;
+}
+
+bool __fastcall hooks::doPostScreenEffects::hook(uintptr_t ecx, uintptr_t edx, const void* pSetup) {
+	if (!csgo::local_player)
+		return do_post_screen_original(ecx, pSetup);
+
+	c_glow::get_ptr()->runGlow();
+
+	return do_post_screen_original(ecx, pSetup);
 }
 
 void __stdcall hooks::paint_traverse::hook(unsigned int panel, bool force_repaint, bool allow_force) {

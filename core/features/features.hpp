@@ -43,17 +43,6 @@ namespace Render {
 		//void onEsp();
 
 	}
-	namespace Glow {
-		inline int category = Category::RENDER;
-		inline bool isEnabled = false;
-		inline bool teammates = true;
-		inline bool enemies = true;
-		inline bool weapons = false;
-
-
-		void RunGlow();
-		void EndGlow();
-	}
 };
 namespace movement {
 	namespace bunny_hop {

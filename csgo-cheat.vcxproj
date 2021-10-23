@@ -105,7 +105,7 @@
     <ClCompile Include="core\features\hacks\ragebot\ragebot.cpp" />
     <ClCompile Include="core\features\hacks\render\Chams.cpp" />
     <ClCompile Include="core\features\hacks\render\player_esp.cpp" />
-    <ClCompile Include="core\features\hacks\render\Glow.cpp" />
+    <ClCompile Include="core\features\hacks\render\glow.cpp" />
     <ClCompile Include="core\features\setting\setting.cpp" />
     <ClCompile Include="core\hooks\hooks.cpp" />
     <ClCompile Include="core\menu\components\button_component.cpp" />
@@ -141,6 +141,7 @@
     <ClInclude Include="core\features\hacks\features.h" />
     <ClInclude Include="core\features\hacks\legit\legitbot.h" />
     <ClInclude Include="core\features\hacks\misc\engine_prediction.hpp" />
+    <ClInclude Include="core\features\hacks\render\glow.h" />
     <ClInclude Include="core\features\hacks\render\player_esp.h" />
     <ClInclude Include="core\features\hacks\render\visuals.h" />
     <ClInclude Include="core\features\module.h" />

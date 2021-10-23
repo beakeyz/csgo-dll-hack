@@ -12,8 +12,8 @@ namespace hooks {
 		bool __stdcall hook(float input_sample_frametime, c_usercmd* cmd);
 	};
 	namespace doPostScreenEffects {
-		using fn = int(__fastcall*)(void*, int, int);
-		int __fastcall hook(void* _this, int edx, int params);
+		using fn = bool(__thiscall*)(uintptr_t, const void*);
+		bool __fastcall hook(uintptr_t ecx, uintptr_t edx, const void* pSetup);
 	};
 
 	namespace paint_traverse {

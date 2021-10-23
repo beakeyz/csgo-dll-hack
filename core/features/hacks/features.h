@@ -7,3 +7,4 @@
 #include "./render/Chams.h"
 #include "./render/player_esp.h"
 #include "./render/visuals.h"
+#include "./render/glow.h"
