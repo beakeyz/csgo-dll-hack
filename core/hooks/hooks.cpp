@@ -126,9 +126,18 @@ void __fastcall hooks::frame_stage_notify::hook(void* _this, int edx, FrameStage
 void __fastcall hooks::draw_model_execute::hook(void* _this, int edx, void* ctx, void* state, model_render_info_t& info, matrix3x4_t* customBoneToWorld) {
 	if (interfaces::engine->is_in_game() && interfaces::engine->is_connected()) {
 
+		if (interfaces::model_render->is_forced_material_override() && !strstr(info.model->name, "arms") && !strstr(info.model->name, "weapons/v_"))
+			return draw_model_execute_original(_this, edx, ctx, state, info, customBoneToWorld);
+
+		c_chams::get_ptr()->onChams(_this, edx, ctx, state, info, customBoneToWorld, draw_model_execute_original, static_cast<entity_t*>(interfaces::entity_list->get_client_entity(info.entity_index)));
+
+		draw_model_execute_original(_this, edx, ctx, state, info, customBoneToWorld);
+
+		interfaces::model_render->override_material(nullptr);
+
+		//TODO: remove
+		/*
 		if (ctx && customBoneToWorld) {
-			//TODO: this might be broken, check and capitalize
-			//original: if (c_chams::get_ptr()->isEnabled)
 			if (c_chams::get_ptr()->teammates || c_chams::get_ptr()->enemies || c_chams::get_ptr()->weapons || c_chams::get_ptr()->hands) {
 				c_chams::get_ptr()->onChams(_this, edx, ctx, state, info, customBoneToWorld, draw_model_execute_original, static_cast<entity_t*>(interfaces::entity_list->get_client_entity(info.entity_index)));
 
@@ -137,10 +146,10 @@ void __fastcall hooks::draw_model_execute::hook(void* _this, int edx, void* ctx,
 			}
 		}
 	}
-	//TODO: this might be broken, check and capitalize
-	//original: if (!c_chams::get_ptr()->isEnabled)
 	if (!c_chams::get_ptr()->teammates && !c_chams::get_ptr()->enemies && !c_chams::get_ptr()->weapons && !c_chams::get_ptr()->hands) {
 		draw_model_execute_original(_this, edx, ctx, state, info, customBoneToWorld);
+	
+	*/
 	}
 }
 
@@ -157,7 +166,6 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 	auto old_forwardmove = cmd->forwardmove;
 	auto old_sidemove = cmd->sidemove;
 	g_ctx.globals.wish_angle = cmd->viewangles;
-
 
 	movement::bunny_hop::bunny_hop(cmd);
 

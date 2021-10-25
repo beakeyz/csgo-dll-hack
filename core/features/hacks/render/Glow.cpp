@@ -53,6 +53,7 @@ void c_glow::runGlow() {
 			continue;
 		}
 
+		glowObject.m_nGlowStyle = 0;
 		glowObject.m_vecClr = vec3_t{ c.r * 1.0F, c.g * 1.0F, c.b * 1.0F };
 		glowObject.m_flAlpha = c.a * 1.0F;
 		glowObject.m_bRenderWhenUnoccluded = false;
