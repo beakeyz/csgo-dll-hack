@@ -110,7 +110,7 @@
     <ClCompile Include="core\hooks\hooks.cpp" />
     <ClCompile Include="core\menu\components\button_component.cpp" />
     <ClCompile Include="core\menu\components\category_btn.cpp" />
-    <ClCompile Include="core\menu\components\groupBox.cpp" />
+    <ClCompile Include="core\menu\components\group_box.cpp" />
     <ClCompile Include="core\menu\framework.cpp" />
     <ClCompile Include="core\menu\menu.cpp" />
     <ClCompile Include="core\menu\utils\animation.cpp" />
@@ -141,6 +141,7 @@
     <ClInclude Include="core\features\hacks\features.h" />
     <ClInclude Include="core\features\hacks\legit\legitbot.h" />
     <ClInclude Include="core\features\hacks\misc\engine_prediction.hpp" />
+    <ClInclude Include="core\features\hacks\misc\misc.h" />
     <ClInclude Include="core\features\hacks\render\glow.h" />
     <ClInclude Include="core\features\hacks\render\player_esp.h" />
     <ClInclude Include="core\features\hacks\render\visuals.h" />

@@ -32,7 +32,6 @@ class c_ragebot{
 	void select_target();
 	//bool get_points_from_hitbox(player_t* e, std::vector< int > hitboxes, matrix3x4_t* matrix, std::vector< vec3_t >& points, float scale);
 	void quickstop(weapon_t* local_weapon);
-	bool is_valid(player_t* player);
 	bool hitchance(vec3_t& angle, player_t* ent);
 
 public:
@@ -45,6 +44,7 @@ public:
 	int cur_hitgroup;
 
 	void work(c_usercmd* cmd);
+	bool is_valid(player_t* player);
 	void auto_revolver(weapon_t* local_weapon, c_usercmd* cmd);
 };
 

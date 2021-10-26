@@ -70,5 +70,6 @@ public:
 
 public:
 	e_boxtype m_boxtype;
+	int current_classifier;
 	std::unordered_map<int, comp*> m_comps = {};
 };

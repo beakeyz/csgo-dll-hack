@@ -18,6 +18,10 @@ void c_gui_manager::draw_box(groupBox& box, groupBox* prev_box, int& total_heigh
 
 		int i = 10;
 		for (auto& elm : box.get_comps()) {
+			if (elm.second->classified_index != box.current_classifier && elm.second->is_classified) {
+				continue;
+			}
+
 			elm.second->draw(i);
 			i += elm.second->get_standard_height();
 		}
@@ -36,6 +40,10 @@ void c_gui_manager::draw_box(groupBox& box, groupBox* prev_box, int& total_heigh
 
 		int ji = 10;
 		for (auto& elm : box.get_comps()) {
+			if (elm.second->classified_index != box.current_classifier && elm.second->is_classified) {
+				continue;
+			}
+
 			elm.second->draw(ji);
 			ji += elm.second->get_standard_height();
 		}

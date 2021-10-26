@@ -157,3 +157,30 @@ vec2_t render::get_text_size(unsigned long font, std::string text) {
 	interfaces::surface->get_text_size(font, wstr, w, h);
 	return { static_cast<float>(w), static_cast<float>(h) };
 }
+
+void render::gradient(int x, int y, int w, int h, color first, color second, GradientType type)
+{
+
+	auto filled_rect_fade = [&](bool reversed, float alpha) {
+		using Fn = void(__thiscall*)(VOID*, int, int, int, int, unsigned int, unsigned int, bool);
+		utilities::call_virtual< Fn >(interfaces::surface, 123) (
+			interfaces::surface, x, y, x + w, y + h,
+			reversed ? alpha : 0,
+			reversed ? 0 : alpha,
+			type == GRADIENT_HORIZONTAL);
+	};
+
+	static auto blend = [](const color& first, const color& second, float t) -> color {
+		return color(
+			first.r + t * (second.r - first.r),
+			first.g + t * (second.g - first.g),
+			first.b + t * (second.b - first.b),
+			first.a + t * (second.a - first.a));
+	};
+
+	interfaces::surface->set_drawing_color(first.r, first.g, first.b, first.a);
+	filled_rect_fade(true, first.a);
+
+	interfaces::surface->set_drawing_color(second.r, second.g, second.b, second.a);
+	filled_rect_fade(false, second.a);
+}

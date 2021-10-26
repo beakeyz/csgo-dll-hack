@@ -36,6 +36,9 @@ namespace hooks {
 	namespace EndScene {
 		using fn = long(__stdcall*)(IDirect3DDevice9* pDevice);
 		long __stdcall hook(IDirect3DDevice9* pDevice);
-	}
-
+	};
+	namespace OverrideView {
+		using fn = void(__thiscall*)(i_client_mode*, view_setup_t*);
+		void __stdcall hook(view_setup_t* pSetup);
+	};
 }

@@ -13,16 +13,10 @@ void c_visuals::full_bright() {
 
 void c_visuals::remove_smoke()
 {
-	if (csgo::local_player && this->m_edit_smoke)
-	{
-		static auto smoke_count = *reinterpret_cast<uint32_t**>(utilities::pattern_scan("client.dll", "A3 ? ? ? ? 57 8B CB") + 0x1);
-		*(int*)smoke_count = 0;
-	}
+	static DWORD smoke_count;
+	static uint8_t* offset;
 
-	if (g_ctx.globals.should_remove_smoke == interfaces::engine->is_in_game() && c_visuals::get().m_edit_smoke)
-		return;
-
-	g_ctx.globals.should_remove_smoke = interfaces::engine->is_in_game() && c_visuals::get().m_edit_smoke;
+	static auto last_value = false;
 
 	static std::vector <const char*> smoke_materials =
 	{
@@ -53,14 +47,23 @@ void c_visuals::remove_smoke()
 		"particle/vistasmokev1/vistasmokev4_nocull"
 	};
 
-	for (auto material_name : smoke_materials)
-	{
-		auto material = interfaces::material_system->find_material(material_name, nullptr);
+	if (!offset)
+		offset = utilities::pattern_scan("client.dll", "55 8B EC 83 EC 08 8B 15 ? ? ? ? 0F 57 C0");
+	
+	if (!smoke_count)
+		smoke_count = *reinterpret_cast<DWORD*>(offset + 0x8);
 
-		if (!material)
-			continue;
+	if (this->m_edit_smoke)
+		*reinterpret_cast<int*>(smoke_count) = 0;
 
-		material->set_material_var_flag(material_var_no_draw, this->m_edit_smoke);
-		material->set_material_var_flag(material_var_wireframe, this->smoke_wireframe);
+	if (last_value != this->m_edit_smoke) {
+		last_value = this->m_edit_smoke;
+
+		for (const auto& name : smoke_materials)
+		{
+			auto material = interfaces::material_system->find_material(name, TEXTURE_GROUP_CLIENT_EFFECTS);
+			if (material)
+				material->set_material_var_flag(material_var_wireframe, last_value);
+		}
 	}
 }

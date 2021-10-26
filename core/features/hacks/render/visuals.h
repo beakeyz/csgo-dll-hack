@@ -7,7 +7,8 @@ class c_visuals : public singleton<c_visuals> {
 public:
 	void full_bright();
 	void remove_smoke();
-
+	void nightmode(entity_t* ent, float override_brightness);
+	
 public:
 	bool visual_recoil = false;
 	bool m_full_bright = false;

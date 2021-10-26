@@ -61,11 +61,6 @@ namespace misc {
 
 };
 namespace combat {
-	namespace resolver {
-		inline int category = Category::COMBAT;
-		inline bool enabled = false;
-		void resolver();
-	}
 	namespace antiaim {
 		inline int category = Category::COMBAT;
 		inline bool isEnabled = false;

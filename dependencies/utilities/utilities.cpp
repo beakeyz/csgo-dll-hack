@@ -58,14 +58,14 @@ std::uint8_t* utilities::pattern_scan(const char* module_name, const char* signa
 
 bool utilities::get_bbox(entity_t* e, Box& b, bool player_esp)
 {
-	auto collideable = e->collideable();
-	auto& m_rgflCoordinateFrame = e->m_rgflCoordinateFrame();
+	matrix_t& tran_frame = e->coord_frame();
 
-	auto min = collideable->mins();
-	auto max = collideable->maxs();
+	const vec3_t min = e->mins();
+	const vec3_t max = e->maxs();
 
-	vec3_t points[8] =
-	{
+	vec3_t screen_boxes[8];
+
+	vec3_t points[] = {
 		vec3_t(min.x, min.y, min.z),
 		vec3_t(min.x, max.y, min.z),
 		vec3_t(max.x, max.y, min.z),
@@ -76,69 +76,43 @@ bool utilities::get_bbox(entity_t* e, Box& b, bool player_esp)
 		vec3_t(max.x, min.y, max.z)
 	};
 
-	vec3_t pointsTransformed[8];
-
-	for (auto i = 0; i < 8; i++) {
-		math::vector_transform(points[i], m_rgflCoordinateFrame, pointsTransformed[i]);
-		
+	for (int i = 0; i <= 7; i++) {
+		if (!math::world_to_screen(math::vector_transform(points[i], tran_frame), screen_boxes[i])) {
+			return false;
+		}
 	}
 
-
-	vec3_t pos = e->origin();
-	vec3_t flb;
-	vec3_t brt;
-	vec3_t blb;
-	vec3_t frt;
-	vec3_t frb;
-	vec3_t brb;
-	vec3_t blt;
-	vec3_t flt;
-
-	auto bFlb = math::world_to_screen(pointsTransformed[3], flb);
-	auto bBrt = math::world_to_screen(pointsTransformed[5], brt);
-	auto bBlb = math::world_to_screen(pointsTransformed[0], blb);
-	auto bFrt = math::world_to_screen(pointsTransformed[4], frt);
-	auto bFrb = math::world_to_screen(pointsTransformed[2], frb);
-	auto bBrb = math::world_to_screen(pointsTransformed[1], brb);
-	auto bBlt = math::world_to_screen(pointsTransformed[6], blt);
-	auto bFlt = math::world_to_screen(pointsTransformed[7], flt);
-
-	if (!bFlb && !bBrt && !bBlb && !bFrt && !bFrb && !bBrb && !bBlt && !bFlt)
-		return false;
-
-	vec3_t arr[8] =
-	{
-		flb,
-		brt,
-		blb,
-		frt,
-		frb,
-		brb,
-		blt,
-		flt
+	vec3_t box_array[] = {
+		screen_boxes[3], // fl
+		screen_boxes[5], // br
+		screen_boxes[0], // bl
+		screen_boxes[4], // fr
+		screen_boxes[2], // fr
+		screen_boxes[1], // br
+		screen_boxes[6], // bl
+		screen_boxes[7] // fl
 	};
 
-	auto left = flb.x;
-	auto top = flb.y;
-	auto right = flb.x;
-	auto bottom = flb.y;
+	float left = screen_boxes[3].x, bottom = screen_boxes[3].y, right = screen_boxes[3].x, top = screen_boxes[3].y;
 
-	for (auto i = 1; i < 8; i++)
-	{
-		if (left > arr[i].x)
-			left = arr[i].x;
-		if (top < arr[i].y)
-			top = arr[i].y;
-		if (right < arr[i].x)
-			right = arr[i].x;
-		if (bottom > arr[i].y)
-			bottom = arr[i].y;
+	for (int i = 0; i <= 7; i++) {
+		if (left > box_array[i].x)
+			left = box_array[i].x;
+
+		if (bottom < box_array[i].y)
+			bottom = box_array[i].y;
+
+		if (right < box_array[i].x)
+			right = box_array[i].x;
+
+		if (top > box_array[i].y)
+			top = box_array[i].y;
 	}
 
-	b.x = left;
-	b.y = bottom;
-	b.w = right - left;
-	b.h = top - bottom;
+	b.x = static_cast<int>(left);
+	b.y = static_cast<int>(top);
+	b.w = static_cast<int>(right) - static_cast<int>(left);
+	b.h = static_cast<int>(bottom) - static_cast<int>(top);
 
 	return true;
 }

@@ -19,6 +19,12 @@ enum font_flags {
 
 namespace render {
 
+	enum GradientType
+	{
+		GRADIENT_HORIZONTAL,
+		GRADIENT_VERTICAL
+	};
+
 	void initialize();
 
 	void draw_line(std::int32_t from_x, std::int32_t from_y, std::int32_t to_x, std::int32_t to_y, color color);
@@ -31,6 +37,7 @@ namespace render {
 	void draw_circle(std::int32_t x, std::int32_t y, std::int32_t radius, std::int32_t segments, color color);
 	void draw_rounded_rect(std::int32_t x, std::int32_t y, std::int32_t width, std::int32_t height, std::int32_t r, color color, bool left_under, bool left_up, bool right_under, bool right_up);
 	vec2_t get_text_size(unsigned long font, std::string text);
+	void gradient(int x, int y, int w, int h, color first, color second, GradientType type);
 
 	namespace fonts {
 		extern unsigned long watermark_font;

@@ -3,8 +3,89 @@
 class comp;
 class groupBox;
 
+
+c_button_classifier::c_button_classifier(groupBox* parent, std::vector<sub_classifier> btns, std::string text, unsigned long font, int index) {
+	this->parent = parent;
+	this->font = font;
+	this->text = text;
+	this->m_btns = btns;
+	this->index = index;
+	this->m_current_classified_index = 0;
+	parent->m_comps[this->index] = this;
+}
+
+void c_button_classifier::draw(int index) {
+	parent->current_classifier = this->m_current_classified_index;
+	this->x = 15;
+	this->y = index + this->parent->getY() + 2;
+	this->x += this->parent->getX();
+	
+
+	render::draw_filled_rect(this->x, this->y, parent->getWidth() - 30, this->h, color::black());
+
+	sub_classifier previous_btn = {this->x,this->y,0,this->h,-1,""};
+	for (auto& btn : this->m_btns) {
+		GetCursorPos(&cursor);
+		btn.y = this->y;
+		btn.h = this->h;
+		btn.w = (parent->getWidth() - 30) / this->m_btns.size();
+		if (previous_btn.index != -1) {
+			btn.x = previous_btn.x + previous_btn.w;
+		}
+		else {
+			btn.x = this->x;
+		}
+
+		previous_btn = btn;
+
+		if (this->parent->current_classifier == btn.index) {
+			render::gradient(btn.x, btn.y, btn.w, btn.h, color(100, 100, 100, 205), color(70, 70, 70, 205), render::GradientType::GRADIENT_VERTICAL);
+			render::draw_rect(btn.x, btn.y, btn.w + 1, btn.h, color(100, 100, 100, 205));
+			//color lmao
+			render::draw_line(btn.x + 1, btn.y + btn.h - 2, btn.x + btn.w - 1, btn.y + btn.h - 2, color::white(255));
+		}
+		else {
+			render::gradient(btn.x, btn.y, btn.w, btn.h, color(70, 70, 70, 205), color(30, 30, 30, 155), render::GradientType::GRADIENT_VERTICAL);
+			render::draw_rect(btn.x, btn.y, btn.w + 1, btn.h, color(100, 100, 100, 205));
+		}
+
+		render::text(btn.x - render::get_text_size(font, btn.text).x / 2 + btn.w / 2,
+					btn.y - render::get_text_size(font, btn.text).y / 2 + btn.h / 2, 
+					font,
+					btn.text,
+					false,
+					color::white());
+	}
+	
+	if (GetAsyncKeyState(VK_LBUTTON) && !is_mouse) {
+		if ((cursor.x > x) && (cursor.x < x + (parent->getWidth() - 30)) && (cursor.y > y) && (cursor.y < y + h)) {
+			this->mouse_clicked(cursor.x, cursor.y, VK_LBUTTON);
+		}
+		is_mouse = true;
+	}
+	else if (!GetAsyncKeyState(VK_LBUTTON) && is_mouse) {
+		this->mouse_released();
+		is_mouse = false;
+
+	}
+}
+
+void c_button_classifier::mouse_clicked(long mouse_x, long mouse_y, int mouse_button) {
+
+	for (auto btn : this->m_btns) {
+		if (mouse_x > btn.x && mouse_x < btn.x + btn.w) {
+			this->m_current_classified_index = btn.index;
+			break;
+		}
+	}
+}
+
+void c_button_classifier::mouse_released() {
+	this->clicking = false;
+}
+
 //BUTTONCOMPONENT section
-buttonComponent::buttonComponent(groupBox* parent, std::string text, unsigned long font, bool& r_value, int index) : value(r_value) {
+buttonComponent::buttonComponent(groupBox* parent, int classified_index, std::string text, unsigned long font, bool& r_value, int index) : value(r_value) {
 	this->font = font;
 	this->text = text;
 	this->value = value;
@@ -13,6 +94,10 @@ buttonComponent::buttonComponent(groupBox* parent, std::string text, unsigned lo
 
 	this->parent->m_comps[this->index] = this;
 
+	if (classified_index != -1) {
+		this->is_classified = true;
+		this->classified_index = classified_index;
+	}
 }
 
 void buttonComponent::draw(int index) {
@@ -86,7 +171,7 @@ std::int32_t buttonComponent::getHeight() {
 }
 
 //SLIDERCOMPONENT SECTION
-c_slider_component::c_slider_component(groupBox* parent, std::string text, unsigned long font, int& aValue, int min_value, int max_value, int index) : value(aValue) {
+c_slider_component::c_slider_component(groupBox* parent, int classified_index, std::string text, unsigned long font, int& aValue, int min_value, int max_value, int index) : value(aValue) {
 	this->font = font;
 	this->text = text;
 	this->parent = parent;
@@ -100,6 +185,11 @@ c_slider_component::c_slider_component(groupBox* parent, std::string text, unsig
 
 	this->parent->m_comps[this->index] = this;
 	//this->draw(0);
+
+	if (classified_index != -1) {
+		this->is_classified = true;
+		this->classified_index = classified_index;
+	}
 }
 
 void c_slider_component::draw(int index) {
@@ -156,7 +246,7 @@ void c_slider_component::mouse_released() {
 
 //COLORPICKER section
 
-c_color_picker::c_color_picker(groupBox* parent, std::string text, unsigned long font, color& aValue, int index) : value(aValue) {
+c_color_picker::c_color_picker(groupBox* parent, int classified_index, std::string text, unsigned long font, color& aValue, int index) : value(aValue) {
 	this->font = font;
 	this->text = text;
 	this->parent = parent;
@@ -165,6 +255,11 @@ c_color_picker::c_color_picker(groupBox* parent, std::string text, unsigned long
 	//this->draw(0);
 
 	this->parent->m_comps[this->index] = this;
+
+	if (classified_index != -1) {
+		this->is_classified = true;
+		this->classified_index = classified_index;
+	}
 }
 
 void c_color_picker::draw(int index) {
@@ -193,7 +288,7 @@ void c_color_picker::draw(int index) {
 
 //MODE PICKER section
 
-c_mode_picker::c_mode_picker(groupBox* parent, std::string text, unsigned long font, std::unordered_map<int, std::string> settings, std::string default_setting, std::string& setting, int index) : current_setting(setting) {
+c_mode_picker::c_mode_picker(groupBox* parent, int classified_index, std::string text, unsigned long font, std::unordered_map<int, std::string> settings, std::string default_setting, std::string& setting, int index) : current_setting(setting) {
 	this->font = font;
 	this->text = text;
 	this->parent = parent;
@@ -218,6 +313,11 @@ c_mode_picker::c_mode_picker(groupBox* parent, std::string text, unsigned long f
 	picker_end_pos = this->parent->getWidth() - 30;
 	picker_start_pos = picker_end_pos - cycle_btn_width * 2 - longest_str - 8;
 	bar_height = 12;
+
+	if (classified_index != -1) {
+		this->is_classified = true;
+		this->classified_index = classified_index;
+	}
 }
 
 void c_mode_picker::draw(int index) {

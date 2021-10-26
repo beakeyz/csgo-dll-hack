@@ -115,6 +115,17 @@ public:
 					   0.0f };
 	}
 
+	float DistTo(const vec3_t& vOther) const
+	{
+		vec3_t delta;
+
+		delta.x = x - vOther.x;
+		delta.y = y - vOther.y;
+		delta.z = z - vOther.z;
+
+		return delta.length();
+	}
+
 	constexpr bool noNull() const noexcept {
 		return x || y || z;
 	}

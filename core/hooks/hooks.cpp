@@ -19,6 +19,7 @@ hooks::paint_traverse::fn paint_traverse_original = nullptr;
 hooks::draw_model_execute::fn draw_model_execute_original = nullptr;
 hooks::frame_stage_notify::fn frame_stage_notify_original = nullptr;
 //hooks::SceneEnd::fn SceneEnd_original = nullptr;
+hooks::OverrideView::fn override_view_original = nullptr;
 
 vec3_t flb_aim_punch;
 vec3_t flb_view_punch;
@@ -33,29 +34,25 @@ bool hooks::initialize() {
 	const auto draw_model_execute_target = reinterpret_cast<void*>(get_virtual(interfaces::model_render, 21));
 	const auto frame_stage_notify_target = reinterpret_cast<void*>(get_virtual(interfaces::client, 37));
 	const auto SceneEnd_target = reinterpret_cast<void*>(get_virtual(interfaces::render_view, 9));
-	const auto EndScene_target = reinterpret_cast<void*>(get_virtual(interfaces::directx, 42));
+	//const auto EndScene_target = reinterpret_cast<void*>(get_virtual(interfaces::directx, 42));
+	const auto Override_target = reinterpret_cast<void*>(get_virtual(interfaces::clientmode, 18));
 
 	if (MH_Initialize() != MH_OK)
 		throw std::runtime_error("failed to initialize MH_Initialize.");
 	else if (MH_CreateHook(create_move_target, &create_move::hook, reinterpret_cast<void**>(&create_move_original)) != MH_OK)
 		throw std::runtime_error("failed to initialize create_move. (outdated index?)");
-
 	else if (MH_CreateHook(paint_traverse_target, &paint_traverse::hook, reinterpret_cast<void**>(&paint_traverse_original)) != MH_OK)
 		throw std::runtime_error("failed to initialize paint_traverse. (outdated index?)");
-
 	else if (MH_CreateHook(do_post_screen_target, &doPostScreenEffects::hook, reinterpret_cast<void**>(&do_post_screen_original)) != MH_OK)
 		throw std::runtime_error("failed to initialize post_screen. (outdated index?)");
 	//else if (MH_CreateHook(EndScene_target, &EndScene::hook, reinterpret_cast<void**>(&EndScene_original)) != MH_OK)
 	//	throw std::runtime_error("failed to initialize EndScene. (outdated index?)");
-
 	else if (MH_CreateHook(draw_model_execute_target, &draw_model_execute::hook, reinterpret_cast<void**>(&draw_model_execute_original)) != MH_OK)
 		throw std::runtime_error("failed to initialize draw_model_execute. (outdated index?)");
-
 	else if (MH_CreateHook(frame_stage_notify_target, &frame_stage_notify::hook, reinterpret_cast<void**>(&frame_stage_notify_original)) != MH_OK)
 		throw std::runtime_error("failed to initialize frame_stage_notify. (outdated index?)");
-
-	//else if (MH_CreateHook(SceneEnd_target, &SceneEnd::hook, reinterpret_cast<void**>(&SceneEnd_original)) != MH_OK)
-	//	throw std::runtime_error("failed to initialize SceneEnd. (outdated index?)");
+	else if (MH_CreateHook(Override_target, &OverrideView::hook, reinterpret_cast<void**>(&override_view_original)) != MH_OK)
+		throw std::runtime_error("failed to initialize Override_view. (outdated index?)");
 
 	
 
@@ -89,7 +86,6 @@ void __fastcall hooks::frame_stage_notify::hook(void* _this, int edx, FrameStage
 
 	if (stage == FrameStage::RENDER_START)
 	{
-		c_visuals::get().remove_smoke();
 
 		if (c_visuals::get().visual_recoil && interfaces::engine->is_in_game())
 		{
@@ -111,7 +107,7 @@ void __fastcall hooks::frame_stage_notify::hook(void* _this, int edx, FrameStage
 
 	if (stage == FrameStage::NET_UPDATE_POSTDATAUPDATE_START)
 	{
-		combat::resolver::resolver();
+		//'resolver' was here lmao
 	}
 
 	frame_stage_notify_original(interfaces::client, edx, stage);
@@ -231,6 +227,10 @@ void __stdcall hooks::paint_traverse::hook(unsigned int panel, bool force_repain
 
 		c_menu::get_ptr()->render();
 
+		c_player_esp::get_ptr()->run();
+
+		//c_player_esp::get_ptr()->run();
+
 		break;
 
 	case fnv::hash("FocusOverlayPanel"):
@@ -240,4 +240,21 @@ void __stdcall hooks::paint_traverse::hook(unsigned int panel, bool force_repain
 	}
 
 	paint_traverse_original(interfaces::panel, panel, force_repaint, allow_force);
+}
+
+
+void __stdcall hooks::OverrideView::hook(view_setup_t* pSetup) {
+
+	c_visuals::get().remove_smoke();
+
+	c_misc::get_ptr()->third_person();
+
+	//if (!interfaces::engine->is_connected() || !interfaces::engine->is_in_game())
+	//	return override_view_original(interfaces::clientmode, pSetup);
+
+	//if (!csgo::local_player->is_scoped()) {
+	//	pSetup->fov = c_misc::get_ptr()->debug_fov;
+	//}
+
+	override_view_original(interfaces::clientmode, pSetup);
 }

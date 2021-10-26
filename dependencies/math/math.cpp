@@ -166,6 +166,11 @@ void math::vector_transform(const vec3_t& in1, const matrix_t& in2, vec3_t& out)
 	out = vec3_t((in1.Dot(vec3_t(in2[0][0], in2[0][1], in2[0][2]))) + in2[0][3], (in1.Dot(vec3_t(in2[1][0], in2[1][1], in2[1][2]))) + in2[1][3], in1.Dot(vec3_t(in2[2][0], in2[2][1], in2[2][2])) + in2[2][3]);
 }
 
+vec3_t math::vector_transform(const vec3_t& in1, const matrix_t& in2)
+{
+	vec3_t out = vec3_t((in1.Dot(vec3_t(in2[0][0], in2[0][1], in2[0][2]))) + in2[0][3], (in1.Dot(vec3_t(in2[1][0], in2[1][1], in2[1][2]))) + in2[1][3], in1.Dot(vec3_t(in2[2][0], in2[2][1], in2[2][2])) + in2[2][3]);
+	return out;
+}
 float math::normalize_yaw(float f) {
 	while (f < -180.0f)
 		f += 360.0f;

@@ -21,3 +21,25 @@ public:
 	color get_color(std::unordered_map<int, std::string> p_color_map, std::string c);
 	void on_draw();
 };
+
+class c_player_esp : public singleton<c_player_esp> {
+
+public:
+	void run();
+	void player(player_t* entity);
+
+public:
+
+
+	struct type{
+		bool boxes = false;
+		bool names = false;
+
+		bool should() {
+			return boxes || names;
+		}
+	}type[2];
+
+private:
+	void draw_box(color c, int index, float x, float y, float w, float h);
+};

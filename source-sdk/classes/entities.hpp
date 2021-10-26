@@ -216,10 +216,14 @@ public:
 		*reinterpret_cast<float*>(uintptr_t(this) + (int)netvar_manager::get_net_var(fnv::hash("CEnvTonemapController"), fnv::hash("m_flCustomAutoExposureMax"))) = value;
 	}
 
-	matrix_t& m_rgflCoordinateFrame()
-	{
-		return *(matrix_t*)((uintptr_t)this + (netvar_manager::get_net_var(fnv::hash("CBaseEntity"), fnv::hash("m_CollisionGroup")) - 0x30));
-	}
+    matrix_t& coord_frame() {
+        const static auto m_CollisionGroup = netvar_manager::get_net_var(fnv::hash("DT_BaseEntity"), fnv::hash("m_CollisionGroup"));
+
+        auto m_rgflCoordinateFrame = m_CollisionGroup - 0x30;
+
+        return *reinterpret_cast<matrix_t*>(reinterpret_cast<uintptr_t>(this) + m_rgflCoordinateFrame);
+    }
+	
 	void* animating() {
 		return reinterpret_cast<void*>(uintptr_t(this) + 0x4);
 	}
@@ -316,20 +320,21 @@ public:
 		return origin() + view_offset();
 	}
 
-	NETVAR("DT_CSPlayer", "m_fFlags", flags, int)
-	NETVAR("DT_BaseEntity", "m_hOwnerEntity", owner_handle, unsigned long)
-	NETVAR("DT_CSPlayer", "m_flSimulationTime", simulation_time, float)
-	NETVAR("DT_BasePlayer", "m_vecOrigin", origin, vec3_t)
-	NETVAR("DT_BasePlayer", "m_vecViewOffset[0]", view_offset, vec3_t)
-	NETVAR("DT_CSPlayer", "m_iTeamNum", team, int)
-	NETVAR("DT_BaseEntity", "m_bSpotted", spotted, bool)
-	NETVAR("DT_CSPlayer", "m_nSurvivalTeam", survival_team, int)
-	NETVAR("DT_CSPlayer", "m_flHealthShotBoostExpirationTime", health_boost_time, float)
-	NETVAR("DT_CSPlayer", "m_dwBoneMatrix", bone_matrix, uintptr_t*)
-	NETVAR("DT_CSPlayer", "m_iHealth", health, int)
-	NETVAR("DT_CSPlayer", "m_iGlowIndex", glowIndex, int)
-	NETVAR("DT_BaseEntity", "m_vecMins", mins, vec3_t)
-	NETVAR("DT_BaseEntity", "m_vecMaxs", maxs, vec3_t)
+    NETVAR("DT_CSPlayer", "m_fFlags", flags, int)
+    NETVAR("DT_BaseEntity", "m_hOwnerEntity", owner_handle, unsigned long)
+    NETVAR("DT_CSPlayer", "m_flSimulationTime", simulation_time, float)
+    NETVAR("DT_BasePlayer", "m_vecOrigin", origin, vec3_t)
+    NETVAR("DT_BasePlayer", "m_vecViewOffset[0]", view_offset, vec3_t)
+    NETVAR("DT_CSPlayer", "m_iTeamNum", team, int)
+    NETVAR("DT_BaseEntity", "m_bSpotted", spotted, bool)
+    NETVAR("DT_CSPlayer", "m_nSurvivalTeam", survival_team, int)
+    NETVAR("DT_CSPlayer", "m_flHealthShotBoostExpirationTime", health_boost_time, float)
+    NETVAR("DT_CSPlayer", "m_dwBoneMatrix", bone_matrix, uintptr_t*)
+    NETVAR("DT_CSPlayer", "m_iHealth", health, int)
+    NETVAR("DT_CSPlayer", "m_iGlowIndex", glowIndex, int)
+    NETVAR("DT_BaseEntity", "m_vecMins", mins, vec3_t)
+    NETVAR("DT_BaseEntity", "m_vecMaxs", maxs, vec3_t)
+    NETVAR("DT_BaseEntity", "m_CollisionGroup", m_CollisionGroup, matrix3x4_t)
 
 };
 
