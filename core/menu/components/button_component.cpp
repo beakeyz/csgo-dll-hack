@@ -37,6 +37,11 @@ void c_button_classifier::draw(int index) {
 			btn.x = this->x;
 		}
 
+		//DEBUG
+		//std::stringstream s;
+		//s << btn.classified_components.size();
+		//render::text(btn.x, btn.y, render::fonts::watermark_font_small, s.str(), false, color::white());
+
 		previous_btn = btn;
 
 		if (this->parent->current_classifier == btn.index) {
@@ -99,8 +104,7 @@ buttonComponent::buttonComponent(groupBox* parent, int classified_index, std::st
 		this->is_classified = true;
 		this->classified_index = classified_index;
 		if (this->parent->m_current_button_classifier != nullptr) {
-			this->parent->m_current_button_classifier->m_btns[classified_index].classified_components[this->parent->m_current_button_classifier->m_btns[classified_index].classified_count] = this;
-			this->parent->m_current_button_classifier->m_btns[classified_index].classified_count++;
+			this->parent->m_current_button_classifier->m_btns[classified_index].classified_components[this->parent->m_current_button_classifier->m_btns[classified_index].classified_count++] = this;
 		}
 	}
 	this->integrated_comp = nullptr;

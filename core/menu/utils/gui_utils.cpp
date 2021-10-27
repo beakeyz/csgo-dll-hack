@@ -5,27 +5,34 @@ class groupBox;
 void c_gui_manager::draw_box(groupBox& box, groupBox* prev_box, int& total_height) {
 
 	int j = 20;
-	/*
+	
 	if (box.m_current_button_classifier != nullptr) {
-		int hightest_count = 0;
+		std::unordered_map<int, c_button_classifier::sub_classifier> sizes = {};
 
-		c_button_classifier::sub_classifier cur;
-		for (auto elm : box.m_current_button_classifier->m_btns) {
-			if (elm.classified_count > hightest_count) cur = elm;
+		for (auto& elm : box.m_current_button_classifier->m_btns) {
+			int size = 0;
+			for (auto& comps : elm.classified_components) {
+				if (!comps.second->is_integrated)
+					size += comps.second->get_standard_height();
+			}
+			sizes[size] = elm;
 		}
 
-		for (auto& elm : cur.classified_components) {
-			if (!elm.second->is_integrated)
-				j += elm.second->get_standard_height();
+		int biggest = 0;
+		for (auto& elm : sizes) {
+			if (elm.first >= biggest) {
+				biggest = elm.first;
+			}
 		}
+
+		j += biggest + box.m_current_button_classifier->get_standard_height();
 	}
 	else {
-	*/
 		for (auto& elm : box.get_comps()) {
 			if (!elm.second->is_integrated)
 				j += elm.second->get_standard_height();
 		}
-	//}
+	}
 	box.set_height(j);
 
 	if (prev_box == nullptr) {
