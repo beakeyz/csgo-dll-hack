@@ -6,6 +6,7 @@ class comp;
 class buttonComponent;
 class c_slider_component;
 class c_color_picker;
+class c_button_classifier;
 
 enum e_boxtype {
 	RAGEBOT,
@@ -71,5 +72,6 @@ public:
 public:
 	e_boxtype m_boxtype;
 	int current_classifier;
+	c_button_classifier* m_current_button_classifier;
 	std::unordered_map<int, comp*> m_comps = {};
 };

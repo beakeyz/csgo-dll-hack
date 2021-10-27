@@ -2,6 +2,7 @@
 #include "../../../menu/variables.hpp"
 #include "player_esp.h"
 #include "./../features.h"
+#include <string>
 
 color c_skeleton_esp::get_color(std::unordered_map<int, std::string> p_color_map, std::string c) {
 
@@ -16,7 +17,7 @@ color c_skeleton_esp::get_color(std::unordered_map<int, std::string> p_color_map
 		return color(255, 0, 0, 255); //red
 	}
 	else if (index == 1) {
-		return color(255, 100, 0, 255); //orange
+		return color(125, 125, 0, 255); //orange
 	}
 	else if (index == 2) {
 		return color(255, 255, 0, 255); //yellow
@@ -40,9 +41,9 @@ color c_skeleton_esp::get_color(std::unordered_map<int, std::string> p_color_map
 		return color(255, 255, 255, 255); //white
 	}
 	else if (index == 9) {
-		return color(0, 0, 0, 255); //black
+		return color(1, 1, 1, 255); //black
 	}
-	return color(0, 0, 0, 255);
+	return color(1, 1, 1, 255);
 }
 
 void c_skeleton_esp::on_draw()
@@ -162,13 +163,7 @@ void c_player_esp::run() {
 
 			if (entity != nullptr) {
 
-				if (entity->team() == csgo::local_player->team() && (this->type[0].boxes || this->type[0].names)) {
-					c_player_esp::get_ptr()->player((player_t*)entity);
-						
-				}
-				else if (entity->team() != csgo::local_player->team() && (this->type[1].boxes || this->type[1].names)) {
-					c_player_esp::get_ptr()->player((player_t*)entity);
-				}
+				c_player_esp::get_ptr()->player((player_t*)entity);
 			}
 		}
 	}
@@ -201,27 +196,25 @@ void c_player_esp::player(player_t* entity) {
 	if (!info)
 		return;
 
-	/*
-	const auto name_color = OSHColor::FromARGB(g_vars.visuals.name_color, m_alpha.at(index));
-	const auto box_color = OSHColor::FromARGB(g_vars.visuals.box_color, m_alpha.at(index));
-	const auto ammo_bar_color = OSHColor::FromARGB(g_vars.visuals.ammo_bar_color, m_alpha.at(index));
-	const auto weapon_color = OSHColor::FromARGB(g_vars.visuals.weapon_color, m_alpha.at(index));
-	const auto flag_color = OSHColor::FromARGB(g_vars.visuals.flag_color, m_alpha.at(index));
-	const auto money_color = OSHColor::FromARGB(g_vars.visuals.money_color, m_alpha.at(index));
-	const auto flashed_color = OSHColor::FromARGB(g_vars.visuals.flash_bar_color, m_alpha.at(index));
-	*/
-	//m_ctx.flag_count = 0;
-	//m_ctx.offset = 0;
+	const auto name_color = c_skeleton_esp::get_ptr()->get_color(this->color_map, this->name_color);
+	const auto box_color = c_skeleton_esp::get_ptr()->get_color(this->color_map, this->box_color);
+	const auto ammo_bar_color = c_skeleton_esp::get_ptr()->get_color(this->color_map, this->ammobar_color);
+	const auto weapon_color = c_skeleton_esp::get_ptr()->get_color(this->color_map, this->weapon_color);
+	const auto flag_color = c_skeleton_esp::get_ptr()->get_color(this->color_map, this->flag_color);
+	const auto money_color = c_skeleton_esp::get_ptr()->get_color(this->color_map, this->money_color);
+	const auto flashed_color = c_skeleton_esp::get_ptr()->get_color(this->color_map, this->flashed_color);
+	
+	g_ctx.globals.flag_count = 0;
+	g_ctx.globals.offset = 0;
 
 	bool is_team = (entity->team() == csgo::local_player->team());
 
-	if ((this->type[0].boxes && is_team) || (this->type[1].boxes && !is_team)){
+	if (boxes){
 		
-
-		draw_box(is_team ? color::white() : color::red(), index, box.x, box.y, box.w, box.h);
+		draw_box(box_color, index, box.x, box.y, box.w, box.h);
 	}
 	
-	if ((this->type[0].names && is_team) || (this->type[1].names && !is_team)) {
+	if (names) {
 		player_info_t info;
 		interfaces::engine->get_player_info(index, &info);
 
@@ -231,34 +224,145 @@ void c_player_esp::player(player_t* entity) {
 			name = name.substr(0, 17) + "...";
 
 		//std::transform( name.begin( ), name.end( ), name.begin( ), tolower );
-		render::text(box.x - render::get_text_size(render::fonts::watermark_font_other, name).x / 2 + box.w * 0.5, box.y - render::get_text_size(render::fonts::watermark_font_other, name).y, render::fonts::watermark_font_other, name, false, color::white());
+		render::text(box.x - render::get_text_size(render::fonts::watermark_font_other, name).x / 2 + box.w * 0.5, box.y - render::get_text_size(render::fonts::watermark_font_other, name).y, render::fonts::watermark_font_other, name, false, name_color);
 	}
-	/*
-	if (g_vars.visuals.healthbar)
-		draw_healthbar(entity, box.x, box.y, box.w, box.h);
+	
+	if (this->healthbar)
+		this->draw_healthbar(entity, box.x, box.y, box.w, box.h);
 
-	if (g_vars.visuals.flash_bar)
-		flash_bar(entity, flashed_color, box.x, box.y, box.w, box.h);
+	if (this->flashed)
+		this->flash_bar(entity, flashed_color, box.x, box.y, box.w, box.h);
 
-	if (g_vars.visuals.ammo_bar)
-		ammo_bar(weapon, entity, ammo_bar_color, box.x, box.y, box.w, box.h, weapon->clip());
+	if (this->ammunition)
+		this->ammo_bar(weapon, entity, ammo_bar_color, box.x, box.y, box.w, box.h, weapon->clip1_count());
 
-	if (g_vars.visuals.weapon)
-		weapon_name(weapon, entity, weapon_color, box.x, box.y, box.w, box.h);
+	if (this->weapon)
+		this->weapon_name(weapon, entity, weapon_color, box.x, box.y, box.w, box.h);
 
-	if (g_vars.visuals.money)
-		g_renderer.ansi_text(g_renderer.m_fonts.at(FONT_04B03_6PX),
-			money_color,
-			OSHColor::FromARGB(220, 10, 10, 10),
-			box.x + box.w + 3, box.y + m_ctx.flag_count++ * 8, OUTLINED, "$%i", entity->money());
+	if (this->money) {
+		std::stringstream s;
+		s << entity->money() << "$";
+		render::text(box.x + box.w + 3, box.y + g_ctx.globals.flag_count++ * 9, render::fonts::watermark_font_other, s.str(), false, money_color);
+	}
+	if (this->flags) {
+		this->draw_flags(entity, flag_color, box.x, box.y, box.w, box.h);
+	}
+}
 
-	if (g_vars.visuals.flags)
-		draw_flags(entity, flag_color, box.x, box.y, box.w, box.h);
-		*/
+void c_player_esp::draw_healthbar(player_t* entity, float x, float y, float w, float h) {
+	int hp = std::clamp(entity->health(), 0, 100);
+	const color health_color = color(255 - hp * 2.55, hp * 2.55, 0, 220);
+
+	const int height = hp * static_cast<int>(h) / 100;
+
+	render::draw_filled_rect(x - 6, y - 1, 4, h + 2, color(10, 10, 10, 220));
+
+	color to_color = color(health_color.r - 40, health_color.g - 40, health_color.b - 40, health_color.a - 10);
+
+	render::gradient(x - 5, y + h - height, 2, height, health_color, to_color, render::GradientType::GRADIENT_VERTICAL);
+
+	//if (hp >= 90 || hp <= 10)
+	//	return;
+
+	std::stringstream s;
+	s << hp << "%";
+	render::text(x - 8, y + h - height - 6, render::fonts::watermark_font_other, s.str(), false, color::white(220));
+
 }
 
 void c_player_esp::draw_box(color c, int index, float x, float y, float w, float h) {
 	render::draw_rect(x - 1, y - 1, w + 2, h + 2, color(10, 10, 10, 220));
 	render::draw_rect(x + 1, y + 1, w - 2, h - 2, color(10, 10, 10, 220));
 	render::draw_rect(x, y, w, h, c);
+}
+
+void c_player_esp::weapon_name(weapon_t* weapon, player_t* player, color c, float x, float y, float w, float h) {
+	auto info = weapon->get_weapon_data();
+	if (!info)
+		return;
+
+	const char* name = info->szHudName;
+	std::wstring localised_name = interfaces::localize->find(name);
+
+	std::string print(localised_name.begin(), localised_name.end());
+	std::transform(print.begin(), print.end(), print.begin(), toupper);
+
+	render::text(x + w * 0.5f, y + h + 2 + g_ctx.globals.offset, render::fonts::watermark_font_other, name, false, c);
+}
+
+void c_player_esp::ammo_bar(weapon_t* weapon, player_t* player, color c, float x, float y, float w, float h, int clip) {
+	auto info = weapon->get_weapon_data();
+	if (!info)
+		return;
+
+	//	setup for drawing
+	const auto ammo = clip;
+	const auto max_ammo = info->iMaxClip1;
+	auto width = w;
+
+	if (info->nWeaponType != WEAPONTYPE_KNIFE && info->nWeaponType != WEAPONTYPE_C4 && info->nWeaponType != WEAPONTYPE_GRENADE && info->nWeaponType != WEAPONTYPE_PLACEHOLDER) {
+		width *= ammo;
+		width /= max_ammo;
+	}
+
+	// background
+	render::draw_filled_rect(x - 1, y + h + 2 + g_ctx.globals.offset, w + 2, 4, color(10, 10, 10, 220));
+	
+	// ammo bar
+	color to_color = color(c.r - 50, c.g - 50, c.b - 50, c.a);
+	render::gradient(x, y + h + 3 + g_ctx.globals.offset, width, 2, c, to_color, render::GradientType::GRADIENT_HORIZONTAL);
+
+	if (ammo < 5 && ammo != 0) {
+		std::stringstream s;
+		s << ammo;
+		render::text(x + width, y + h, render::fonts::watermark_font_other, s.str(), false, c);
+	}
+
+	g_ctx.globals.offset += 5;
+}
+
+void c_player_esp::flash_bar(player_t* player, color c, float x, float y, float w, float h) {
+	const auto max_alpha = 255.f;
+
+	float flash_alpha = player->flash_duration();
+	if (flash_alpha < 1.f)
+		return;
+
+	float width = w;
+
+	//	calculate width
+	width *= (flash_alpha / 255.f);
+
+	// background
+	render::draw_filled_rect(x - 1, y + h + 2, w + 2, 4, color(10, 10, 10, 220));
+
+	// flash bar
+	render::draw_filled_rect(x, y + h + 3, width, 2, c);
+
+	g_ctx.globals.offset += 5;
+}
+
+void c_player_esp::draw_flags(player_t* player, color c, float x, float y, float w, float h) {
+	std::string armor_flag;
+	if (player->has_helmet())
+		armor_flag += "H";
+
+	if (player->armor() > 0)
+		armor_flag += "K";
+
+	if (!armor_flag.empty()) {
+		render::text(x + w + 3, y + g_ctx.globals.flag_count++ * 9, render::fonts::watermark_font_other, armor_flag, false, c);
+	}
+
+	if (player->flash_duration() > 140.f) {
+		render::text(x + w + 3, y + g_ctx.globals.flag_count++ * 9, render::fonts::watermark_font_other, "F", false, c);
+	}
+	if (player->is_scoped()) {
+		render::text(x + w + 3, y + g_ctx.globals.flag_count++ * 9, render::fonts::watermark_font_other, "+", false, c);
+	}
+	if (combat::ragebot::isEnabled) {
+		if (g_ragebot.m_last_target == player) {
+			render::text(x + w + 3, y + g_ctx.globals.flag_count++ * 9, render::fonts::watermark_font_other, "TARGET", false, c);
+		}
+	}
 }

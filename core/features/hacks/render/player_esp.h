@@ -31,15 +31,34 @@ public:
 public:
 
 
-	struct type{
-		bool boxes = false;
-		bool names = false;
+	bool boxes = false;
+	bool names = false;
+	bool healthbar = false;
+	bool ammunition = false;
+	bool weapon = false;
+	bool flags = false;
+	bool money = false;
+	bool flashed = false;
 
-		bool should() {
-			return boxes || names;
-		}
-	}type[2];
+	std::unordered_map<int, std::string> color_map = { {0, "Red"}, {1, "Orange"}, {2, "Yellow"}, {3, "Green"}, {4, "Cyan"}, {5, "Blue"}, {6, "Purple"}, {7, "Pink"},  {8, "White"}, {9, "Black"} };
 
-private:
+
+	std::string box_color;
+	std::string name_color;
+	std::string ammobar_color;
+	std::string weapon_color;
+	std::string flag_color;
+	std::string money_color;
+	std::string flashed_color;
+
+	
+
+public:
 	void draw_box(color c, int index, float x, float y, float w, float h);
+	void ammo_bar(weapon_t* weapon, player_t* player, color c, float x, float y, float w, float h, int clip);
+	void flash_bar(player_t* player, color c, float x, float y, float w, float h);
+	void weapon_name(weapon_t* weapon, player_t* player, color c, float x, float y, float w, float h);
+	void draw_flags(player_t* player, color c, float x, float y, float w, float h);
+	void draw_healthbar(player_t* entity, float x, float y, float w, float h);
+
 };

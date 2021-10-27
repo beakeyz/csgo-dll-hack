@@ -18,8 +18,9 @@ groupBox::groupBox(e_position pos, std::int32_t y, std::int32_t h, unsigned long
 	this->m_boxtype = type;
 
 	this->index = index;
-
+	this->m_current_button_classifier = nullptr;
 	this->w = variables::menu::w / 2 - 20;
+	
 
 	switch (this->m_pos)
 	{

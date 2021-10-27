@@ -17,6 +17,8 @@ public:
 	std::string text;
 	bool is_classified = false;
 	int classified_index = -1;
+	comp* integrated_comp = nullptr;
+	bool is_integrated = false;
 };
 
 class c_button_classifier : public comp {
@@ -29,6 +31,8 @@ public:
 		float h;
 		int index;
 		std::string text;
+		int classified_count = 0;
+		std::unordered_map<int, comp*> classified_components = {};
 	};
 
 	c_button_classifier(groupBox* parent, std::vector<sub_classifier> btns, std::string text, unsigned long font, int index);
@@ -55,7 +59,6 @@ public:
 
 	int m_current_classified_index;
 	std::vector<sub_classifier> m_btns;
-	std::unordered_map<int, comp*> classified_components = {};
 };
 
 class buttonComponent : public comp {
@@ -63,6 +66,7 @@ class buttonComponent : public comp {
 public:
 	buttonComponent(groupBox* parent, int classified_index, std::string text, unsigned long font, bool& r_value, int index);
 
+	buttonComponent(groupBox* parent, int classified_index, std::string text, unsigned long font, bool& r_value, int index, comp* integrated_comp);
 	/*
 	buttonComponent(double x, double y, groupBox* parent, std::string text, unsigned long font, bool& r_value, void(*callback)()) : value(r_value) {
 		this->x = x;
@@ -115,9 +119,9 @@ protected:
 
 	bool is_mouse;
 	bool clicking;
-
+	
 public:
-	const int indexed_height = 12;
+	const int indexed_height = 15;
 
 };
 
@@ -220,7 +224,7 @@ public:
 	POINT cursor;
 	bool is_mouse;
 	const double indexed_height = 18;
-
+	
 private:
 
 	int longest_str = 0;

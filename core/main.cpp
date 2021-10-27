@@ -75,13 +75,31 @@ unsigned long WINAPI initialize(void* instance) {
 
 	groupBox PlayerEspBox(e_position::LEFT, 80, 0, render::fonts::watermark_font_other, "Player esp", e_boxtype::PLAYER_ESP, 0);
 
-	c_button_classifier target_type(&PlayerEspBox, { {0,0,0,0,0,"Teammates"}, {0,0,0,0,1,"Enemies"} }, "", render::fonts::watermark_font_other, 0);
+	c_button_classifier target_type(&PlayerEspBox, { {0,0,0,0,0,"General"}, {0,0,0,0,1,"Models"} }, "", render::fonts::watermark_font_other, 0);
 
-	buttonComponent player_esp_box_team(&PlayerEspBox, 0, "Bounding boxes", render::fonts::watermark_font_small, c_player_esp::get_ptr()->type[0].boxes, 1);
-	buttonComponent player_esp_name_team(&PlayerEspBox, 0, "Name", render::fonts::watermark_font_small, c_player_esp::get_ptr()->type[0].names, 2);
+	c_mode_picker box_color(&PlayerEspBox, 0, " ", render::fonts::watermark_font_small, c_player_esp::get_ptr()->color_map, "White", c_player_esp::get_ptr()->box_color, 1);
+	buttonComponent player_esp_box(&PlayerEspBox, 0, "Bounding boxes", render::fonts::watermark_font_small, c_player_esp::get_ptr()->boxes, 2, &box_color);
+	
+	c_mode_picker name_color(&PlayerEspBox, 0, " ", render::fonts::watermark_font_small, c_player_esp::get_ptr()->color_map, "White", c_player_esp::get_ptr()->name_color, 3);
+	buttonComponent player_esp_name(&PlayerEspBox, 0, "Name", render::fonts::watermark_font_small, c_player_esp::get_ptr()->names, 4, &name_color);
+	
+	buttonComponent player_esp_healthbar(&PlayerEspBox, 0, "Health bar", render::fonts::watermark_font_small, c_player_esp::get_ptr()->healthbar, 5);
+	
+	c_mode_picker ammobar_color(&PlayerEspBox, 0, " ", render::fonts::watermark_font_small, c_player_esp::get_ptr()->color_map, "White", c_player_esp::get_ptr()->ammobar_color, 6);
+	buttonComponent player_esp_ammo(&PlayerEspBox, 0, "Ammo bar", render::fonts::watermark_font_small, c_player_esp::get_ptr()->ammunition, 7, &ammobar_color);
 
-	buttonComponent player_esp_box_enemy(&PlayerEspBox, 1, "Bounding boxes", render::fonts::watermark_font_small, c_player_esp::get_ptr()->type[1].boxes, 3);
-	buttonComponent player_esp_name_enemy(&PlayerEspBox, 1, "Name", render::fonts::watermark_font_small, c_player_esp::get_ptr()->type[1].names, 4);
+	c_mode_picker weapon_color(&PlayerEspBox, 0, " ", render::fonts::watermark_font_small, c_player_esp::get_ptr()->color_map, "White", c_player_esp::get_ptr()->weapon_color, 8);
+	buttonComponent player_esp_weapon(&PlayerEspBox, 0, "Weapon", render::fonts::watermark_font_small, c_player_esp::get_ptr()->weapon, 9, &weapon_color);
+	
+	c_mode_picker flags_color(&PlayerEspBox, 0, " ", render::fonts::watermark_font_small, c_player_esp::get_ptr()->color_map, "White", c_player_esp::get_ptr()->flag_color, 10);
+	buttonComponent player_esp_flags(&PlayerEspBox, 0, "Flags", render::fonts::watermark_font_small, c_player_esp::get_ptr()->flags, 11, &flags_color);
+	
+	c_mode_picker money_color(&PlayerEspBox, 0, " ", render::fonts::watermark_font_small, c_player_esp::get_ptr()->color_map, "White", c_player_esp::get_ptr()->money_color, 12);
+	buttonComponent player_esp_money(&PlayerEspBox, 0, "Money", render::fonts::watermark_font_small, c_player_esp::get_ptr()->money, 13, &money_color);
+	
+	c_mode_picker flashed_color(&PlayerEspBox, 0, " ", render::fonts::watermark_font_small, c_player_esp::get_ptr()->color_map, "White", c_player_esp::get_ptr()->flashed_color, 14);
+	buttonComponent player_esp_flashed(&PlayerEspBox, 0, "Flashed", render::fonts::watermark_font_small, c_player_esp::get_ptr()->flashed, 15, &flashed_color);
+
 
 	groupBox Chamsbox (e_position::LEFT, 80, 0, render::fonts::watermark_font_other, "Chams", e_boxtype::CHAMS, 1);
 
@@ -136,7 +154,7 @@ unsigned long WINAPI initialize(void* instance) {
 	c_menu::get_ptr()->combat_btn.m_boxes[ragebot_box.index] = &ragebot_box;
 
 	c_menu::get_ptr()->visuals_btn.m_boxes[PlayerEspBox.index] = &PlayerEspBox;
-	c_menu::get_ptr()->visuals_btn.m_boxes[Chamsbox.index] = &Chamsbox;
+	//c_menu::get_ptr()->visuals_btn.m_boxes[Chamsbox.index] = &Chamsbox;
 	c_menu::get_ptr()->visuals_btn.m_boxes[visual_box.index] = &visual_box;
 	c_menu::get_ptr()->visuals_btn.m_boxes[esp_box.index] = &esp_box;
 	c_menu::get_ptr()->visuals_btn.m_boxes[glow_box.index] = &glow_box;

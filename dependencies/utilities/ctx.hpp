@@ -22,6 +22,8 @@ public:
 		bool should_remove_smoke = false;
 		bool send_packet = true;
 		weapon_t* weapon = nullptr;
+		int offset = 0;
+		int flag_count = 0;
 	} globals;
 
 };

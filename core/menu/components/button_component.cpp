@@ -12,6 +12,7 @@ c_button_classifier::c_button_classifier(groupBox* parent, std::vector<sub_class
 	this->index = index;
 	this->m_current_classified_index = 0;
 	parent->m_comps[this->index] = this;
+	parent->m_current_button_classifier = this;
 }
 
 void c_button_classifier::draw(int index) {
@@ -97,7 +98,34 @@ buttonComponent::buttonComponent(groupBox* parent, int classified_index, std::st
 	if (classified_index != -1) {
 		this->is_classified = true;
 		this->classified_index = classified_index;
+		if (this->parent->m_current_button_classifier != nullptr) {
+			this->parent->m_current_button_classifier->m_btns[classified_index].classified_components[this->parent->m_current_button_classifier->m_btns[classified_index].classified_count] = this;
+			this->parent->m_current_button_classifier->m_btns[classified_index].classified_count++;
+		}
 	}
+	this->integrated_comp = nullptr;
+}
+
+buttonComponent::buttonComponent(groupBox* parent, int classified_index, std::string text, unsigned long font, bool& r_value, int index, comp* integrated_comp) : value(r_value) {
+	this->font = font;
+	this->text = text;
+	this->value = value;
+	this->parent = parent;
+	this->index = index;
+
+	this->parent->m_comps[this->index] = this;
+
+	if (classified_index != -1) {
+		this->is_classified = true;
+		this->classified_index = classified_index;
+		if (this->parent->m_current_button_classifier != nullptr) {
+			this->parent->m_current_button_classifier->m_btns[classified_index].classified_components[this->parent->m_current_button_classifier->m_btns[classified_index].classified_count] = this;
+			this->parent->m_current_button_classifier->m_btns[classified_index].classified_count++;
+		}
+	}
+
+	integrated_comp->is_integrated = true;
+	this->integrated_comp = integrated_comp;
 }
 
 void buttonComponent::draw(int index) {
@@ -189,6 +217,10 @@ c_slider_component::c_slider_component(groupBox* parent, int classified_index, s
 	if (classified_index != -1) {
 		this->is_classified = true;
 		this->classified_index = classified_index;
+		if (this->parent->m_current_button_classifier != nullptr) {
+			this->parent->m_current_button_classifier->m_btns[classified_index].classified_components[this->parent->m_current_button_classifier->m_btns[classified_index].classified_count] = this;
+			this->parent->m_current_button_classifier->m_btns[classified_index].classified_count++;
+		}
 	}
 }
 
@@ -317,12 +349,18 @@ c_mode_picker::c_mode_picker(groupBox* parent, int classified_index, std::string
 	if (classified_index != -1) {
 		this->is_classified = true;
 		this->classified_index = classified_index;
+		if (this->parent->m_current_button_classifier != nullptr) {
+			this->parent->m_current_button_classifier->m_btns[classified_index].classified_components[this->parent->m_current_button_classifier->m_btns[classified_index].classified_count] = this;
+			this->parent->m_current_button_classifier->m_btns[classified_index].classified_count++;
+		}
 	}
+	this->is_integrated = false;
 }
 
 void c_mode_picker::draw(int index) {
 	this->x = 15;
-	this->y = index + this->parent->getY() + 6;
+
+	this->y = index + this->parent->getY() + (this->is_integrated ? 0 : 6);
 	this->x += this->parent->getX();
 	//this->y += this->parent->getY();
 
@@ -342,7 +380,9 @@ void c_mode_picker::draw(int index) {
 		is_mouse = false;
 	}
 
-	render::text(x, y - 2, font, this->text + ":", false, color::white());
+	if (!this->is_integrated)
+		render::text(x, y - 2, font, this->text + ":", false, color::white());
+
 	render::draw_filled_rect(this->x + picker_start_pos - 1, this->y - 1, picker_end_pos - picker_start_pos + 2, bar_height + 2, color(18, 18, 18, 255));
 	render::draw_filled_rect(this->x + picker_start_pos, this->y, picker_end_pos - picker_start_pos, bar_height, color(34, 34, 34, 235));
 

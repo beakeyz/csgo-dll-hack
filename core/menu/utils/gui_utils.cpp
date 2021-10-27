@@ -5,15 +5,33 @@ class groupBox;
 void c_gui_manager::draw_box(groupBox& box, groupBox* prev_box, int& total_height) {
 
 	int j = 20;
-	for (auto& elm : box.get_comps()) {
-		j += elm.second->get_standard_height();
+	/*
+	if (box.m_current_button_classifier != nullptr) {
+		int hightest_count = 0;
+
+		c_button_classifier::sub_classifier cur;
+		for (auto elm : box.m_current_button_classifier->m_btns) {
+			if (elm.classified_count > hightest_count) cur = elm;
+		}
+
+		for (auto& elm : cur.classified_components) {
+			if (!elm.second->is_integrated)
+				j += elm.second->get_standard_height();
+		}
 	}
+	else {
+	*/
+		for (auto& elm : box.get_comps()) {
+			if (!elm.second->is_integrated)
+				j += elm.second->get_standard_height();
+		}
+	//}
 	box.set_height(j);
 
 	if (prev_box == nullptr) {
 		
 		total_height = j;
-
+		
 		box.draw();
 
 		int i = 10;
@@ -23,7 +41,10 @@ void c_gui_manager::draw_box(groupBox& box, groupBox* prev_box, int& total_heigh
 			}
 
 			elm.second->draw(i);
-			i += elm.second->get_standard_height();
+
+			if (elm.second->is_integrated == false) {
+				i += elm.second->get_standard_height();
+			}
 		}
 		return;
 	}
@@ -45,7 +66,10 @@ void c_gui_manager::draw_box(groupBox& box, groupBox* prev_box, int& total_heigh
 			}
 
 			elm.second->draw(ji);
-			ji += elm.second->get_standard_height();
+
+			if (elm.second->is_integrated == false) {
+				ji += elm.second->get_standard_height();
+			}
 		}
 	}
 	else {
