@@ -100,11 +100,6 @@ void __fastcall hooks::frame_stage_notify::hook(void* _this, int edx, FrameStage
 		}
 	}
 
-	if (stage == FrameStage::RENDER_END)
-	{
-		c_visuals::get().full_bright();
-	}
-
 	if (stage == FrameStage::NET_UPDATE_POSTDATAUPDATE_START)
 	{
 		//'resolver' was here lmao
@@ -170,6 +165,8 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 
 	g_ragebot.unpredicted_vel = csgo::local_player->velocity();
 
+	
+
 	prediction::start(cmd); {
 
 		g_ragebot.work(cmd);
@@ -179,6 +176,8 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 		combat::antiaim::run(cmd, g_ctx.globals.send_packet);
 
 		c_fakelag::get_ptr()->think(cmd, g_ctx.globals.send_packet);
+
+		c_nade_prediction::get_ptr()->fetch_points(cmd);
 
 	} prediction::end();
 
@@ -222,14 +221,14 @@ void __stdcall hooks::paint_traverse::hook(unsigned int panel, bool force_repain
 		render::text(10, 16, render::fonts::font_bigboi, watermark, false, color::white(255));
 		
 		c_skeleton_esp::get_ptr()->on_draw();
+		c_player_esp::get_ptr()->run();
+		c_visuals::get_ptr()->run_visuals();
+		c_nade_prediction::get_ptr()->render();
 
 		c_menu::get_ptr()->toggle();
 
 		c_menu::get_ptr()->render();
 
-		c_player_esp::get_ptr()->run();
-
-		//c_player_esp::get_ptr()->run();
 
 		break;
 

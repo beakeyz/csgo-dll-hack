@@ -6,7 +6,7 @@ class c_timer {
 
 public:
 	c_timer() {
-		last_ms = interfaces::globals->cur_time;
+		last_ms = interfaces::globals->curtime;
 	}
 
 	void reset();

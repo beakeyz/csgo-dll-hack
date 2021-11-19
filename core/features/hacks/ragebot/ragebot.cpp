@@ -20,7 +20,7 @@ void c_ragebot::work(c_usercmd* cmd) {
 
 	m_cmd = cmd;
 
-	select_target();
+	select_target(cmd);
 	choose_angles();
 	//restore_players();
 
@@ -30,7 +30,7 @@ void c_ragebot::work(c_usercmd* cmd) {
 	}
 }
 
-void c_ragebot::select_target() {
+void c_ragebot::select_target(c_usercmd* cmd) {
 	auto local = csgo::local_player;
 	if (!local || !local->is_alive())
 		return;
@@ -41,7 +41,7 @@ void c_ragebot::select_target() {
 
 	try {
 		
-		for (short i = 1; i < interfaces::globals->max_clients; i++) {
+		for (short i = 1; i < interfaces::globals->maxClients; i++) {
 			
 			player_t* e = static_cast<player_t*>(interfaces::entity_list->get_client_entity(i));
 			
@@ -151,29 +151,13 @@ void c_ragebot::select_target() {
 
 				interfaces::trace_ray->trace_ray(ray, MASK_SHOT_HULL | CONTENTS_HITBOX, &filter, &trace);
 
-				//if (trace.entity == e && cur_hitgroup != -1) {
-				//	g_autowall.ScaleDamage(cur_hitgroup, e, cur_weapon_info->weapon_armor_ratio, current_damage);
-				
-					
-				//	if (current_damage > player_best_damage) {
-				//		player_best_damage = current_damage;
-				//		player_best_point = point;
-				//	}
-				//}
-				//else
 				if (cur_hitgroup != -1) {
 					current_damage = g_autowall.get_damage(point);
-					//std::stringstream stream;
-
-					//stream << current_damage;
-
-					//console::log(stream.str().c_str());
-
 					if (current_damage <= 0) {
 						continue;
 					}
 
-					if (current_damage >= e->health()) {
+					if (current_damage > e->health()) {
 						player_best_damage = current_damage;
 						player_best_point = point;
 						break;
@@ -189,17 +173,35 @@ void c_ragebot::select_target() {
 			m_players.emplace_back(e, i, static_cast<int>(player_best_damage), player_best_point, e->abs_origin().distance_to(local->abs_origin()));
 		}
 
+		const char* tmp = this->curent_sort_mode.c_str();
+
 		std::sort(m_players.begin(), m_players.end(), [&](rage_t& a, rage_t& b) {
-			//switch (g_vars.rage.target_selection) {
-			//case 0:
-			return a.m_damage > b.m_damage;
-			//case 1:
-			//return a.distance < b.distance;
-			//case 2:
-			//	return a.index < b.index;
-			//default:
-			//	return false;
-			//}
+
+			
+			if (std::strcmp(tmp, "Health")) {
+				return a.m_damage > b.m_damage;
+			}
+			else if (std::strcmp(tmp, "Distance")) {
+				return a.distance < b.distance;
+			}
+			else if (std::strcmp(tmp, "Fov")) {
+
+				auto calculateRelativeAngle = [&](const vec3_t& source, const vec3_t& destination, const vec3_t& viewAngles)
+				{
+					return ((destination - source).toAngle() - viewAngles).normalized();
+				};
+
+				const auto angle1 = calculateRelativeAngle(csgo::local_player->get_eye_pos(), a.m_bestpoint, cmd->viewangles);
+				const auto angle2 = calculateRelativeAngle(csgo::local_player->get_eye_pos(), b.m_bestpoint, cmd->viewangles);
+
+				float fov1 = std::hypot(angle1.x, angle1.y);
+				float fov2 = std::hypot(angle2.x, angle2.y);
+
+				return fov1 < fov2;
+			}
+			else {
+				return a.index < b.index;
+			}
 		});
 	}
 	catch (const std::out_of_range& ex) {
@@ -216,7 +218,7 @@ bool c_ragebot::hitchance(vec3_t& angle, player_t* ent) {
 
 	vec3_t forward, right, up;
 	vec3_t eye_position = local->get_eye_pos();
-	math::angle_vectors(angle - local->aim_punch_angle() * 2.f, &forward, &right, &up); // maybe add an option to not account for punch.
+	math::angle_vectors(angle - local->aim_punch_angle() * 2.f, forward, right, up); // maybe add an option to not account for punch.
 
 	weapon_t* weapon = local->active_weapon();
 	if (!weapon)
@@ -231,9 +233,9 @@ bool c_ragebot::hitchance(vec3_t& angle, player_t* ent) {
 		random_seed(seed);
 
 		float a = math::random_float(0.f, 1.f);
-		float b = math::random_float(0.f, 2.f * 3.1415F);
+		float b = math::random_float(0.f, 2.f * M_PI);
 		float c = math::random_float(0.f, 1.f);
-		float d = math::random_float(0.f, 2.f * 3.1415F);
+		float d = math::random_float(0.f, 2.f * M_PI);
 
 		const float generated_spread = a * weapon_spread;
 		const float generated_cone = c * weapon_cone;
@@ -310,25 +312,27 @@ void c_ragebot::choose_angles() {
 	
 	m_last_target = selected_target;
 
-	//if ((!local->is_scoped() && (weapon->get_weapon_data()-> == WEAPONTYPE_SNIPER_RIFLE)) && selected_target)
-	//	m_cmd->buttons |= in_attack2;
+	//always
+	if ((!local->is_scoped() && this->has_scope(weapon)) && selected_target)
+		m_cmd->buttons |= in_attack2;
 
 	vec3_t aim_angle = math::calc_angle(local->get_eye_pos(), best_hitboxpos);
+	aim_angle.normalized();
 	aim_angle.clamp();
 
-	
 	//if (!hitchance(aim_angle, selected_target)) {
-		//if (g_vars.rage.autoscope == 2 && (!local->is_scoped() && weapon->has_scope()))
-		//	m_cmd->m_buttons |= IN_ATTACK2;
+		//hitchance fail
+		//if ((!local->is_scoped() && this->has_scope(weapon)) && selected_target)
+		//	m_cmd->buttons |= in_attack2;
 
-	if (combat::ragebot::quickstop)
-		quickstop(weapon);
+		if (combat::ragebot::quickstop)
+			quickstop(weapon);
 
-	//	if (combat::ragebot::auto_fire)
-	//		return;
+		//if (combat::ragebot::auto_fire)
+		//	return;
 	//}
 	
-	if (csgo::local_player->next_attack() > interfaces::globals->cur_time)
+	if (csgo::local_player->next_attack() > interfaces::globals->curtime)
 		return;
 
 	if (combat::ragebot::auto_fire /*&& !(m_cmd->buttons & in_attack)*/) {
@@ -352,6 +356,7 @@ void c_ragebot::choose_angles() {
 		//g_backtrack.process_cmd(m_cmd, selected_target, best_record);
 		if (shots_fired > 1) {
 			m_cmd->buttons &= ~in_attack;
+			m_cmd->buttons &= ~in_attack2;
 			shots_fired = 0;
 		}
 	}
@@ -369,7 +374,7 @@ void c_ragebot::quickstop(weapon_t* local_weapon) {
 		return;
 
 	// note: scoped weapons use the alternate speed member.
-	const float max_speed = local_weapon->flags() ? weapon_info->flMaxSpeed[0] : weapon_info->flMaxSpeed[1];
+	const float max_speed = this->has_scope(local_weapon) ? weapon_info->flMaxSpeed[1] : weapon_info->flMaxSpeed[0];
 
 	if (unpredicted_vel.length_2d() > max_speed * .34f) {
 		const vec3_t velocity = unpredicted_vel;
@@ -385,9 +390,7 @@ void c_ragebot::quickstop(weapon_t* local_weapon) {
 		vec3_t negated_direction = forward * -speed;
 
 		const auto m_max = [&](float a, float b) {
-			if (a > b) {
-				return a;
-			}
+			if (a > b)return a; 
 			return b;
 		};
 
@@ -425,6 +428,10 @@ bool c_ragebot::is_valid(player_t* player) {
 		return false;*/
 	
 	return true;
+}
+
+bool c_ragebot::has_scope(weapon_t* weapon) {
+	return (weapon->get_weapon_data()->nWeaponType == WEAPONTYPE_SNIPER_RIFLE || weapon->client_class()->class_id == cweaponaug || weapon->client_class()->class_id == cweaponsg556);
 }
 
 void combat::ragebot::onEnable() {

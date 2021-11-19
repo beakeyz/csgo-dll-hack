@@ -9,7 +9,7 @@ vec3_t calculateRelativeAngle(const vec3_t& source, const vec3_t& destination, c
 void combat::aimbot::aim_bot(c_usercmd* cmd) {
 	if (!combat::aimbot::isEnabled)
 		return;
-	if (!csgo::local_player || !(uintptr_t*)csgo::local_player || csgo::local_player->next_attack() > interfaces::globals->cur_time || csgo::local_player->is_defusing() || csgo::local_player->health() <= 0)
+	if (!csgo::local_player || !(uintptr_t*)csgo::local_player || csgo::local_player->next_attack() > interfaces::globals->curtime || csgo::local_player->is_defusing() || csgo::local_player->health() <= 0)
 		return;
 
 	const auto curr_weapon = csgo::local_player->active_weapon();

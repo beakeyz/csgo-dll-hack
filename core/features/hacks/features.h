@@ -9,3 +9,4 @@
 #include "./render/visuals.h"
 #include "./render/glow.h"
 #include "./misc/misc.h"
+#include "./nade_pred/nade_pred.h"

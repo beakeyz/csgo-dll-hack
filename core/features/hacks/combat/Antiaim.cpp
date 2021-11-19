@@ -33,7 +33,7 @@ void combat::antiaim::run(c_usercmd* cmd, bool& bSendPacket)
 		return;
 	}
 
-	if (weapon->next_primary_attack() - interfaces::globals->cur_time < interfaces::globals->interval_per_tick && (cmd->buttons & in_attack || cmd->buttons & in_attack2))
+	if (weapon->next_primary_attack() - interfaces::globals->curtime < interfaces::globals->interval_per_tick && (cmd->buttons & in_attack || cmd->buttons & in_attack2))
 	{
 		return;
 	}
@@ -120,7 +120,7 @@ void combat::antiaim::handle_yaw(c_usercmd* cmd, bool fake)
 	//}
 
 	if (combat::antiaim::spinbot) {
-		cmd->viewangles.y = fmodf(interfaces::globals->tick_count * (float)combat::antiaim::spinspeed, 360.f);
+		cmd->viewangles.y = fmodf(interfaces::globals->tickcount * (float)combat::antiaim::spinspeed, 360.f);
 	}
 	else {
 		if (combat::antiaim::backwards) {

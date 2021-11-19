@@ -1,11 +1,11 @@
 #include "./timer.h"
 
 void c_timer::reset() {
-	c_timer::last_ms = interfaces::globals->cur_time;
+	c_timer::last_ms = interfaces::globals->curtime;
 }
 
 bool c_timer::has_time_elapsed(float time, bool reset) {
-	if (interfaces::globals->cur_time - c_timer::last_ms > time) {
+	if (interfaces::globals->curtime - c_timer::last_ms > time) {
 		if (reset) {
 			c_timer::reset();
 		}

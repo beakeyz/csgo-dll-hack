@@ -98,6 +98,7 @@
     <ClCompile Include="core\features\hacks\legit\legitbot.cpp" />
     <ClCompile Include="core\features\hacks\misc\engine_prediction.cpp" />
     <ClCompile Include="core\features\hacks\misc\misc.cpp" />
+    <ClCompile Include="core\features\hacks\nade_pred\nade_pred.cpp" />
     <ClCompile Include="core\features\hacks\render\visuals.cpp" />
     <ClCompile Include="core\features\module.cpp" />
     <ClCompile Include="core\features\hacks\movement\Auto Strafe.cpp" />
@@ -142,6 +143,7 @@
     <ClInclude Include="core\features\hacks\legit\legitbot.h" />
     <ClInclude Include="core\features\hacks\misc\engine_prediction.hpp" />
     <ClInclude Include="core\features\hacks\misc\misc.h" />
+    <ClInclude Include="core\features\hacks\nade_pred\nade_pred.h" />
     <ClInclude Include="core\features\hacks\render\glow.h" />
     <ClInclude Include="core\features\hacks\render\player_esp.h" />
     <ClInclude Include="core\features\hacks\render\visuals.h" />

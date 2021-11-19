@@ -386,6 +386,30 @@ public:
 		return (*(original_fn**)this)[461](this);
 		//return interfaces::weapon_system->get_weapon_data(this->item_definition_index());
 	}
+
+    bool check_detonate(const vec3_t& vecThrow, const trace_t& tr, int tick, float interval)
+    {
+        switch (item_definition_index())
+        {
+        case WEAPON_SMOKEGRENADE:
+        case WEAPON_DECOY:
+            if (vecThrow.length_2d() < 0.1f)
+            {
+                int det_tick_mod = (int)(0.2f / interval);
+                return !(tick % det_tick_mod);
+            }
+            return false;
+        case WEAPON_MOLOTOV:
+        case WEAPON_INCGRENADE:
+            if (tr.flFraction != 1.0f && tr.plane.normal.z > 0.7f)
+                return true;
+        case WEAPON_FLASHBANG:
+        case WEAPON_HEGRENADE:
+            return (float)tick * interval > 1.5f && !(tick % (int)(0.2f / interval));
+        default:
+            return false;
+        }
+    }
 };
 
 //class AnimationLayer;
@@ -540,6 +564,13 @@ public:
 	}
 };
 
+class c_env_tonemap_controller : public entity_t {
+public:
+    NETVAR("DT_EnvTonemapController", "m_bUseCustomAutoExposureMin", use_custom_exposure_min, unsigned char);
+    NETVAR("DT_EnvTonemapController", "m_bUseCustomAutoExposureMax", use_custom_exposure_max, unsigned char);
+    NETVAR("DT_EnvTonemapController", "m_flCustomAutoExposureMax", custom_exposure_min, float);
+    NETVAR("DT_EnvTonemapController", "m_flCustomAutoExposureMax", custom_exposure_max, float);
+};
 /*
 class AnimationLayer
 {

@@ -223,30 +223,22 @@ void math::angle_to_vector(const vec3_t& angles, vec3_t& forward) {
 	forward.z = -sp;
 }
 
-void math::angle_vectors(const vec3_t & angles, vec3_t * forward, vec3_t * right, vec3_t * up) {
+void math::angle_vectors(const vec3_t & angles, vec3_t& forward, vec3_t& right, vec3_t& up) {
 	float sp, sy, sr, cp, cy, cr;
 
 	sin_cos(DEG2RAD(angles.x), &sp, &cp);
 	sin_cos(DEG2RAD(angles.y), &sy, &cy);
 	sin_cos(DEG2RAD(angles.z), &sr, &cr);
 
-	if (forward) {
-		forward->x = cp * cy;
-		forward->y = cp * sy;
-		forward->z = -sp;
-	}
-
-	if (right) {
-		right->x = -1 * sr * sp * cy + -1 * cr * -sy;
-		right->y = -1 * sr * sp * sy + -1 * cr * cy;
-		right->z = -1 * sr * cp;
-	}
-
-	if (up) {
-		up->x = cr * sp * cy + -sr * -sy;
-		up->y = cr * sp * sy + -sr * cy;
-		up->z = cr * cp;
-	}
+	forward.x = (cp * cy);
+	forward.y = (cp * sy);
+	forward.z = (-sp);
+	right.x = (-1 * sr * sp * cy + -1 * cr * -sy);
+	right.y = (-1 * sr * sp * sy + -1 * cr * cy);
+	right.z = (-1 * sr * cp);
+	up.x = (cr * sp * cy + -sr * -sy);
+	up.y = (cr * sp * sy + -sr * cy);
+	up.z = (cr * cp);
 }
 
 vec3_t math::vector_add(vec3_t & a, vec3_t & b) {

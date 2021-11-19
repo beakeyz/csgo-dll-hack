@@ -1,14 +1,16 @@
 #include "visuals.h"
 
-void c_visuals::full_bright() {
+void c_visuals::run_visuals() {
 
-	if (!csgo::local_player || !interfaces::engine->is_in_game())
-		return;
 
-	static auto mat_fullbright = interfaces::console->get_convar("mat_fullbright");
+	for (int i = 1; i <= interfaces::entity_list->get_highest_index(); i++) {
+		auto entity = static_cast<entity_t*>(interfaces::entity_list->get_client_entity(i));
+		if (!entity)
+			continue;
 
-	if (mat_fullbright->float_value != this->m_full_bright)
-		mat_fullbright->set_value(this->m_full_bright);
+		this->nightmode(entity);
+	}
+
 }
 
 void c_visuals::remove_smoke()
@@ -66,4 +68,29 @@ void c_visuals::remove_smoke()
 				material->set_material_var_flag(material_var_wireframe, last_value);
 		}
 	}
+}
+
+void c_visuals::nightmode(entity_t* ent, float override_brightness) {
+	if (!interfaces::engine->is_connected() || !csgo::local_player/* || !ent */)
+		return;
+
+	auto client_class = ent->client_class();
+	if (!client_class || client_class->class_id != cenvtonemapcontroller)
+		return;
+
+	float brightness = this->m_nightmode / 100.f;
+	if (!this->m_nightmode)
+		brightness = 0.001f;
+
+	if (override_brightness > 0.f)
+		brightness = override_brightness / 100.f;
+
+	// will not work if post processing is disabled.
+	auto tonemap_controller = reinterpret_cast<c_env_tonemap_controller*>(ent);
+
+	tonemap_controller->use_custom_exposure_min() = 1;
+	tonemap_controller->use_custom_exposure_max() = 1;
+
+	tonemap_controller->custom_exposure_min() = brightness;
+	tonemap_controller->custom_exposure_max() = brightness;
 }

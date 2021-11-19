@@ -56,7 +56,7 @@ void c_skeleton_esp::on_draw()
 		if (!csgo::local_player)
 			return;
 
-		for (int i = 1; i <= interfaces::globals->max_clients; ++i) {
+		for (int i = 1; i <= interfaces::globals->maxClients; ++i) {
 			auto entity = static_cast<entity_t*>(interfaces::entity_list->get_client_entity(i));
 
 			if (!entity || entity->dormant() || entity == csgo::local_player || entity->health() == 0)
@@ -155,7 +155,7 @@ void c_player_esp::run() {
 		if (!csgo::local_player)
 			return;
 
-		for (int i = 1; i <= interfaces::globals->max_clients; ++i) {
+		for (int i = 1; i <= interfaces::globals->maxClients; ++i) {
 			auto entity = static_cast<entity_t*>(interfaces::entity_list->get_client_entity(i));
 
 			if (!entity || entity->dormant() || entity == csgo::local_player || entity->health() == 0)

@@ -123,8 +123,8 @@ void utilities::movement_fix(c_usercmd* m_pcmd)
 	auto viewangles = m_pcmd->viewangles;
 	viewangles.normalized();
 
-	math::angle_vectors(g_ctx.globals.wish_angle, &view_fwd, &view_right, &view_up);
-	math::angle_vectors(viewangles, &g_cmd_fwd, &g_cmd_right, &g_cmd_up);
+	math::angle_vectors(g_ctx.globals.wish_angle, view_fwd, view_right, view_up);
+	math::angle_vectors(viewangles, g_cmd_fwd, g_cmd_right, g_cmd_up);
 
 	const auto v8 = sqrtf((view_fwd.x * view_fwd.x) + (view_fwd.y * view_fwd.y));
 	const auto v10 = sqrtf((view_right.x * view_right.x) + (view_right.y * view_right.y));

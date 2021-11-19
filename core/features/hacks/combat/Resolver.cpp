@@ -82,7 +82,7 @@ void resolver::resolve_yaw()
 	}
 	else
 	{
-		if (interfaces::globals->cur_time - lock_side > 2.0f)
+		if (interfaces::globals->curtime - lock_side > 2.0f)
 		{
 			//g_autowall.
 			//auto fire_data_positive = autowall::get().wall_penetration(g_ctx.globals.eye_pos, player->mathitbox_position_matrix(HITBOX_HEAD, player_record->matrixes_data.positive), player);

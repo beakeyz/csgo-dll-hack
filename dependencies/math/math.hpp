@@ -8,7 +8,7 @@ namespace math {
 	vec3_t angle_vector(vec3_t angle);
 	void transform_vector(vec3_t&, matrix_t&, vec3_t&);
 	void vector_angles(const vec3_t&, vec3_t&);
-	void angle_vectors(const vec3_t&, vec3_t*, vec3_t*, vec3_t*);
+	void angle_vectors(const vec3_t&, vec3_t&, vec3_t&, vec3_t&);
 	vec3_t vector_add(vec3_t&, vec3_t&);
 	vec3_t vector_subtract(vec3_t&, vec3_t&);
 	vec3_t vector_multiply(vec3_t&, vec3_t&);

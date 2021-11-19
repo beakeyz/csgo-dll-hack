@@ -7,13 +7,13 @@ void prediction::start(c_usercmd* cmd) {
 	if (!prediction_random_seed) 
 		prediction_random_seed = *reinterpret_cast<int**>(utilities::pattern_scan("client.dll", sig_prediction_random_seed) + 2);
 
-	*prediction_random_seed = cmd->randomseed & 0x7FFFFFFF;
+	*prediction_random_seed = cmd->randomseed;
 
-	old_cur_time = interfaces::globals->cur_time;
-	old_frame_time = interfaces::globals->frame_time;
+	old_cur_time = interfaces::globals->curtime;
+	old_frame_time = interfaces::globals->frametime;
 
-	interfaces::globals->cur_time = csgo::local_player->get_tick_base() * interfaces::globals->interval_per_tick;
-	interfaces::globals->frame_time = interfaces::globals->interval_per_tick;
+	interfaces::globals->curtime = csgo::local_player->get_tick_base() * interfaces::globals->interval_per_tick;
+	interfaces::globals->frametime = interfaces::globals->interval_per_tick;
 
 	interfaces::game_movement->start_track_prediction_errors(csgo::local_player);
 
@@ -33,6 +33,6 @@ void prediction::end() {
 
 	*prediction_random_seed = -1;
 
-	interfaces::globals->cur_time = old_cur_time;
-	interfaces::globals->frame_time = old_frame_time;
+	interfaces::globals->curtime = old_cur_time;
+	interfaces::globals->frametime = old_frame_time;
 }
