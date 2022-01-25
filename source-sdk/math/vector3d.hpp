@@ -68,6 +68,15 @@ public:
 		z /= fl;
 		return *this;
 	}
+	bool operator==(const vec3_t& src) const
+	{
+		return (src.x == x) && (src.y == y) && (src.z == z);
+	}
+
+	bool operator!=(const vec3_t& src) const
+	{
+		return (src.x != x) || (src.y != y) || (src.z != z);
+	}
 	auto operator-(const vec3_t& other) const -> vec3_t {
 		auto buf = *this;
 
@@ -92,7 +101,11 @@ public:
 	float operator[](int i) const {
 		return ((float*)this)[i];
 	}
-
+	inline void MulAdd(const vec3_t& a, const vec3_t& b, float scalar) {
+		x = a.x + b.x * scalar;
+		y = a.y + b.y * scalar;
+		z = a.z + b.z * scalar;
+	}
 	inline float length_2d() const {
 		return sqrt((x * x) + (y * y));
 	}

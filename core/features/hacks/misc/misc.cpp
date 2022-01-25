@@ -47,5 +47,5 @@ void c_misc::third_person() {
 
 	interfaces::input->camera_offset = angles;
 
-	//csgo::local_player->update_client_side_animations();
+	csgo::local_player->update_client_side_animations();
 }

@@ -78,6 +78,11 @@ void hooks::release() {
 
 void __fastcall hooks::frame_stage_notify::hook(void* _this, int edx, FrameStage stage) {
 
+
+	if (!csgo::local_player || !interfaces::engine->is_in_game() || !interfaces::engine->is_connected())
+		return frame_stage_notify_original(interfaces::client, edx, stage);;
+
+
 	aim_punch = nullptr;
 	view_punch = nullptr;
 
@@ -99,13 +104,21 @@ void __fastcall hooks::frame_stage_notify::hook(void* _this, int edx, FrameStage
 			(*view_punch) = { 0.0f, 0.0f, 0.0f };
 		}
 	}
-
-	if (stage == FrameStage::NET_UPDATE_POSTDATAUPDATE_START)
+	
+	if (stage == FrameStage::NET_UPDATE_POSTDATAUPDATE_END)
 	{
-		//'resolver' was here lmao
+		if (Resolver::get().is_enabled)
+			Resolver::get().Resolve();
 	}
 
 	frame_stage_notify_original(interfaces::client, edx, stage);
+
+	if (stage == FrameStage::NET_UPDATE_END)
+	{
+		if (Resolver::get().is_enabled)
+			Resolver::get().Log();
+
+	}
 
 	if (csgo::local_player && c_visuals::get().visual_recoil && csgo::local_player->is_alive() && aim_punch && view_punch)
 	{
@@ -165,8 +178,6 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 
 	g_ragebot.unpredicted_vel = csgo::local_player->velocity();
 
-	
-
 	prediction::start(cmd); {
 
 		g_ragebot.work(cmd);
@@ -177,10 +188,9 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 
 		c_fakelag::get_ptr()->think(cmd, g_ctx.globals.send_packet);
 
-		c_nade_prediction::get_ptr()->fetch_points(cmd);
-
 	} prediction::end();
 
+	CCSGrenadeHint::get_ptr()->Tick(cmd->buttons);
 
 	math::CorrectMovement(old_viewangles, cmd, old_forwardmove, old_sidemove);
 
@@ -223,7 +233,7 @@ void __stdcall hooks::paint_traverse::hook(unsigned int panel, bool force_repain
 		c_skeleton_esp::get_ptr()->on_draw();
 		c_player_esp::get_ptr()->run();
 		c_visuals::get_ptr()->run_visuals();
-		c_nade_prediction::get_ptr()->render();
+		CCSGrenadeHint::get_ptr()->Paint();
 
 		c_menu::get_ptr()->toggle();
 
@@ -247,6 +257,8 @@ void __stdcall hooks::OverrideView::hook(view_setup_t* pSetup) {
 	c_visuals::get().remove_smoke();
 
 	c_misc::get_ptr()->third_person();
+
+	CCSGrenadeHint::get_ptr()->View();
 
 	//if (!interfaces::engine->is_connected() || !interfaces::engine->is_in_game())
 	//	return override_view_original(interfaces::clientmode, pSetup);

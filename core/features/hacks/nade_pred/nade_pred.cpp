@@ -4,135 +4,199 @@
 
 #include <mutex>
 
-void c_nade_prediction::Tick(int buttons)
+void CCSGrenadeHint::Tick(int buttons)
 {
-	if (!c_visuals::get_ptr()->projectile_prediction)
+	if (!c_visuals::get().projectile_prediction)
 		return;
 
-	bool _in_attack = buttons & in_attack;
-	bool _in_attack2 = buttons & in_attack2;
+	bool _in_attack = (buttons & in_attack);
+	bool _in_attack2 = (buttons & in_attack2);
 
-	act = (_in_attack && _in_attack2) ? ACT::ACT_LOB : (_in_attack2) ? ACT::ACT_DROP : (_in_attack) ? ACT::ACT_THROW : ACT::ACT_NONE;
+	act = (_in_attack && _in_attack2) ? ACT_DROP :
+		(_in_attack2) ? ACT_THROW :
+		(_in_attack) ? ACT_LOB :
+		ACT_NONE;
 }
 
-bool c_nade_prediction::is_enabled(c_usercmd* cmd)
+void CCSGrenadeHint::View()
 {
+	if (!c_visuals::get().projectile_prediction)
+		return;
+
 	if (!csgo::local_player)
-		return false;
+		return;
 
-	player = csgo::local_player;
-	if (player->is_alive())
-		Tick(cmd->buttons);
+	auto weapon = csgo::local_player->active_weapon();
+	if (!weapon)
+		return;
 
-	else if (player->observer_target())
+	if ((weapon->client_class()->class_id == class_ids::cbasecsgrenade) && act != ACT_NONE)
 	{
-		player = (player_t*)interfaces::entity_list->get_client_entity_handle(player->observer_target());
-		act = 0;
+		vec3_t Angles;
+		interfaces::engine->get_view_angles(Angles);
+
+		c_client_class* pWeaponClass = weapon->client_class();
+		if (!pWeaponClass)
+		{
+			type = -1;
+			Simulate(Angles, csgo::local_player);
+		}
+		else
+		{
+			type = pWeaponClass->class_id;
+			Simulate(Angles, csgo::local_player);
+		}
 	}
 	else
-		return false;
-
-	if (player->move_type() == movetype_noclip)
-		return false;
-
-	weapon = player->active_weapon();
-	if (!weapon || weapon->get_weapon_data()->nWeaponType != WEAPONTYPE_GRENADE)
-		return false;
-
-	return true;
+	{
+		type = -1;
+	}
 }
 
-void c_nade_prediction::fetch_points(c_usercmd* cmd)
-{
-	if (!c_visuals::get_ptr()->projectile_prediction || !interfaces::engine->is_in_game() || !interfaces::engine->is_connected())
-		return;
+inline float CSGO_Armor(float flDamage, int ArmorValue) {
+	float flArmorRatio = 0.5f;
+	float flArmorBonus = 0.5f;
+	if (ArmorValue > 0) {
+		float flNew = flDamage * flArmorRatio;
+		float flArmor = (flDamage - flNew) * flArmorBonus;
 
-	if ((prediction::data.buttons & in_attack && !(cmd->buttons & in_attack2)) || (prediction::data.buttons & in_attack2 && !(cmd->buttons & in_attack2))) {
-		
-		screen_points.clear();
-		return;
-	}
-
-	render_mutex.lock();
-
-	screen_points.clear();
-
-	if (!is_enabled(cmd))
-	{
-		render_mutex.unlock();
-
-		return;
-	}
-
-	was_flashed = player->is_flashed();
-
-	vec3_t vecSrc, vecThrow;
-	Setup(vecSrc, vecThrow, cmd->viewangles);
-
-	float interval = interfaces::globals->interval_per_tick;
-
-	int logstep = static_cast<int>(0.05f / interval);
-	int logtimer = 0;
-
-	std::vector<vec3_t> path;
-
-	for (unsigned int i = 0; i < path.max_size() - 1; ++i)
-	{
-		if (!logtimer) {
-			path.emplace_back(vecSrc);
-		}
-		
-		vec3_t move{0,0,0};
-		AddGravityMove(move, vecThrow, interval, false);
-
-		// Push entity
-		trace_t tr;
-		PushEntity(vecSrc, move, tr);
-
-		int result = 0;
-
-		if (weapon->check_detonate(vecThrow, tr, i, interval)) {
-			result |= 1;
+		if (flArmor > static_cast<float>(ArmorValue)) {
+			flArmor = static_cast<float>(ArmorValue) * (1.f / flArmorBonus);
+			flNew = flDamage - flArmor;
 		}
 
-		if (tr.flFraction != 1.0f)
-		{
-			result |= 2; // Collision!
-			ResolveFlyCollisionCustom(tr, vecThrow, interval);
-		}
-
-		vecSrc = tr.end;
-
-		if (result & 1)
-			break;
-			
-		if ((result & 2) || logtimer >= logstep)
-			logtimer = 0;
-		else
-			++logtimer;
+		flDamage = flNew;
 	}
-
-	path.emplace_back(vecSrc);
-
-	vec3_t prev = path[0];
-	vec3_t nadeStart, nadeEnd;
-
-	for (auto& nade : path)
-	{
-		if (math::world_to_screen(prev, nadeStart) && math::world_to_screen(nade, nadeEnd))
-		{
-			screen_points.emplace_back(std::pair<vec3_t, vec3_t>{ nadeStart, nadeEnd });
-		}
-		prev = nade;
-	}
-
-	render_mutex.unlock();
+	return flDamage;
 }
 
-void c_nade_prediction::Setup(vec3_t& vecSrc, vec3_t& vecThrow, vec3_t viewangles)
+void CCSGrenadeHint::Paint()
 {
-	vec3_t angThrow = viewangles;
-	//roll
+	if (!c_visuals::get().projectile_prediction)
+		return;
+
+	if (!csgo::local_player)
+		return;
+
+	auto weapon = csgo::local_player->active_weapon();
+	if (!weapon)
+		return;
+
+	if ((type) && path.size() > 1 && act != ACT_NONE && (weapon->client_class()->class_id == class_ids::cbasecsgrenade))
+	{
+		vec3_t ab, cd;
+		vec3_t prev = path[0];
+		for (auto it = path.begin(), end = path.end(); it != end; ++it)
+		{
+			if (math::world_to_screen(prev, ab) && math::world_to_screen(*it, cd))
+			{
+				interfaces::surface->set_drawing_color(TracerColor.r, TracerColor.g, TracerColor.b);
+				interfaces::surface->draw_line(ab[0], ab[1], cd[0], cd[1]);
+			}
+			prev = *it;
+		}
+
+		//for (auto it = OtherCollisions.begin(), end = OtherCollisions.end(); it != end; ++it)
+		//{
+		//	render::draw_rect(it->first.x, it->first.y, 2.f, 2.f, color(0, 255, 0, 200));
+		//}
+
+		//Visuals::Draw3DCube(2.f, OtherCollisions.rbegin()->second, OtherCollisions.rbegin()->first, Color(255, 0, 0, 200));
+
+		std::string EntName;
+		auto bestdmg = 0;
+		static color redcol = { 255, 0, 0, 255 };
+		static color greencol = { 25, 255, 25, 255 };
+		static color yellowgreencol = { 177, 253, 2, 255 };
+		static color yellowcol = { 255, 255, 0, 255 };
+		static color orangecol = { 255, 128, 0, 255 };
+		color* BestColor = &redcol;
+
+		vec3_t endpos = path[path.size() - 1];
+		vec3_t absendpos = endpos;
+
+		float totaladded = 0.0f;
+
+		while (totaladded < 30.0f) {
+			if (interfaces::trace_ray->get_point_contents(endpos) == CONTENTS_EMPTY)
+				break;
+
+			totaladded += 2.0f;
+			endpos.z += 2.0f;
+		}
+
+		weapon_t* pWeapon = csgo::local_player->active_weapon();
+		int weap_id = pWeapon->index();
+
+		if (pWeapon &&
+			weap_id == WEAPON_HEGRENADE ||
+			weap_id == WEAPON_MOLOTOV ||
+			weap_id == WEAPON_INCGRENADE) {
+			for (int i = 1; i < 64; i++) {
+				player_t* pEntity = static_cast<player_t*>(interfaces::entity_list->get_client_entity(i));
+
+				if (!pEntity || pEntity->team() == csgo::local_player->team())
+					continue;
+
+				float dist = (pEntity->origin() - endpos).length();
+
+				if (dist < 350.0f) {
+					trace_filter filter;
+					filter.skip = csgo::local_player;
+					ray_t ray;
+					vec3_t NadeScreen;
+					math::world_to_screen(endpos, NadeScreen);
+
+					vec3_t vPelvis = pEntity->getBonePos(3);
+					ray.initialize(endpos, vPelvis);
+					trace_t ptr;
+					interfaces::trace_ray->trace_ray(ray, MASK_SHOT, &filter, &ptr);
+
+					if (ptr.entity == pEntity) {
+						vec3_t PelvisScreen;
+
+						math::world_to_screen(vPelvis, PelvisScreen);
+
+						static float a = 105.0f;
+						static float b = 25.0f;
+						static float c = 140.0f;
+
+						float d = ((((pEntity->origin()) - prev).length() - b) / c);
+						float flDamage = a * exp(-d * d);
+						auto dmg = max(static_cast<int>(ceilf(CSGO_Armor(flDamage, pEntity->armor()))), 0);
+
+						color* destcolor = dmg >= 65 ? &redcol : dmg >= 40.0f ? &orangecol : dmg >= 20.0f ? &yellowgreencol : &greencol;
+
+						if (dmg > bestdmg) {
+							EntName = "hareld";
+							BestColor = destcolor;
+							bestdmg = dmg;
+						}
+					}
+				}
+			}
+		}
+
+		/*
+		if (bestdmg > 0.f) {
+			if (weap_id != WEAPON_HEGRENADE)
+			{
+				if (math::world_to_screen(prev, cd))
+					Visuals::DrawString(Visuals::ui_font, cd[0], cd[1] - 10, *BestColor, FONT_CENTER, firegrenade_didnt_hit ? "No collisions" : (EntName + " will be burnt.").c_str());
+			}
+			else
+			{
+				if (math::world_to_screen(*path.begin(), cd))
+					Visuals::DrawString(Visuals::ui_font, cd[0], cd[1] - 10, *BestColor, FONT_CENTER, ("Most damage dealt to: " + EntName + " -" + std::to_string(bestdmg)).c_str());
+			}
+		}
+		*/
+	}
+}
+
+void CCSGrenadeHint::Setup(player_t* pl, vec3_t& vecSrc, vec3_t& vecThrow, const vec3_t& angEyeAngles)
+{
+	vec3_t angThrow = angEyeAngles;
 	float pitch = angThrow.x;
 
 	if (pitch <= 90.0f)
@@ -146,14 +210,18 @@ void c_nade_prediction::Setup(vec3_t& vecSrc, vec3_t& vecThrow, vec3_t viewangle
 	{
 		pitch -= 360.0f;
 	}
-
 	float a = pitch - (90.0f - fabs(pitch)) * 10.0f / 90.0f;
 	angThrow.x = a;
 
+	// Gets ThrowVelocity from weapon files
+	// Clamped to [15,750]
 	float flVel = 750.0f * 0.9f;
 
+	// Do magic on member of grenade object [esi+9E4h]
+	// m1=1  m1+m2=0.5  m2=0
 	static const float power[] = { 1.0f, 1.0f, 0.5f, 0.0f };
 	float b = power[act];
+	// Clamped to [0,1]
 	b = b * 0.7f;
 	b = b + 0.3f;
 	flVel *= b;
@@ -161,32 +229,188 @@ void c_nade_prediction::Setup(vec3_t& vecSrc, vec3_t& vecThrow, vec3_t viewangle
 	vec3_t vForward, vRight, vUp;
 	math::angle_vectors(angThrow, vForward, vRight, vUp);
 
-	vecSrc = csgo::local_player->get_eye_pos();
+	vecSrc = pl->origin();
+	vecSrc += pl->view_offset();
 	float off = (power[act] * 12.0f) - 12.0f;
 	vecSrc.z += off;
 
+	// Game calls UTIL_TraceHull here with hull and assigns vecSrc tr.endpos
 	trace_t tr;
 	vec3_t vecDest = vecSrc;
-	vecDest += vForward * 22.0f;
-
+	vecDest.MulAdd(vecDest, vForward, 22.0f);
 	TraceHull(vecSrc, vecDest, tr);
 
+	// After the hull trace it moves 6 units back along vForward
+	// vecSrc = tr.endpos - vForward * 6
 	vec3_t vecBack = vForward; vecBack *= 6.0f;
 	vecSrc = tr.end;
 	vecSrc -= vecBack;
 
-	vecThrow = csgo::local_player->velocity(); vecThrow *= 1.25f;
-	vecThrow += vForward * flVel;
+	// Finally calculate velocity
+	vecThrow = pl->velocity(); vecThrow *= 1.25f;
+	vecThrow.MulAdd(vecThrow, vForward, flVel);
 }
 
-void c_nade_prediction::ResolveFlyCollisionCustom(trace_t& tr, vec3_t& vecVelocity, float interval)
+void CCSGrenadeHint::Simulate(vec3_t& Angles, player_t* pLocal)
 {
-	if (!c_visuals::get_ptr()->projectile_prediction)
-		return;
+	vec3_t vecSrc, vecThrow;
+	Setup(pLocal, vecSrc, vecThrow, Angles);
 
+	float interval = interfaces::globals->interval_per_tick;
+
+	// Log positions 20 times per sec
+	int logstep = static_cast<int>(0.05f / interval);
+	int logtimer = 0;
+
+	path.clear();
+	OtherCollisions.clear();
+	TracerColor = color(255, 255, 0, 255);
+	for (unsigned int i = 0; i < path.max_size() - 1; ++i)
+	{
+		if (!logtimer)
+			path.push_back(vecSrc);
+
+		int s = Step(vecSrc, vecThrow, i, interval);
+		if ((s & 1) || vecThrow == vec3_t(0, 0, 0))
+			break;
+
+		// Reset the log timer every logstep OR we bounced
+		if ((s & 2) || logtimer >= logstep) logtimer = 0;
+		else ++logtimer;
+	}
+	path.push_back(vecSrc);
+}
+
+int CCSGrenadeHint::Step(vec3_t& vecSrc, vec3_t& vecThrow, int tick, float interval)
+{
+	// Apply gravity
+	vec3_t move;
+	AddGravityMove(move, vecThrow, interval, false);
+
+	// Push entity
+	trace_t tr;
+	PushEntity(vecSrc, move, tr);
+
+	int result = 0;
+	// Check ending conditions
+	if (CheckDetonate(vecThrow, tr, tick, interval))
+	{
+		result |= 1;
+	}
+
+	// Resolve collisions
+	if (tr.flFraction != 1.0f)
+	{
+		result |= 2; // Collision!
+		ResolveFlyCollisionCustom(tr, vecThrow, interval);
+	}
+
+	if (tr.entity && ((player_t*)tr.entity)->is_player())
+	{
+		TracerColor = color(255, 0, 0, 255);
+	}
+
+	if ((result & 1) || vecThrow == vec3_t(0, 0, 0) || tr.flFraction != 1.0f)
+	{
+		vec3_t angles;
+		math::vector_angles((tr.end - tr.start).normalized(), angles);
+		OtherCollisions.push_back(std::make_pair(tr.end, angles));
+	}
+
+	// Set new position
+	vecSrc = tr.end;
+
+	return result;
+}
+
+bool CCSGrenadeHint::CheckDetonate(vec3_t& vecThrow, const trace_t& tr, int tick, float interval)
+{
+	firegrenade_didnt_hit = false;
+	switch (type)
+	{
+	case class_ids::csmokegrenade:
+	case class_ids::cdecoygrenade:
+		// Velocity must be <0.1, this is only checked every 0.2s
+		if (vecThrow.length() < 0.1f)
+		{
+			int det_tick_mod = static_cast<int>(0.2f / interval);
+			return !(tick % det_tick_mod);
+		}
+		return false;
+
+		/* TIMES AREN'T COMPLETELY RIGHT FROM WHAT I'VE SEEN ! ! ! */
+	case class_ids::cmolotovgrenade:
+	case class_ids::cincendiarygrenade:
+		// Detonate when hitting the floor
+		if (tr.flFraction != 1.0f && tr.plane.normal.z > 0.7f)
+			return true;
+		// OR we've been flying for too long
+
+	case class_ids::cflashbang:
+	case class_ids::chegrenade: {
+		// Pure timer based, detonate at 1.5s, checked every 0.2s
+		firegrenade_didnt_hit = static_cast<float>(tick) * interval > 1.5f && !(tick % static_cast<int>(0.2f / interval));
+		return firegrenade_didnt_hit;
+	}
+	default:
+		//Assert(false);
+		return false;
+	}
+}
+
+void CCSGrenadeHint::TraceHull(vec3_t& src, vec3_t& end, trace_t& tr)
+{
+	// Setup grenade hull
+	static const vec3_t hull[2] = { vec3_t(-2.0f, -2.0f, -2.0f), vec3_t(2.0f, 2.0f, 2.0f) };
+
+	trace_filter filter;
+	//filter.SetIgnoreClass("BaseCSGrenadeProjectile");
+	filter.skip = interfaces::entity_list->get_client_entity(interfaces::engine->get_local_player());
+
+	ray_t ray;
+	ray.initialize(src, end, hull[0], hull[1]);
+
+	const unsigned int mask = 0x200400B;
+	interfaces::trace_ray->trace_ray(ray, mask, &filter, &tr);
+}
+
+void CCSGrenadeHint::AddGravityMove(vec3_t& move, vec3_t& vel, float frametime, bool onground)
+{
+	vec3_t basevel(0.0f, 0.0f, 0.0f);
+
+	move.x = (vel.x + basevel.x) * frametime;
+	move.y = (vel.y + basevel.y) * frametime;
+
+	if (onground)
+	{
+		move.z = (vel.z + basevel.z) * frametime;
+	}
+	else
+	{
+		// Game calls GetActualGravity( this );
+		float gravity = 800.0f * 0.4f;
+
+		float newZ = vel.z - (gravity * frametime);
+		move.z = ((vel.z + newZ) / 2.0f + basevel.z) * frametime;
+
+		vel.z = newZ;
+	}
+}
+
+void CCSGrenadeHint::PushEntity(vec3_t& src, const vec3_t& move, trace_t& tr)
+{
+	vec3_t vecAbsEnd = src;
+	vecAbsEnd += move;
+
+	// Trace through world
+	TraceHull(src, vecAbsEnd, tr);
+}
+
+void CCSGrenadeHint::ResolveFlyCollisionCustom(trace_t& tr, vec3_t& vecVelocity, float interval)
+{
 	// Calculate elasticity
-	float flSurfaceElasticity = 1.0;
-	float flGrenadeElasticity = 0.45f;
+	float flSurfaceElasticity = 1.0;  // Assume all surfaces have the same elasticity
+	float flGrenadeElasticity = 0.45f; // GetGrenadeElasticity()
 	float flTotalElasticity = flGrenadeElasticity * flSurfaceElasticity;
 	if (flTotalElasticity > 0.9f) flTotalElasticity = 0.9f;
 	if (flTotalElasticity < 0.0f) flTotalElasticity = 0.0f;
@@ -196,16 +420,15 @@ void c_nade_prediction::ResolveFlyCollisionCustom(trace_t& tr, vec3_t& vecVeloci
 	PhysicsClipVelocity(vecVelocity, tr.plane.normal, vecAbsVelocity, 2.0f);
 	vecAbsVelocity *= flTotalElasticity;
 
+	// Stop completely once we move too slow
 	float flSpeedSqr = vecAbsVelocity.length_sqr();
-	static const float flMinSpeedSqr = 20.0f * 20.0f;
-
+	static const float flMinSpeedSqr = 20.0f * 20.0f; // 30.0f * 30.0f in CSS
 	if (flSpeedSqr < flMinSpeedSqr)
 	{
-		vecAbsVelocity.x = 0.0f;
-		vecAbsVelocity.y = 0.0f;
-		vecAbsVelocity.z = 0.0f;
+		vecAbsVelocity = vec3_t(0, 0, 0);
 	}
 
+	// Stop if on ground
 	if (tr.plane.normal.z > 0.7f)
 	{
 		vecVelocity = vecAbsVelocity;
@@ -218,50 +441,7 @@ void c_nade_prediction::ResolveFlyCollisionCustom(trace_t& tr, vec3_t& vecVeloci
 	}
 }
 
-void c_nade_prediction::TraceHull(vec3_t& src, vec3_t& end, trace_t& tr)
-{
-	if (!c_visuals::get_ptr()->projectile_prediction)
-		return;
-
-	ray_t ray;
-	ray.initialize(src, end, vec3_t(-2.0f, -2.0f, -2.0f), vec3_t(2.0f, 2.0f, 2.0f));
-
-	trace_filter filter;
-	filter.skip = csgo::local_player;
-
-	interfaces::trace_ray->trace_ray(ray, 0x200400B, &filter, &tr);
-}
-
-void c_nade_prediction::PushEntity(vec3_t& src, const vec3_t& move, trace_t& tr)
-{
-	if (!c_visuals::get_ptr()->projectile_prediction)
-		return;
-
-	vec3_t vecAbsEnd = src;
-	vecAbsEnd += move;
-	TraceHull(src, vecAbsEnd, tr);
-}
-
-void c_nade_prediction::AddGravityMove(vec3_t& move, vec3_t& vel, float frametime, bool onground)
-{
-	move = { 0,0,0 };
-	move.x = (vel.x) * frametime;
-	move.y = (vel.y) * frametime;
-
-	if (onground)
-	{
-		move.z = (vel.z) * frametime;
-	}
-	else
-	{
-		float gravity = 800.0f * 0.4f;
-		float newZ = vel.z - (gravity * frametime);
-		move.z = ((vel.z + newZ) / 2.0f) * frametime;
-		vel.z = newZ;
-	}
-}
-
-int c_nade_prediction::PhysicsClipVelocity(const vec3_t& in, const vec3_t& normal, vec3_t& out, float overbounce)
+int CCSGrenadeHint::PhysicsClipVelocity(const vec3_t& in, const vec3_t& normal, vec3_t& out, float overbounce)
 {
 	static const float STOP_EPSILON = 0.1f;
 
@@ -296,39 +476,4 @@ int c_nade_prediction::PhysicsClipVelocity(const vec3_t& in, const vec3_t& norma
 	}
 
 	return blocked;
-}
-
-void c_nade_prediction::render()
-{
-	if (c_menu::get_ptr()->is_open || !interfaces::engine->is_in_game() || !interfaces::engine->is_connected())
-		return;
-
-	if (!c_visuals::get_ptr()->projectile_prediction)
-		return;
-
-	if (render_mutex.try_lock())
-	{
-		saved_points = screen_points;
-
-		render_mutex.unlock();
-	}
-
-	if (saved_points.empty())
-		return;
-
-	static const auto red_color = color::red();
-	static const auto white_color = color::white();
-	static const auto black_color = color::black();
-	static const auto blue_color = color::blue();
-
-	for (auto& point : saved_points)
-	{
-		render::draw_line(point.first.x, point.first.y, point.second.x, point.second.y, was_flashed ? black_color : white_color);
-	}
-
-	//const auto last_point = saved_points[saved_points.size() - 1].second;
-	//render::draw_circle(last_point.x, last_point.y, 5, 180, red_color);
-
-	//const auto& first_point = saved_points.at(0);
-	//render::draw_filled_rect(first_point.first.x - 2.5f, first_point.first.y - 2.5f, 5.f, 5.f, was_flashed ? black_color : white_color);
 }

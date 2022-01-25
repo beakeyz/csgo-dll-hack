@@ -68,15 +68,13 @@ void c_ragebot::select_target(c_usercmd* cmd) {
 			}
 			else {
 				*/
-				if (combat::ragebot::head) {
-					hitboxes.push_back(8);
-					hitboxes.push_back(7);
-				}
-				if (combat::ragebot::pelvis) {
-					hitboxes.push_back(4);
-					hitboxes.push_back(5);
-					hitboxes.push_back(3);
-					hitboxes.push_back(0);
+				if (combat::ragebot::legs) {
+					hitboxes.push_back(88);
+					hitboxes.push_back(72);
+					hitboxes.push_back(83);
+					hitboxes.push_back(74);
+					hitboxes.push_back(84);
+					hitboxes.push_back(76);
 				}
 				if (combat::ragebot::arms) {
 					hitboxes.push_back(65);
@@ -86,13 +84,15 @@ void c_ragebot::select_target(c_usercmd* cmd) {
 					hitboxes.push_back(90);
 					hitboxes.push_back(56);
 				}
-				if (combat::ragebot::legs) {
-					hitboxes.push_back(88);
-					hitboxes.push_back(72);
-					hitboxes.push_back(83);
-					hitboxes.push_back(74);
-					hitboxes.push_back(84);
-					hitboxes.push_back(76);
+				if (combat::ragebot::pelvis) {
+					hitboxes.push_back(4);
+					hitboxes.push_back(5);
+					hitboxes.push_back(3);
+					hitboxes.push_back(0);
+				}
+				if (combat::ragebot::head) {
+					hitboxes.push_back(7);
+					hitboxes.push_back(8);
 				}
 			//}
 
@@ -100,6 +100,7 @@ void c_ragebot::select_target(c_usercmd* cmd) {
 			vec3_t player_best_point = vec3_t(0.f, 0.f, 0.f);
 			const int best_min_dmg = local->active_weapon()->clip1_count() <= 3 ? e->health() : combat::ragebot::min_dmg; // ensure we get the kill
 			
+
 			for (auto& hitbox : hitboxes) {
 				const vec3_t point = e->getBonePos(hitbox);
 				const vec3_t local_eye_pos = csgo::local_player->get_eye_pos();
