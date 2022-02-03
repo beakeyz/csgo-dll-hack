@@ -23,7 +23,7 @@ void c_fakelag::think(c_usercmd* cmd, bool& sendPacket)
 		}
 	}
 
-	if (choke > static_cast<int>(interfaces::clientstate->choked_commands))
+	if (choke > static_cast<int>(interfaces::clientstate->choked_commands)) {
 		g_ctx.globals.send_packet = false;
-	
+	}
 }

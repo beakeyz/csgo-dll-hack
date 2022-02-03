@@ -233,6 +233,7 @@ void __stdcall hooks::paint_traverse::hook(unsigned int panel, bool force_repain
 		c_skeleton_esp::get_ptr()->on_draw();
 		c_player_esp::get_ptr()->run();
 		c_visuals::get_ptr()->run_visuals();
+
 		CCSGrenadeHint::get_ptr()->Paint();
 
 		c_menu::get_ptr()->toggle();

@@ -62,9 +62,7 @@ void Resolver::Resolve()
 			player->m_angEyeAngles().yaw = new_yaw;
 			return;
 		}
-		*/
 
-		/*
 		if (g_Options.hvh_resolver_override && g_InputSystem->IsButtonDown(g_Options.hvh_resolver_override_key))
 		{
 			Override(); //needs an improvement sometimes fucked up xD
@@ -75,12 +73,10 @@ void Resolver::Resolve()
 		}
 		*/
 
-		
 		AnimationLayer curBalanceLayer, prevBalanceLayer;
 
 		ResolveInfo curtickrecord;
 		curtickrecord.SaveRecord(player);
-
 		
 		if ((player->flags() & fl_onground) && (IsFakewalking(player, curtickrecord) || (player->velocity().length_2d() > 0.1f && player->velocity().length_2d() < 45.f && !(player->flags() & fl_ducking)))) //Fakewalk, shiftwalk check // We have to rework the fakewalk resolving, it sucks :D
 		{
@@ -140,7 +136,6 @@ void Resolver::Resolve()
 					player->eye_angles().y = new_yaw;
 
 					//Global::resolverModes[player->EntIndex()] = "Breaking LBY";
-
 					continue;
 				}
 				else if (curBalanceLayer.m_flWeight == 0.f && (prevBalanceLayer.m_flCycle > 0.92f && curBalanceLayer.m_flCycle > 0.92f)) // breaking lby with delta < 120
@@ -219,7 +214,6 @@ void Resolver::Resolve()
 
 			continue;
 		}
-
 		*/
 		float_t new_yaw = player->lower_body_yaw() + record.m_flLbyDelta;
 		new_yaw = math::clamp(new_yaw, -180, 180);

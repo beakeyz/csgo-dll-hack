@@ -236,6 +236,9 @@
     <ClInclude Include="source-sdk\structs\vertex_t.hpp" />
     <ClInclude Include="source-sdk\structs\weaponinfo.hpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="README.me" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

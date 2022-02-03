@@ -96,10 +96,10 @@ void CCSGrenadeHint::Paint()
 			prev = *it;
 		}
 
-		//for (auto it = OtherCollisions.begin(), end = OtherCollisions.end(); it != end; ++it)
-		//{
-		//	render::draw_rect(it->first.x, it->first.y, 2.f, 2.f, color(0, 255, 0, 200));
-		//}
+		for (auto it = OtherCollisions.begin(), end = OtherCollisions.end(); it != end; ++it)
+		{
+			render::draw_rect(it->first.x, it->first.y, 2.f, 2.f, color(0, 255, 0, 200));
+		}
 
 		//Visuals::Draw3DCube(2.f, OtherCollisions.rbegin()->second, OtherCollisions.rbegin()->first, Color(255, 0, 0, 200));
 
