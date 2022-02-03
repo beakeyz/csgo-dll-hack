@@ -237,7 +237,7 @@
     <ClInclude Include="source-sdk\structs\weaponinfo.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="README.me" />
+    <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
