@@ -221,8 +221,6 @@ void Resolver::Resolve()
 		player->eye_angles().y = new_yaw;
 
 	}
-
-	
 }
 
 void Resolver::Override()
@@ -334,7 +332,6 @@ bool Resolver::IsAdjustingBalance(player_t* player, ResolveInfo& record, Animati
 			*layer = record.animationLayer[i];
 			return true;
 		}
-		Sleep(1);
 	}
 	return false;
 }

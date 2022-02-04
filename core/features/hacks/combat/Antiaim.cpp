@@ -46,10 +46,6 @@ void combat::antiaim::run(c_usercmd* cmd, bool& bSendPacket)
 	handle_yaw(cmd, bSendPacket);
 	handle_pitch(cmd);
 
-	if (combat::antiaim::desync)
-	{
-		
-	}
 }
 
 void combat::antiaim::handle_yaw(c_usercmd* cmd, bool fake)

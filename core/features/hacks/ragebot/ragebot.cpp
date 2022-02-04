@@ -98,7 +98,7 @@ void c_ragebot::select_target(c_usercmd* cmd) {
 
 			float player_best_damage = 0.f;
 			vec3_t player_best_point = vec3_t(0.f, 0.f, 0.f);
-			const int best_min_dmg = local->active_weapon()->clip1_count() <= 3 ? e->health() : combat::ragebot::min_dmg; // ensure we get the kill
+			const int best_min_dmg = combat::ragebot::min_dmg; // ensure we get the kill
 			
 
 			for (auto& hitbox : hitboxes) {
@@ -158,20 +158,23 @@ void c_ragebot::select_target(c_usercmd* cmd) {
 						continue;
 					}
 
-					if (current_damage > e->health()) {
-						player_best_damage = current_damage;
-						player_best_point = point;
-						break;
-					}
-
 					if (current_damage > player_best_damage && current_damage > best_min_dmg) {
 						player_best_damage = current_damage;
 						player_best_point = point;
+					}
+
+					if (current_damage >= e->health()) {
+						player_best_damage = current_damage;
+						player_best_point = point;
+						break;
 					}
 				}
 			}
 
 			m_players.emplace_back(e, i, static_cast<int>(player_best_damage), player_best_point, e->abs_origin().distance_to(local->abs_origin()));
+			if (player_best_damage >= e->health()) {
+				break;
+			}
 		}
 
 		const char* tmp = this->curent_sort_mode.c_str();

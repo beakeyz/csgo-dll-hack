@@ -2,6 +2,7 @@
 #include "../../features.hpp"
 #include "../../../menu/variables.hpp"
 #include "../../module.h"
+#include "./../../setting/settings.h"
 #include <deque>
 
 class player_t;
@@ -79,7 +80,11 @@ public:
 
 	ResolveInfo arr_infos[65];
 
-	bool is_enabled = false;
+	c_bool_setting* is_enabled = new c_bool_setting("Enabled", false);
+
+	~Resolver() {
+		delete is_enabled;
+	}
 
 private:
 

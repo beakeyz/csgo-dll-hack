@@ -107,7 +107,7 @@ void __fastcall hooks::frame_stage_notify::hook(void* _this, int edx, FrameStage
 	
 	if (stage == FrameStage::NET_UPDATE_POSTDATAUPDATE_END)
 	{
-		if (Resolver::get().is_enabled)
+		if (Resolver::get().is_enabled->m_value)
 			Resolver::get().Resolve();
 	}
 
@@ -115,7 +115,7 @@ void __fastcall hooks::frame_stage_notify::hook(void* _this, int edx, FrameStage
 
 	if (stage == FrameStage::NET_UPDATE_END)
 	{
-		if (Resolver::get().is_enabled)
+		if (Resolver::get().is_enabled->m_value)
 			Resolver::get().Log();
 
 	}

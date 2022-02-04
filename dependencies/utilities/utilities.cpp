@@ -2,6 +2,7 @@
 #include "../utilities/csgo.hpp"
 #include <psapi.h>
 
+
 std::uint8_t* utilities::pattern_scan(const char* module_name, const char* signature) noexcept {
     const auto module_handle = GetModuleHandleA(module_name);
 
@@ -55,6 +56,7 @@ std::uint8_t* utilities::pattern_scan(const char* module_name, const char* signa
 
     throw std::runtime_error(std::string("Wrong signature: ") + signature);
 }
+
 
 bool utilities::get_bbox(entity_t* e, Box& b, bool player_esp)
 {
@@ -189,4 +191,3 @@ void utilities::rotate_movement(c_usercmd* cmd, float yaw)
 	cmd->forwardmove = new_forwardmove;
 	cmd->forwardmove = new_sidemove;
 }
-

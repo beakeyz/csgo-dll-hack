@@ -40,7 +40,7 @@ unsigned long WINAPI initialize(void *instance)
 
 	buttonComponent Aimbot_checkboxComp(&box, -1, "Aimbot", render::fonts::watermark_font_small, combat::aimbot::isEnabled, 0);
 	buttonComponent Trigger_comp(&box, -1, "Triggerbot", render::fonts::watermark_font_small, combat::triggerbot::enabled, 1);
-	buttonComponent Resolver_comp(&box, -1, "Resolver", render::fonts::watermark_font_small, Resolver::get().is_enabled, 2);
+	buttonComponent Resolver_comp(&box, -1, "Resolver", render::fonts::watermark_font_small, Resolver::get().is_enabled->m_value, 2);
 	buttonComponent anti_aim_comp(&box, -1, "Anti aim", render::fonts::watermark_font_small, combat::antiaim::isEnabled, 3);
 	buttonComponent desync_comp(&box, -1, "Desync", render::fonts::watermark_font_small, combat::antiaim::desync, 4);
 	buttonComponent backwards_comp(&box, -1, "Backwards", render::fonts::watermark_font_small, combat::antiaim::backwards, 5);
