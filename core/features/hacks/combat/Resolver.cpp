@@ -117,71 +117,57 @@ void Resolver::Resolve()
 
 				//Global::resolverModes[player->EntIndex()] = "Fakehead (delta > 35)";
 			}
-			if (IsAdjustingBalance(player, record, &prevBalanceLayer))
+			if ((prevBalanceLayer.m_flCycle != curBalanceLayer.m_flCycle) || curBalanceLayer.m_flWeight == 1.f)
 			{
-				if ((prevBalanceLayer.m_flCycle != curBalanceLayer.m_flCycle) || curBalanceLayer.m_flWeight == 1.f)
-				{
-					float
-						flAnimTime = curBalanceLayer.m_flCycle,
-						flSimTime = player->simulation_time();
+				float
+					flAnimTime = curBalanceLayer.m_flCycle,
+					flSimTime = player->simulation_time();
 
-					//if (flAnimTime < 0.01f && prevBalanceLayer.m_flCycle > 0.01f && g_Options.rage_lagcompensation && CMBacktracking::Get().IsTickValid(TIME_TO_TICKS(flSimTime - flAnimTime)))
-					//{
-					//	CMBacktracking::Get().SetOverwriteTick(player, QAngle(player->m_angEyeAngles().pitch, player->m_flLowerBodyYawTarget(), 0), (flSimTime - flAnimTime), 2);
-					//}
+				//if (flAnimTime < 0.01f && prevBalanceLayer.m_flCycle > 0.01f && g_Options.rage_lagcompensation && CMBacktracking::Get().IsTickValid(TIME_TO_TICKS(flSimTime - flAnimTime)))
+				//{
+				//	CMBacktracking::Get().SetOverwriteTick(player, QAngle(player->m_angEyeAngles().pitch, player->m_flLowerBodyYawTarget(), 0), (flSimTime - flAnimTime), 2);
+				//}
 
-					float_t new_yaw = player->lower_body_yaw();
-					new_yaw = math::clamp(new_yaw, -180, 180);
-
-					player->eye_angles().y = new_yaw;
-
-					//Global::resolverModes[player->EntIndex()] = "Breaking LBY";
-					continue;
-				}
-				else if (curBalanceLayer.m_flWeight == 0.f && (prevBalanceLayer.m_flCycle > 0.92f && curBalanceLayer.m_flCycle > 0.92f)) // breaking lby with delta < 120
-				{
-					if (player->simulation_time() >= record.m_flStandingTime + 0.22f && record.m_bIsMoving)
-					{
-						record.m_flLbyDelta = record.m_flLowerBodyYawTarget - player->lower_body_yaw();
-
-						float_t new_yaw = player->lower_body_yaw() + record.m_flLbyDelta;
-						new_yaw = math::clamp(new_yaw, -180, 180);
-
-						player->eye_angles().y = new_yaw;
-
-						record.m_bIsMoving = false;
-
-						//Global::resolverModes[player->EntIndex()] = "Breaking LBY (delta < 120)";
-
-						continue;
-					}
-
-					if (player->simulation_time() >= record.m_flStandingTime + 1.32f && std::fabsf(record.m_flLbyDelta) < 35.f)
-					{
-						record.m_flLbyDelta = record.m_flMovingLBY - player->lower_body_yaw();
-						float_t new_yaw = player->lower_body_yaw() + record.m_flLbyDelta;
-						new_yaw = math::clamp(new_yaw, -180, 180);
-
-						player->eye_angles().y = new_yaw;
-
-						record.m_bIsMoving = false;
-
-						//Global::resolverModes[player->EntIndex()] = "LBY delta < 35";
-
-						continue;
-					}
-				}
-			}
-			else
-			{
 				float_t new_yaw = player->lower_body_yaw();
 				new_yaw = math::clamp(new_yaw, -180, 180);
 
 				player->eye_angles().y = new_yaw;
 
-				//Global::resolverModes[player->EntIndex()] = "Other";
-
+				//Global::resolverModes[player->EntIndex()] = "Breaking LBY";
 				continue;
+			}
+			else if (curBalanceLayer.m_flWeight == 0.f && (prevBalanceLayer.m_flCycle > 0.92f && curBalanceLayer.m_flCycle > 0.92f)) // breaking lby with delta < 120
+			{
+				if (player->simulation_time() >= record.m_flStandingTime + 0.22f && record.m_bIsMoving)
+				{
+					record.m_flLbyDelta = record.m_flLowerBodyYawTarget - player->lower_body_yaw();
+
+					float_t new_yaw = player->lower_body_yaw() + record.m_flLbyDelta;
+					new_yaw = math::clamp(new_yaw, -180, 180);
+
+					player->eye_angles().y = new_yaw;
+
+					record.m_bIsMoving = false;
+
+					//Global::resolverModes[player->EntIndex()] = "Breaking LBY (delta < 120)";
+
+					continue;
+				}
+
+				if (player->simulation_time() >= record.m_flStandingTime + 1.32f && std::fabsf(record.m_flLbyDelta) < 35.f)
+				{
+					record.m_flLbyDelta = record.m_flMovingLBY - player->lower_body_yaw();
+					float_t new_yaw = player->lower_body_yaw() + record.m_flLbyDelta;
+					new_yaw = math::clamp(new_yaw, -180, 180);
+
+					player->eye_angles().y = new_yaw;
+
+					record.m_bIsMoving = false;
+
+					//Global::resolverModes[player->EntIndex()] = "LBY delta < 35";
+
+					continue;
+				}
 			}
 		}
 		/*

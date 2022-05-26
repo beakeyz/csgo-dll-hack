@@ -26,7 +26,6 @@
 #include "i_player_movement.hpp"
 #include "i_weapon_system.hpp"
 #include "c_physics_surface.h"
-#include "./../utilities/procaddr/GetProcAddr.h"
 
 namespace interfaces {
 	enum class interface_type { index, bruteforce };

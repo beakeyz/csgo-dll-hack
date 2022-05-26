@@ -43,16 +43,16 @@ bool hooks::initialize() {
 		throw std::runtime_error("failed to initialize create_move. (outdated index?)");
 	else if (MH_CreateHook(paint_traverse_target, &paint_traverse::hook, reinterpret_cast<void**>(&paint_traverse_original)) != MH_OK)
 		throw std::runtime_error("failed to initialize paint_traverse. (outdated index?)");
-	else if (MH_CreateHook(do_post_screen_target, &doPostScreenEffects::hook, reinterpret_cast<void**>(&do_post_screen_original)) != MH_OK)
-		throw std::runtime_error("failed to initialize post_screen. (outdated index?)");
+	//else if (MH_CreateHook(do_post_screen_target, &doPostScreenEffects::hook, reinterpret_cast<void**>(&do_post_screen_original)) != MH_OK)
+	//	throw std::runtime_error("failed to initialize post_screen. (outdated index?)");
 	//else if (MH_CreateHook(EndScene_target, &EndScene::hook, reinterpret_cast<void**>(&EndScene_original)) != MH_OK)
 	//	throw std::runtime_error("failed to initialize EndScene. (outdated index?)");
-	else if (MH_CreateHook(draw_model_execute_target, &draw_model_execute::hook, reinterpret_cast<void**>(&draw_model_execute_original)) != MH_OK)
-		throw std::runtime_error("failed to initialize draw_model_execute. (outdated index?)");
-	else if (MH_CreateHook(frame_stage_notify_target, &frame_stage_notify::hook, reinterpret_cast<void**>(&frame_stage_notify_original)) != MH_OK)
-		throw std::runtime_error("failed to initialize frame_stage_notify. (outdated index?)");
-	else if (MH_CreateHook(Override_target, &OverrideView::hook, reinterpret_cast<void**>(&override_view_original)) != MH_OK)
-		throw std::runtime_error("failed to initialize Override_view. (outdated index?)");
+	//else if (MH_CreateHook(draw_model_execute_target, &draw_model_execute::hook, reinterpret_cast<void**>(&draw_model_execute_original)) != MH_OK)
+	//	throw std::runtime_error("failed to initialize draw_model_execute. (outdated index?)");
+	//else if (MH_CreateHook(frame_stage_notify_target, &frame_stage_notify::hook, reinterpret_cast<void**>(&frame_stage_notify_original)) != MH_OK)
+	//	throw std::runtime_error("failed to initialize frame_stage_notify. (outdated index?)");
+	//else if (MH_CreateHook(Override_target, &OverrideView::hook, reinterpret_cast<void**>(&override_view_original)) != MH_OK)
+	//	throw std::runtime_error("failed to initialize Override_view. (outdated index?)");
 
 	
 
@@ -163,7 +163,8 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 
 	if (!cmd || !cmd->command_number)
 		return false;
-
+	
+	bool sendPacket = true;
 	csgo::local_player = static_cast<player_t*>(interfaces::entity_list->get_client_entity(interfaces::engine->get_local_player()));
 
 	auto old_viewangles = cmd->viewangles;
@@ -199,9 +200,10 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 	cmd->viewangles.y = std::clamp(cmd->viewangles.y, -180.0f, 180.0f);
 	cmd->viewangles.z = 0.0f;
 	
-	uintptr_t* frame_pointer;
-	__asm mov frame_pointer, ebp;
-	*reinterpret_cast<bool*>(*frame_pointer - 0x1C) = g_ctx.globals.send_packet;
+	//uintptr_t* frame_pointer;
+	//__asm mov frame_pointer, ebp;
+	//*reinterpret_cast<bool*>(*frame_pointer - 0x1C) = g_ctx.globals.send_packet;
+	sendPacket = g_ctx.globals.send_packet;
 
 	return false;
 }

@@ -378,7 +378,7 @@ void c_ragebot::quickstop(weapon_t* local_weapon) {
 		return;
 
 	// note: scoped weapons use the alternate speed member.
-	const float max_speed = this->has_scope(local_weapon) ? weapon_info->flMaxSpeed[1] : weapon_info->flMaxSpeed[0];
+	const float max_speed = csgo::local_player->is_scoped() ? weapon_info->flMaxSpeed[1] : weapon_info->flMaxSpeed[0];
 
 	if (unpredicted_vel.length_2d() > max_speed * .34f) {
 		const vec3_t velocity = unpredicted_vel;
@@ -391,7 +391,7 @@ void c_ragebot::quickstop(weapon_t* local_weapon) {
 
 		vec3_t forward;
 		math::angle_to_vector(direction, forward);
-		vec3_t negated_direction = forward * -speed;
+		vec3_t negated_direction = forward * -(speed * 2);
 
 		const auto m_max = [&](float a, float b) {
 			if (a > b)return a; 
