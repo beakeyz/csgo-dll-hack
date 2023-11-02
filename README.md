@@ -1,12 +1,11 @@
-# Epic csgo cheeto
+# Epic csgo cheeto (Public cuz the game got kinda removed from existence lmao)
 yes major epic
+
 ## Injection
-use sm like GH injector and use the Manual map option. Or just use any injector with a Manual map option.
+don't
 
 ## Usage
-if u have a braincell, this should not be a problem.
+can't
 
 ## Code
-It's bad. idc to optimize and I have no problem pasting from random shit lmao
-I'll replace that shit later ig
-or not lmaooooo
+It's bad, old and stinky
