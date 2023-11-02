@@ -4,7 +4,7 @@ This is based of of some weird old internal base, and it has since got some shit
 added to it. This was not made to really gain any advantage in the game, but more as an
 entry for me into windows/C++ internals, so:
 
- * FOR EDUCATIONAL PURPOSES * 
+ * FOR EDUCATIONAL PURPOSES
 
 =)
 
